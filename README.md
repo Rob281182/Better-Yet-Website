@@ -29,5 +29,6 @@ Copy the folder into any WordPress install under `wp-content/themes/better-yet` 
 Case-study images are loaded directly from the client sites (heiden.bike, roamorthotics.com.au, stephanieannestudio.com, all on the same Hostinger account), so nothing is uploaded to this site. The URLs live in the `$by_media` array at the top of `page-our-work.php`; swap a path there to change a picture. The Heiden Bike Builder is embedded live (`https://heiden.bike/builder-v2/`), and the Roam and Stephanie sites load in a frame when a visitor clicks "Preview". If a client site ever blocks framing, the poster image and "open" link still work.
 
 ## Versions
+- 1.4.0: Ready Steady Go Kids and Damselfly case studies, plus their home-page cards.
 - 1.3.0: pictures, galleries, live Heiden Bike Builder embed and site previews on Our work; thumbnails on the home-page work cards.
 - 1.2.0: Our work page. 1.1.0: brand deck styling. 1.0.0: first release.

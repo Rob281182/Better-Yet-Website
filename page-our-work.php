@@ -53,15 +53,38 @@ $by_media = array(
 		'shop'     => 'https://stephanieannestudio.com/#shop',
 		'insta'    => 'https://www.instagram.com/stephanie.anne.studio/',
 	),
+	'rsgk' => array(
+		'base'   => 'https://www.readysteadygokids.com.au/img/',
+		'hero'   => 'children.png',
+		'child'  => 'child.png',
+		'logo'   => 'logo.svg',
+		'photos' => array(
+			array( 'https://rsgk-assets-dev.s3.ap-southeast-2.amazonaws.com/images/content/ZWbTIqCvNuNkBR6SPo4CFOG28j2cCm4YFpnIJWQm.jpg', 'In class' ),
+			array( 'https://rsgk-assets-dev.s3.ap-southeast-2.amazonaws.com/images/content/21H7FvGHY9ZqluS6qZgFqbJDk2dIjAdT3Dk0XuQs.jpg', 'In class' ),
+			array( 'https://rsgk-assets-dev.s3.ap-southeast-2.amazonaws.com/images/content/wluvt480hgl27N8f8k1Z55lsihIXwIrIX20AX54P.jpg', 'In class' ),
+			array( 'https://rsgk-assets-dev.s3.ap-southeast-2.amazonaws.com/images/content/eqwCxSXQsT6SQ5eGQSUlrhuJ3qB6FqrWbvvzNvyW.jpg', 'In class' ),
+		),
+		'site'   => 'https://www.readysteadygokids.com.au',
+		'trial'  => 'https://www.readysteadygokids.com.au/',
+		'insta'  => 'https://www.instagram.com/readysteadygokids/',
+	),
+	'damselfly' => array(
+		'hero'   => 'https://www.damselfly.com.au/cdn/shop/files/1_2ca14e82-2b74-47b3-850e-7ed88e0cf25a_1000x.png?v=1776925121',
+		'strap'  => 'https://www.damselfly.com.au/cdn/shop/files/2_8ab9f6a5-7547-4939-bfe0-f7f2653d6005_1000x.png?v=1776925082',
+		'about'  => 'https://cdn.shopify.com/s/files/1/0588/4573/files/About-Us-Revised_7b5762f1-1ac8-41bc-b8af-7150330921cb_2048x2048.jpg',
+		'logo'   => 'https://www.damselfly.com.au/cdn/shop/files/DAMSELFLY_LOGO_DFLYONLY_220x.png?v=1613701528',
+		'site'   => 'https://www.damselfly.com.au',
+		'shop'   => 'https://www.damselfly.com.au/collections/custom-candle',
+	),
 );
-$h = $by_media['heiden']; $r = $by_media['roam']; $s = $by_media['stephanie'];
+$h = $by_media['heiden']; $r = $by_media['roam']; $s = $by_media['stephanie']; $k = $by_media['rsgk']; $d = $by_media['damselfly'];
 get_header(); ?>
   <main id="main">
     <section class="hero hero--page">
       <div class="wrap">
         <p class="eyebrow">Our work</p>
         <h1>Real businesses. Real time back.</h1>
-        <p class="lead">Three owner-run businesses we helped set up and streamline. Different trades, same result: the busywork runs itself, and the owner gets on with the work they love.</p>
+        <p class="lead">Five businesses we helped set up and streamline, from a one-person studio to a national franchise. Different trades, same result: the busywork runs itself, and the owner gets on with the work they love.</p>
         <div class="hero__strip" aria-hidden="true">
           <img src="<?php echo esc_url( $h['base'] . $h['strip'][0][0] ); ?>" alt="" loading="eager">
           <img src="<?php echo esc_url( $r['base'] . $r['workflow'] ); ?>" alt="" loading="eager">
@@ -231,6 +254,80 @@ get_header(); ?>
           <div class="embed__overlay">
             <button type="button" class="btn btn--light embed__load">Preview the live shop</button>
             <p class="embed__note">or <a href="<?php echo esc_url( $s['site'] ); ?>" target="_blank" rel="noopener">open stephanieannestudio.com</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- READY STEADY GO KIDS -->
+    <!-- Rob: the "what we do" copy here is a first draft from the public site. Correct anything that isn't ours. -->
+    <section class="section" id="rsgk">
+      <div class="wrap">
+        <div class="case__grid case__grid--even">
+          <div>
+            <p class="eyebrow">Kids' sport &middot; National franchise</p>
+            <h2 class="h2">Ready Steady Go Kids</h2>
+            <p class="case__sub">More kids on the field. Less chasing forms. <a href="<?php echo esc_url( $k['site'] ); ?>" target="_blank" rel="noopener">readysteadygokids.com.au</a></p>
+            <p>Ready Steady Go Kids runs multi-sport classes for 1.5 to 6 year olds, teaching the fundamentals of ten sports across more than 190 locations in Australia and overseas, through a network of franchisees. That's thousands of families, hundreds of coaches and a new term every ten weeks, which is a lot of enrolments, make-up classes, party bookings and franchise enquiries to keep moving.</p>
+            <p>The job here is scale without the admin: one enrolment system every location shares, a free-trial path that takes a parent one step, term re-enrolments and payments that run themselves (including pay-in-four), and a franchise enquiry funnel that lands warm leads with head office. On top sits the marketing layer: campaigns pointed at the right suburb, and tracking that shows which locations fill and which need a push.</p>
+            <div class="gallery gallery--4">
+              <?php foreach ( $k['photos'] as $img ) : ?>
+                <figure class="gallery__item"><img src="<?php echo esc_url( $img[0] ); ?>" alt="<?php echo esc_attr( $img[1] ); ?>" loading="lazy"><figcaption><?php echo esc_html( $img[1] ); ?></figcaption></figure>
+              <?php endforeach; ?>
+            </div>
+          </div>
+          <div class="case__side">
+            <figure class="media media--light">
+              <img src="<?php echo esc_url( $k['base'] . $k['hero'] ); ?>" alt="Children at a Ready Steady Go Kids class" loading="lazy">
+              <figcaption>A lifelong love of sport starts here.</figcaption>
+            </figure>
+            <aside class="case__facts">
+              <h3>What runs itself</h3>
+              <ul class="case__stack">
+                <li>Online enrolment and free-trial booking shared by every location</li>
+                <li>Term payments with pay-in-four, refunds and make-up classes handled in one place</li>
+                <li>Party, event and early-learning-centre bookings through structured forms</li>
+                <li>Franchise enquiries captured and qualified for Australia and international</li>
+                <li>Tag-managed tracking across the whole enrolment funnel</li>
+              </ul>
+            </aside>
+            <p class="case__links"><a href="<?php echo esc_url( $k['site'] ); ?>" target="_blank" rel="noopener">Visit readysteadygokids.com.au</a> &middot; <a href="<?php echo esc_url( $k['insta'] ); ?>" target="_blank" rel="noopener">@readysteadygokids on Instagram</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DAMSELFLY -->
+    <section class="section section--alt" id="damselfly">
+      <div class="wrap">
+        <div class="case__grid case__grid--even">
+          <div>
+            <p class="eyebrow">Lifestyle brand &middot; Online store</p>
+            <h2 class="h2">Damselfly</h2>
+            <p class="case__sub">More making. Less packing-slip admin. <a href="<?php echo esc_url( $d['site'] ); ?>" target="_blank" rel="noopener">damselfly.com.au</a></p>
+            <p>Damselfly is our co-founder Christianna's own label: twenty years of jewellery, quote candles and now custom candles and convertible phone straps, worn by the odd pop star along the way. It is also our testing ground. Anything we recommend to a client has usually been tried on Damselfly first.</p>
+            <p>The store does the selling. Shoppers pick a vessel colour and one of twelve fragrances and the custom candle builds itself in the cart, refills and bundles upsell without a salesperson, and checkout takes Apple Pay, Google Pay, Shop Pay and PayPal in three currencies. Behind the scenes, orders, shipping rules, the free-shipping threshold, wholesale enquiries and the newsletter all run without anyone touching them, so the only manual step is lighting the wick to check the batch.</p>
+            <aside class="case__facts">
+              <h3>What runs itself</h3>
+              <ul class="case__stack">
+                <li>Custom candle builder: colour, fragrance and refill options in one product flow</li>
+                <li>Bundles and refills that upsell automatically</li>
+                <li>Multi-currency checkout with wallet payments</li>
+                <li>Shipping rules, free-shipping threshold and returns handled by policy, not email</li>
+                <li>Wholesale and newsletter capture built into the store</li>
+              </ul>
+            </aside>
+            <p class="case__links"><a href="<?php echo esc_url( $d['shop'] ); ?>" target="_blank" rel="noopener">Build a custom candle</a> &middot; <a href="<?php echo esc_url( $d['site'] ); ?>" target="_blank" rel="noopener">Visit damselfly.com.au</a></p>
+          </div>
+          <div class="case__side">
+            <figure class="media">
+              <img src="<?php echo esc_url( $d['hero'] ); ?>" alt="Damselfly custom candles" loading="lazy">
+              <figcaption>Custom candles: pick your colour, pick your poison.</figcaption>
+            </figure>
+            <div class="gallery gallery--2">
+              <figure class="gallery__item"><img src="<?php echo esc_url( $d['strap'] ); ?>" alt="Damselfly convertible phone strap" loading="lazy"><figcaption>Convertible phone straps</figcaption></figure>
+              <figure class="gallery__item"><img src="<?php echo esc_url( $d['about'] ); ?>" alt="Christianna Heideman, founder of Damselfly" loading="lazy"><figcaption>Christianna, founder</figcaption></figure>
+            </div>
           </div>
         </div>
       </div>

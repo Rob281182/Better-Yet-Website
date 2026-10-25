@@ -148,3 +148,12 @@
     embeds.filter(function (b) { return b.getAttribute("data-embed-auto") === "1"; }).forEach(function (b) { io.observe(b); });
   }
 })();
+
+/* ---------- Hide any hotlinked picture that fails to load ---------- */
+(function () {
+  Array.prototype.slice.call(document.querySelectorAll(".gallery__item img, .media img, .customer__img, .hero__strip img")).forEach(function (img) {
+    function miss() { var f = img.closest(".gallery__item, .media") || img; f.classList.add("is-missing"); if (f === img) img.style.display = "none"; }
+    if (img.complete && img.naturalWidth === 0 && img.src) miss();
+    img.addEventListener("error", miss);
+  });
+})();
