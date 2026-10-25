@@ -1,0 +1,272 @@
+<?php
+/**
+ * Better Yet theme functions.
+ * Settings: Appearance > Customize > Better Yet settings.
+ * Enquiries: saved under "Enquiries" in the dashboard, emailed, and optionally sent to a webhook (Zapier/Make/CRM).
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+define( 'BY_VERSION', '1.2.0' );
+
+/* ---------- Settings ---------- */
+function by_defaults() {
+	return array(
+		'brand'       => 'Better Yet',
+		'tagline'     => 'Smarter systems. More time back.',
+		'email'       => 'hello@betteryet.com.au',
+		'notify'      => '',   // where enquiries are emailed; blank = site admin email
+		'phone'       => '',
+		'abn'         => '',
+		'instagram'   => '',
+		'linkedin'    => '',
+		'booking_url' => '',
+		'webhook_url' => '',
+		'ga4_id'      => '',
+		'pixel_id'    => '',
+	);
+}
+
+function by_opt( $key ) {
+	$d = by_defaults();
+	return get_theme_mod( 'by_' . $key, isset( $d[ $key ] ) ? $d[ $key ] : '' );
+}
+
+function by_privacy_url() {
+	$url = get_privacy_policy_url();
+	return $url ? $url : home_url( '/privacy-policy/' );
+}
+
+add_action( 'customize_register', function ( $wp ) {
+	$wp->add_section( 'by_settings', array(
+		'title'    => 'Better Yet settings',
+		'priority' => 20,
+	) );
+	$fields = array(
+		'brand'       => array( 'Business name', 'text', 'Not locked yet? Change it here and it updates across the site.' ),
+		'tagline'     => array( 'Tagline', 'text', '' ),
+		'email'       => array( 'Public email address', 'email', 'Shown on the site.' ),
+		'notify'      => array( 'Send enquiries to', 'text', 'Email address(es) that receive form enquiries, comma separated. Blank uses the site admin email.' ),
+		'phone'       => array( 'Phone', 'text', '' ),
+		'abn'         => array( 'ABN line', 'text', 'e.g. ABN 12 345 678 901' ),
+		'instagram'   => array( 'Instagram URL', 'url', '' ),
+		'linkedin'    => array( 'LinkedIn URL', 'url', '' ),
+		'booking_url' => array( 'Booking link', 'url', 'Calendly, Cal.com, Google Calendar appointment page or Microsoft Bookings. "Book a call" buttons open it.' ),
+		'webhook_url' => array( 'CRM / automation webhook URL', 'url', 'Optional. Each enquiry is POSTed here as JSON (Zapier, Make, n8n, HubSpot, GoHighLevel...).' ),
+		'ga4_id'      => array( 'Google Analytics 4 ID', 'text', 'e.g. G-XXXXXXXXXX' ),
+		'pixel_id'    => array( 'Meta Pixel ID', 'text', 'For Instagram/Facebook ads. Enquiries are tracked as Lead.' ),
+	);
+	$d = by_defaults();
+	foreach ( $fields as $key => $f ) {
+		$san = 'sanitize_text_field';
+		if ( 'url' === $f[1] ) $san = 'esc_url_raw';
+		if ( 'email' === $f[1] ) $san = 'sanitize_email';
+		$wp->add_setting( 'by_' . $key, array( 'default' => $d[ $key ], 'sanitize_callback' => $san ) );
+		$wp->add_control( 'by_' . $key, array(
+			'label'       => $f[0],
+			'description' => $f[2],
+			'section'     => 'by_settings',
+			'type'        => $f[1],
+		) );
+	}
+} );
+
+/* ---------- Theme setup and assets ---------- */
+add_action( 'after_setup_theme', function () {
+	add_theme_support( 'title-tag' );
+	add_theme_support( 'html5', array( 'script', 'style', 'search-form', 'gallery', 'caption' ) );
+} );
+
+add_filter( 'document_title_parts', function ( $parts ) {
+	if ( is_front_page() ) {
+		$parts = array( 'title' => by_opt( 'brand' ), 'tagline' => by_opt( 'tagline' ) );
+	}
+	return $parts;
+} );
+add_filter( 'document_title_separator', function () { return '|'; } );
+
+add_action( 'wp_enqueue_scripts', function () {
+	$dir = get_template_directory_uri() . '/assets';
+	wp_enqueue_style( 'by-fonts', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap', array(), null );
+	wp_enqueue_style( 'by-site', $dir . '/site.css', array( 'by-fonts' ), BY_VERSION );
+	wp_enqueue_script( 'by-site', $dir . '/site.js', array(), BY_VERSION, true );
+	$site = array(
+		'brand'       => by_opt( 'brand' ),
+		'tagline'     => by_opt( 'tagline' ),
+		'email'       => by_opt( 'email' ),
+		'phone'       => by_opt( 'phone' ),
+		'abn'         => by_opt( 'abn' ),
+		'instagram'   => by_opt( 'instagram' ),
+		'linkedin'    => by_opt( 'linkedin' ),
+		'bookingUrl'  => by_opt( 'booking_url' ),
+		'ga4Id'       => by_opt( 'ga4_id' ),
+		'metaPixelId' => by_opt( 'pixel_id' ),
+	);
+	wp_add_inline_script( 'by-site', 'window.SITE = ' . wp_json_encode( $site ) . ';', 'before' );
+} );
+
+add_action( 'wp_head', function () {
+	echo '<link rel="icon" href="' . esc_url( get_template_directory_uri() . '/assets/favicon.svg' ) . '" type="image/svg+xml">' . "\n";
+}, 2 );
+
+/* ---------- Enquiries (saved in the dashboard) ---------- */
+add_action( 'init', function () {
+	register_post_type( 'by_enquiry', array(
+		'labels'          => array(
+			'name'          => 'Enquiries',
+			'singular_name' => 'Enquiry',
+			'all_items'     => 'All enquiries',
+		),
+		'public'          => false,
+		'show_ui'         => true,
+		'menu_icon'       => 'dashicons-email-alt',
+		'menu_position'   => 3,
+		'supports'        => array( 'title', 'editor' ),
+		'capability_type' => 'post',
+		'capabilities'    => array( 'create_posts' => 'do_not_allow' ),
+		'map_meta_cap'    => true,
+	) );
+} );
+
+add_filter( 'manage_by_enquiry_posts_columns', function ( $cols ) {
+	return array(
+		'cb'       => $cols['cb'],
+		'title'    => 'Name',
+		'by_email' => 'Email',
+		'by_phone' => 'Phone',
+		'by_int'   => 'Interest',
+		'date'     => 'Received',
+	);
+} );
+add_action( 'manage_by_enquiry_posts_custom_column', function ( $col, $id ) {
+	$map = array( 'by_email' => '_by_email', 'by_phone' => '_by_phone', 'by_int' => '_by_interest' );
+	if ( isset( $map[ $col ] ) ) echo esc_html( get_post_meta( $id, $map[ $col ], true ) );
+}, 10, 2 );
+
+function by_enquiry_handler() {
+	$fail = function ( $msg, $code ) { wp_send_json( array( 'ok' => false, 'error' => $msg ), $code ); };
+
+	if ( ! isset( $_POST['by_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['by_nonce'] ) ), 'by_enquiry' ) ) {
+		$fail( 'Your session expired. Please refresh the page and try again.', 403 );
+	}
+	// Honeypot: bots fill the hidden "website" field
+	if ( ! empty( $_POST['website'] ) ) wp_send_json( array( 'ok' => true ) );
+
+	$f = function ( $k, $max = 200 ) {
+		return isset( $_POST[ $k ] ) ? mb_substr( sanitize_text_field( wp_unslash( $_POST[ $k ] ) ), 0, $max ) : '';
+	};
+	$d = array(
+		'name'          => $f( 'name', 120 ),
+		'business'      => $f( 'business', 160 ),
+		'email'         => sanitize_email( $f( 'email' ) ),
+		'phone'         => $f( 'phone', 40 ),
+		'interest'      => $f( 'interest', 80 ),
+		'message'       => isset( $_POST['message'] ) ? mb_substr( sanitize_textarea_field( wp_unslash( $_POST['message'] ) ), 0, 4000 ) : '',
+		'calc_estimate' => $f( 'calc_estimate', 300 ),
+		'consent'       => empty( $_POST['consent'] ) ? 'no' : 'yes',
+		'submitted_at'  => current_time( 'c' ),
+		'source'        => home_url( '/' ),
+	);
+
+	if ( '' === $d['name'] || ! is_email( $d['email'] ) ) $fail( 'Please add your name and a valid email.', 422 );
+	if ( 'yes' !== $d['consent'] ) $fail( 'Please tick the consent box.', 422 );
+
+	// Rate limit: one enquiry per 30 seconds per visitor
+	$ip  = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+	$key = 'by_rl_' . md5( $ip );
+	if ( get_transient( $key ) ) $fail( 'Please wait a moment before sending again.', 429 );
+	set_transient( $key, 1, 30 );
+
+	// 1. Save in the dashboard
+	$body = "Business: {$d['business']}\nEmail: {$d['email']}\nPhone: {$d['phone']}\nInterest: {$d['interest']}\n";
+	if ( $d['calc_estimate'] ) $body .= "Calculator: {$d['calc_estimate']}\n";
+	$body .= "\nWhere time is being lost:\n{$d['message']}\n";
+	$post_id = wp_insert_post( array(
+		'post_type'    => 'by_enquiry',
+		'post_status'  => 'private',
+		'post_title'   => $d['name'] . ( $d['business'] ? ' (' . $d['business'] . ')' : '' ),
+		'post_content' => $body,
+	) );
+	if ( $post_id && ! is_wp_error( $post_id ) ) {
+		update_post_meta( $post_id, '_by_email', $d['email'] );
+		update_post_meta( $post_id, '_by_phone', $d['phone'] );
+		update_post_meta( $post_id, '_by_interest', $d['interest'] );
+	}
+
+	// 2. Email
+	$to      = by_opt( 'notify' ) ? array_map( 'trim', explode( ',', by_opt( 'notify' ) ) ) : get_option( 'admin_email' );
+	$subject = 'New ' . by_opt( 'brand' ) . ' enquiry: ' . $d['name'];
+	$mailed  = wp_mail( $to, $subject, "New website enquiry\n\nName: {$d['name']}\n" . $body, array( 'Reply-To: ' . $d['name'] . ' <' . $d['email'] . '>' ) );
+
+	// 3. Webhook (CRM / automation)
+	$hook = by_opt( 'webhook_url' );
+	if ( $hook ) {
+		wp_remote_post( $hook, array(
+			'timeout' => 8,
+			'headers' => array( 'Content-Type' => 'application/json' ),
+			'body'    => wp_json_encode( $d ),
+		) );
+	}
+
+	if ( $post_id || $mailed ) wp_send_json( array( 'ok' => true ) );
+	$fail( 'Sorry, we could not send your message right now.', 500 );
+}
+add_action( 'admin_post_nopriv_by_enquiry', 'by_enquiry_handler' );
+add_action( 'admin_post_by_enquiry', 'by_enquiry_handler' );
+
+/* ---------- On activation: create the privacy policy page ---------- */
+add_action( 'after_switch_theme', function () {
+	$existing = (int) get_option( 'wp_page_for_privacy_policy' );
+	if ( $existing && 'publish' === get_post_status( $existing ) ) return;
+
+	$content = <<<HTML
+<!-- wp:paragraph --><p>Last updated: October 2026</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Better Yet ("we", "us") respects your privacy. This policy explains how we handle personal information collected through this website.</p><!-- /wp:paragraph -->
+<!-- wp:heading --><h2>What we collect</h2><!-- /wp:heading -->
+<!-- wp:paragraph --><p>When you send an enquiry we collect the details you provide: your name, business name, email, phone number and message, plus any time-back calculator estimate you choose to send. If analytics or advertising tools are switched on, we also collect anonymous usage data such as pages visited and device type through cookies.</p><!-- /wp:paragraph -->
+<!-- wp:heading --><h2>How we use it</h2><!-- /wp:heading -->
+<!-- wp:list --><ul><li>To respond to your enquiry and arrange a discovery call.</li><li>To provide and improve our services.</li><li>To measure how our website and advertising perform.</li></ul><!-- /wp:list -->
+<!-- wp:paragraph --><p>We will not sell your personal information. We will only send you marketing if you have agreed to it, and you can opt out at any time.</p><!-- /wp:paragraph -->
+<!-- wp:heading --><h2>Who we share it with</h2><!-- /wp:heading -->
+<!-- wp:paragraph --><p>We use trusted service providers to run our business, such as our website host, email provider, CRM and scheduling tools, and analytics and advertising platforms (for example Google and Meta). Some of these providers may store data outside Australia.</p><!-- /wp:paragraph -->
+<!-- wp:heading --><h2>Keeping it safe</h2><!-- /wp:heading -->
+<!-- wp:paragraph --><p>We take reasonable steps to protect your information from misuse, loss and unauthorised access, and we delete it when it is no longer needed.</p><!-- /wp:paragraph -->
+<!-- wp:heading --><h2>Access and correction</h2><!-- /wp:heading -->
+<!-- wp:paragraph --><p>You can ask to see or correct the personal information we hold about you, or make a privacy complaint, by emailing us using the address on our home page. If you are not satisfied with our response you can contact the Office of the Australian Information Commissioner (oaic.gov.au).</p><!-- /wp:paragraph -->
+HTML;
+
+	$id = wp_insert_post( array(
+		'post_type'    => 'page',
+		'post_status'  => 'publish',
+		'post_title'   => 'Privacy policy',
+		'post_name'    => 'privacy-policy',
+		'post_content' => $content,
+	) );
+	if ( $id && ! is_wp_error( $id ) ) update_option( 'wp_page_for_privacy_policy', $id );
+} );
+
+/* ---------- "Our work" page: created once, uses the page-our-work.php template ---------- */
+add_action( 'init', function () {
+	if ( get_option( 'by_work_page_id' ) ) return;
+	$page = get_page_by_path( 'our-work' );
+	if ( ! $page ) {
+		$id = wp_insert_post( array(
+			'post_type'    => 'page',
+			'post_status'  => 'publish',
+			'post_title'   => 'Our work',
+			'post_name'    => 'our-work',
+			'post_content' => '',
+		) );
+	} else {
+		$id = $page->ID;
+	}
+	if ( $id && ! is_wp_error( $id ) ) {
+		update_post_meta( $id, '_wp_page_template', 'page-our-work.php' );
+		update_option( 'by_work_page_id', $id );
+	}
+} );
+
+function by_work_url() {
+	$id = (int) get_option( 'by_work_page_id' );
+	return $id ? get_permalink( $id ) : home_url( '/our-work/' );
+}
