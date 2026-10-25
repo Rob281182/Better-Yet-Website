@@ -1,7 +1,7 @@
 # Better Yet website (WordPress theme)
 
 This repository **is** the WordPress theme for betteryet (one-page site + "Our work" page + enquiry form).
-It is deployed to Hostinger with Git: Hostinger clones this repo into `wp-content/themes/better-yet` on the live site.
+It is deployed to Hostinger with Git: Hostinger clones this repo into `wp-content/themes/betteryet` on the live site.
 
 ## How updates go live
 1. Change files here and push to `main`.
@@ -24,3 +24,10 @@ Follows Christie's brand deck (Oct 2026): human-first AI agency, "Smarter system
 
 ## Local testing
 Copy the folder into any WordPress install under `wp-content/themes/better-yet` and activate it.
+
+## Pictures and embeds on "Our work"
+Case-study images are loaded directly from the client sites (heiden.bike, roamorthotics.com.au, stephanieannestudio.com, all on the same Hostinger account), so nothing is uploaded to this site. The URLs live in the `$by_media` array at the top of `page-our-work.php`; swap a path there to change a picture. The Heiden Bike Builder is embedded live (`https://heiden.bike/builder-v2/`), and the Roam and Stephanie sites load in a frame when a visitor clicks "Preview". If a client site ever blocks framing, the poster image and "open" link still work.
+
+## Versions
+- 1.3.0: pictures, galleries, live Heiden Bike Builder embed and site previews on Our work; thumbnails on the home-page work cards.
+- 1.2.0: Our work page. 1.1.0: brand deck styling. 1.0.0: first release.

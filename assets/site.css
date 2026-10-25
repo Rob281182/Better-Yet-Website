@@ -273,3 +273,55 @@ details p { color: var(--ink-soft); padding-right: 40px; }
 .cta .btn { margin-top: 12px; }
 @media (max-width: 960px) { .case__grid, .case__grid--even { grid-template-columns: 1fr; gap: 28px; } .work-teaser .customers { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .case__outcomes { grid-template-columns: 1fr; } }
+
+/* ---------- Our work: media, galleries, embeds (v1.3.0) ---------- */
+.h3 { font-family: var(--font-head); font-weight: 700; font-size: clamp(1.3rem, 2.4vw, 1.8rem); letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 .5em; }
+.link-plain { color: var(--ink); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--ink); }
+.hero__strip { display: grid; grid-template-columns: 1.6fr 1.3fr .8fr; gap: 12px; margin-top: 48px; }
+.hero__strip img { width: 100%; height: 260px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--line); background: var(--bg-alt); display: block; }
+.media { margin: 0; }
+.media img { width: 100%; height: auto; display: block; border-radius: var(--radius); border: 1px solid var(--line); background: var(--bg-alt); }
+.media figcaption, .gallery figcaption { font-size: .85rem; color: var(--ink-soft); margin-top: .6rem; }
+.media--wide { margin: 0 0 48px; }
+.media--wide img { aspect-ratio: 21 / 9; object-fit: cover; }
+.media--portrait { max-width: 420px; justify-self: end; }
+.case__side { display: grid; gap: 28px; }
+.case__links { margin-top: 20px; font-weight: 600; }
+.case__links a { color: var(--ink); }
+.gallery { display: grid; gap: 16px; margin: 40px 0 0; }
+.gallery--4 { grid-template-columns: repeat(4, 1fr); }
+.gallery--art { grid-template-columns: repeat(6, 1fr); }
+.gallery--products { grid-template-columns: repeat(4, 1fr); margin-top: 28px; }
+.gallery__item { margin: 0; }
+.gallery__item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; border-radius: var(--radius); border: 1px solid var(--line); background: var(--bg-alt); }
+.gallery--art .gallery__item img { aspect-ratio: 3 / 4; }
+.gallery__item--pad img { object-fit: contain; background: var(--white); padding: 10px; }
+.showcase { margin-top: 56px; }
+.showcase__head { max-width: 680px; margin-bottom: 20px; }
+.showcase__head p { color: var(--ink-soft); }
+.showcase__links { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; margin: 20px 0 0; }
+.embed { position: relative; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--line); background: #0f0f0f; box-shadow: 0 24px 50px -30px rgba(0,0,0,.45); }
+.embed--app { aspect-ratio: 16 / 10; }
+.embed--site { aspect-ratio: 16 / 9; margin-top: 40px; }
+.embed__poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; filter: saturate(.8); }
+.embed--site .embed__poster { opacity: .35; }
+.embed__overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 24px; background: linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.45)); }
+.embed__note { color: rgba(246,243,238,.8); font-size: .9rem; margin: 0; }
+.embed__note a { color: var(--bg); }
+.embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+.embed.is-loaded .embed__poster, .embed.is-loaded .embed__overlay { display: none; }
+@media (max-width: 960px) {
+  .hero__strip { grid-template-columns: 1fr 1fr; }
+  .hero__strip img:last-child { display: none; }
+  .gallery--art { grid-template-columns: repeat(3, 1fr); }
+  .media--portrait { justify-self: start; }
+  .embed--app { aspect-ratio: 4 / 5; }
+}
+@media (max-width: 640px) {
+  .hero__strip img { height: 160px; }
+  .gallery--4, .gallery--products { grid-template-columns: repeat(2, 1fr); }
+  .gallery--art { grid-template-columns: repeat(2, 1fr); }
+  .embed--site { aspect-ratio: 4 / 5; }
+}
+/* Home page: recent work cards with pictures */
+.customer__img { width: calc(100% + 56px); max-width: none; margin: -28px -28px 20px; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: var(--radius) var(--radius) 0 0; border-bottom: 1px solid var(--line); background: var(--bg-alt); }

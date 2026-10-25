@@ -118,3 +118,33 @@
     fbq("init", S.metaPixelId); fbq("track", "PageView");
   }
 })();
+
+/* ---------- Click-to-load embeds (Our work page) ---------- */
+(function () {
+  var embeds = Array.prototype.slice.call(document.querySelectorAll(".embed[data-embed]"));
+  if (!embeds.length) return;
+  function load(box) {
+    if (box.classList.contains("is-loaded")) return;
+    var f = document.createElement("iframe");
+    f.src = box.getAttribute("data-embed");
+    f.title = box.getAttribute("data-embed-title") || "Embedded site";
+    f.loading = "lazy";
+    f.setAttribute("allow", "fullscreen; xr-spatial-tracking");
+    f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    box.appendChild(f);
+    box.classList.add("is-loaded");
+  }
+  embeds.forEach(function (box) {
+    var btn = box.querySelector(".embed__load");
+    if (btn) btn.addEventListener("click", function () { load(box); });
+  });
+  /* The featured app embed loads itself on large screens once it scrolls into view. */
+  var wide = window.matchMedia("(min-width: 961px)").matches;
+  var saveData = navigator.connection && navigator.connection.saveData;
+  if (wide && !saveData && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+    }, { rootMargin: "200px 0px" });
+    embeds.filter(function (b) { return b.getAttribute("data-embed-auto") === "1"; }).forEach(function (b) { io.observe(b); });
+  }
+})();
