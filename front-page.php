@@ -80,6 +80,78 @@ get_header(); ?>
       </div>
     </section>
 
+    <!-- THE AUDIT (productised, v1.5.0) -->
+    <section class="section" id="audit">
+      <div class="wrap">
+        <p class="eyebrow">Start here</p>
+        <h2 class="h2"><?php echo esc_html( by_opt( 'audit_name' ) ); ?></h2>
+        <p class="lead">One conversation, one report, one clear next step. You find out exactly where your week goes and what it would take to get it back, in plain English, with numbers.</p>
+        <div class="audit">
+          <div class="audit__main">
+            <ol class="audit__timeline">
+              <li><span class="audit__when">Day 1</span><strong>A 60 to 90-minute session.</strong> We walk through how work actually moves through your business: enquiries, quotes, bookings, invoices, the follow-ups that slip.</li>
+              <li><span class="audit__when">Within 5 business days</span><strong>Your Time-Back Report.</strong> Short, specific and written for you, not for a software vendor.</li>
+              <li><span class="audit__when">Then</span><strong>A 30-minute walkthrough.</strong> We go through it together and you decide what, if anything, happens next.</li>
+            </ol>
+            <h3 class="audit__h3">What's in the report</h3>
+            <ul class="audit__list">
+              <li>Your top five time drains, each costed in hours and dollars a year</li>
+              <li>The fixes, ranked by payback, including the ones not worth doing</li>
+              <li>The tools involved and what they cost to run, with no surprises</li>
+              <li>A fixed price and timeline for the first fix</li>
+            </ul>
+            <p class="audit__keep">You keep the report either way. Plenty of owners use it to fix things themselves, and that's fine by us.</p>
+          </div>
+          <aside class="audit__card">
+            <p class="audit__price-label">Investment</p>
+            <p class="audit__price"><?php echo esc_html( by_price( 'audit_price' ) ); ?></p>
+            <?php if ( by_has( 'audit_founding' ) ) : ?><p class="audit__founding"><?php echo esc_html( by_opt( 'audit_founding' ) ); ?></p><?php endif; ?>
+            <?php if ( by_has( 'credit_text' ) || by_has( 'guarantee_text' ) ) : ?>
+            <ul class="audit__promises">
+              <?php if ( by_has( 'credit_text' ) ) : ?><li><?php echo esc_html( by_opt( 'credit_text' ) ); ?></li><?php endif; ?>
+              <?php if ( by_has( 'guarantee_text' ) ) : ?><li><?php echo esc_html( by_opt( 'guarantee_text' ) ); ?></li><?php endif; ?>
+            </ul>
+            <?php endif; ?>
+            <a href="#contact" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
+            <p class="audit__small">Not sure yet? Start with a free 20-minute discovery call.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- READY-MADE FIXES (v1.5.0) -->
+    <section class="section section--alt" id="fixes">
+      <div class="wrap">
+        <p class="eyebrow">Ready-made fixes</p>
+        <h2 class="h2">Small, fixed-price jobs that pay for themselves.</h2>
+        <p class="lead">You don't have to start with a big project. These are the fixes we're asked for most, scoped and priced up front.</p>
+        <div class="packages">
+          <article class="package">
+            <p class="package__kicker">Most popular first step</p>
+            <h3>The First Fix</h3>
+            <p>One workflow, built and running in two to three weeks. Invoice chasing, enquiry follow-up, quote-to-job handover, appointment reminders: pick the one that hurts most.</p>
+            <p class="package__price"><?php echo esc_html( by_price( 'fix_price' ) ); ?></p>
+            <ul class="package__list"><li>Scoped from your audit or a short call</li><li>Built on the tools you already use</li><li>Handover and a written how-it-works</li></ul>
+          </article>
+          <article class="package">
+            <p class="package__kicker">Trades and clinics</p>
+            <h3>The Missed-Call Catcher</h3>
+            <p>Every call you can't answer gets a text back within seconds, the caller can book or leave their details, and the lead lands in your CRM with a reminder to follow up.</p>
+            <p class="package__price"><?php echo esc_html( by_price( 'call_price' ) ); ?></p>
+            <ul class="package__list"><li>Works with your existing number</li><li>Optional AI receptionist that answers and books</li><li>Every call logged, nothing lost</li></ul>
+          </article>
+          <article class="package">
+            <p class="package__kicker">After the build</p>
+            <h3>Keep It Working</h3>
+            <p>A small monthly plan for one or two automations: monitoring, fixes when a tool changes, and the small tweaks you think of once it's live. For businesses that don't need a full retainer.</p>
+            <p class="package__price"><?php echo esc_html( by_price( 'plan_price' ) ); ?></p>
+            <ul class="package__list"><li>We watch it so you don't have to</li><li>Changes turned around in days</li><li>Cancel any month</li></ul>
+          </article>
+        </div>
+        <p class="complementary"><strong>Bigger projects</strong> (connected systems, CRM, booking, quoting, reporting) are quoted from your audit, <?php echo esc_html( by_price( 'project_price', 'typically from a few thousand dollars' ) ); ?>. Ongoing management is available on a monthly retainer.</p>
+      </div>
+    </section>
+
     <!-- THE DIFFERENCE -->
     <section class="section" id="services">
       <div class="wrap difference">
@@ -120,7 +192,21 @@ get_header(); ?>
         <div class="calc__result" aria-live="polite">
           <div class="calc__big"><span id="resHours">216</span><small>hours back a year</small></div>
           <div class="calc__big"><span id="resDollars">$10,800</span><small>in time value a year</small></div>
-          <a href="#contact" class="btn btn--light" id="calcCta">Talk to us about it <span aria-hidden="true">→</span></a>
+          <form class="calc__capture" id="reportForm" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post" novalidate>
+            <input type="hidden" name="action" value="by_enquiry">
+            <input type="hidden" name="kind" value="report">
+            <input type="hidden" name="calc_estimate" id="calcEstimateReport" value="">
+            <input type="hidden" name="by_nonce" value="<?php echo esc_attr( wp_create_nonce( 'by_enquiry' ) ); ?>">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+            <label class="calc__capture-label" for="reportEmail">Want this as a personalised time-back report?</label>
+            <div class="calc__capture-row">
+              <input type="email" id="reportEmail" name="email" placeholder="you@business.com.au" required>
+              <button type="submit" class="btn btn--light">Email it to me</button>
+            </div>
+            <label class="calc__consent"><input type="checkbox" name="consent" value="yes" required> <span>Send me my estimate and the occasional useful email. No spam, unsubscribe any time.</span></label>
+            <p class="form__status form__status--dark" id="reportStatus" aria-live="polite"></p>
+          </form>
+          <a href="#contact" class="link-light" id="calcCta">Or talk to us about it <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
@@ -136,6 +222,7 @@ get_header(); ?>
           <article class="customer"><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
           <article class="customer"><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
         </div>
+        <p class="tools"><span class="tools__label">Works with the tools you already use:</span> Xero &middot; MYOB &middot; ServiceM8 &middot; Tradify &middot; Cliniko &middot; Halaxy &middot; Shopify &middot; WooCommerce &middot; HubSpot &middot; Google Workspace &middot; Microsoft 365 &middot; and most things with an app</p>
       </div>
     </section>
 
@@ -196,12 +283,31 @@ get_header(); ?>
         </details>
         <details>
           <summary>How long does an audit take?</summary>
-          <p>Most audits are completed within one to two weeks, depending on the size of the business and how quickly we can speak with your team.</p>
+          <p>One 60 to 90-minute session, your report within five business days, then a 30-minute walkthrough. About a week from start to finish for most businesses.</p>
+        </details>
+        <details>
+          <summary>What does the audit cost?</summary>
+          <p><?php echo esc_html( by_opt( 'audit_name' ) ); ?> is <?php echo esc_html( by_price( 'audit_price', 'a fixed fee we confirm on the discovery call' ) ); ?>.<?php if ( by_has( 'credit_text' ) ) echo ' ' . esc_html( by_opt( 'credit_text' ) ); ?><?php if ( by_has( 'guarantee_text' ) ) echo ' ' . esc_html( by_opt( 'guarantee_text' ) ); ?> Ready-made fixes and bigger projects are priced up front before any work starts.</p>
+        </details>
+        <details>
+          <summary>What happens to my data? Is it used to train AI?</summary>
+          <p>No. Your business data is never used to train AI models, ours or anyone else's. Every automated step we build is logged, a person checks anything uncertain before it goes out, and you own everything we build, including the logins.</p>
         </details>
         <details>
           <summary>Do you work with businesses outside my city?</summary>
           <p>Yes. We work with businesses across Australia, mostly online with on-site visits where it helps.</p>
         </details>
+      </div>
+    </section>
+
+    <!-- OUR PROMISE (v1.5.0) -->
+    <section class="section section--tight">
+      <div class="wrap">
+        <ul class="promise">
+          <li><strong>Your data stays yours.</strong> It is never used to train AI, and we only connect what the job needs.</li>
+          <li><strong>A person checks the uncertain bits.</strong> Automations handle the routine; humans handle the judgement calls.</li>
+          <li><strong>You own everything we build.</strong> The accounts, the logins and the documentation, from day one.</li>
+        </ul>
       </div>
     </section>
 

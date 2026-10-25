@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '1.4.0' );
+define( 'BY_VERSION', '1.5.0' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -24,8 +24,25 @@ function by_defaults() {
 		'webhook_url' => '',
 		'ga4_id'      => '',
 		'pixel_id'    => '',
+		// Offer and pricing (v1.5.0). Leave a price blank and the site says "Quoted on the call".
+		'audit_name'     => 'The Time-Back Audit',
+		'audit_price'    => '',
+		'audit_founding' => '',
+		'fix_price'      => '',
+		'call_price'     => '',
+		'plan_price'     => '',
+		'project_price'  => '',
+		'credit_text'    => '',
+		'guarantee_text' => '',
 	);
 }
+
+/* Price helper: returns the set price or a fallback phrase. */
+function by_price( $key, $fallback = 'Quoted on the call' ) {
+	$v = trim( (string) by_opt( $key ) );
+	return $v !== '' ? $v : $fallback;
+}
+function by_has( $key ) { return trim( (string) by_opt( $key ) ) !== ''; }
 
 function by_opt( $key ) {
 	$d = by_defaults();
@@ -55,6 +72,15 @@ add_action( 'customize_register', function ( $wp ) {
 		'webhook_url' => array( 'CRM / automation webhook URL', 'url', 'Optional. Each enquiry is POSTed here as JSON (Zapier, Make, n8n, HubSpot, GoHighLevel...).' ),
 		'ga4_id'      => array( 'Google Analytics 4 ID', 'text', 'e.g. G-XXXXXXXXXX' ),
 		'pixel_id'    => array( 'Meta Pixel ID', 'text', 'For Instagram/Facebook ads. Enquiries are tracked as Lead.' ),
+		'audit_name'     => array( 'Audit name', 'text', 'Shown as the product name of the audit.' ),
+		'audit_price'    => array( 'Audit price', 'text', 'e.g. "$995 + GST". Blank shows "Quoted on the call". Competitor report suggests $995 + GST.' ),
+		'audit_founding' => array( 'Audit founding offer', 'text', 'Optional line under the price, e.g. "Founding price $695 + GST for our first three clients".' ),
+		'fix_price'      => array( 'First fix price', 'text', 'e.g. "from $1,500 + GST". One workflow built in 2 to 3 weeks.' ),
+		'call_price'     => array( 'Missed-call catcher price', 'text', 'e.g. "from $1,200 setup + $150 a month".' ),
+		'plan_price'     => array( 'Keep it working plan price', 'text', 'e.g. "from $300 a month". Report suggests $300 to $600.' ),
+		'project_price'  => array( 'Projects price', 'text', 'e.g. "from $3,000 + GST".' ),
+		'credit_text'    => array( 'Audit credit line', 'text', 'Optional. e.g. "The full audit fee is credited against any build booked within 60 days." Blank hides it.' ),
+		'guarantee_text' => array( 'Guarantee line', 'text', 'Optional. e.g. "If we can\'t find at least 5 hours a week to hand back, you don\'t pay." Blank hides it.' ),
 	);
 	$d = by_defaults();
 	foreach ( $fields as $key => $f ) {
@@ -155,7 +181,9 @@ function by_enquiry_handler() {
 	$f = function ( $k, $max = 200 ) {
 		return isset( $_POST[ $k ] ) ? mb_substr( sanitize_text_field( wp_unslash( $_POST[ $k ] ) ), 0, $max ) : '';
 	};
+	$kind = $f( 'kind', 20 ) === 'report' ? 'report' : 'enquiry';
 	$d = array(
+		'kind'          => $kind,
 		'name'          => $f( 'name', 120 ),
 		'business'      => $f( 'business', 160 ),
 		'email'         => sanitize_email( $f( 'email' ) ),
@@ -168,6 +196,7 @@ function by_enquiry_handler() {
 		'source'        => home_url( '/' ),
 	);
 
+	if ( 'report' === $kind && '' === $d['name'] && is_email( $d['email'] ) ) $d['name'] = ucfirst( strtok( $d['email'], '@' ) );
 	if ( '' === $d['name'] || ! is_email( $d['email'] ) ) $fail( 'Please add your name and a valid email.', 422 );
 	if ( 'yes' !== $d['consent'] ) $fail( 'Please tick the consent box.', 422 );
 
@@ -184,7 +213,7 @@ function by_enquiry_handler() {
 	$post_id = wp_insert_post( array(
 		'post_type'    => 'by_enquiry',
 		'post_status'  => 'private',
-		'post_title'   => $d['name'] . ( $d['business'] ? ' (' . $d['business'] . ')' : '' ),
+		'post_title'   => ( 'report' === $kind ? 'Time-back report: ' : '' ) . $d['name'] . ( $d['business'] ? ' (' . $d['business'] . ')' : '' ),
 		'post_content' => $body,
 	) );
 	if ( $post_id && ! is_wp_error( $post_id ) ) {
@@ -195,8 +224,18 @@ function by_enquiry_handler() {
 
 	// 2. Email
 	$to      = by_opt( 'notify' ) ? array_map( 'trim', explode( ',', by_opt( 'notify' ) ) ) : get_option( 'admin_email' );
-	$subject = 'New ' . by_opt( 'brand' ) . ' enquiry: ' . $d['name'];
+	$subject = ( 'report' === $kind ? 'Time-back report request: ' : 'New ' . by_opt( 'brand' ) . ' enquiry: ' ) . $d['name'];
 	$mailed  = wp_mail( $to, $subject, "New website enquiry\n\nName: {$d['name']}\n" . $body, array( 'Reply-To: ' . $d['name'] . ' <' . $d['email'] . '>' ) );
+
+	// 2b. Calculator lead magnet: send the person their estimate straight away
+	if ( 'report' === $kind ) {
+		$brand = by_opt( 'brand' );
+		$txt   = "Hi {$d['name']},\n\nHere is your time-back estimate from the {$brand} calculator:\n\n{$d['calc_estimate']}\n\n"
+		       . "That is a rough figure based on handing over part of your repetitive admin. " . by_opt( 'audit_name' ) . " turns it into real numbers: your top five time drains in hours and dollars, the fixes ranked, and a fixed price for the first one.\n\n"
+		       . "Reply to this email and tell us what eats your week, or book a free 20-minute call: " . ( by_opt( 'booking_url' ) ? by_opt( 'booking_url' ) : home_url( '/#contact' ) ) . "\n\n{$brand}\n" . by_opt( 'tagline' ) . "\n" . home_url( '/' );
+		$from  = is_array( $to ) ? $to[0] : $to;
+		wp_mail( $d['email'], 'Your time-back estimate from ' . $brand, $txt, array( 'Reply-To: ' . $brand . ' <' . $from . '>' ) );
+	}
 
 	// 3. Webhook (CRM / automation)
 	$hook = by_opt( 'webhook_url' );

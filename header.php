@@ -20,8 +20,9 @@
       <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo" aria-label="Home"><span data-brand><?php echo esc_html( by_opt( 'brand' ) ); ?></span><span class="mark">.</span></a>
       <nav class="nav__links" id="navLinks" aria-label="Main">
         <a href="<?php echo esc_url( $h ); ?>#how">How it works</a>
+        <a href="<?php echo esc_url( $h ); ?>#audit">The audit</a>
         <a href="<?php echo esc_url( $h ); ?>#services">The difference</a>
-        <a href="<?php echo esc_url( $h ); ?>#calculator">Time-back calculator</a>
+        <a href="<?php echo esc_url( $h ); ?>#calculator">Calculator</a>
         <a href="<?php echo esc_url( $h ); ?>#who">Who we help</a>
         <a href="<?php echo esc_url( by_work_url() ); ?>">Our work</a>
         <a href="<?php echo esc_url( $h ); ?>#about">About</a>

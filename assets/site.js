@@ -57,8 +57,9 @@
     $("#shareOut").textContent = sh.value + "%";
     $("#resHours").textContent = fmt(yearHours);
     $("#resDollars").textContent = "$" + fmt(yearDollars);
-    var est = $("#calcEstimate");
-    if (est) est.value = hours + " hrs/wk admin @ $" + rate + "/hr, " + sh.value + "% automatable = ~" + fmt(yearHours) + " hrs / $" + fmt(yearDollars) + " a year";
+    var estText = hours + " hrs/wk admin @ $" + rate + "/hr, " + sh.value + "% automatable = ~" + fmt(yearHours) + " hrs / $" + fmt(yearDollars) + " a year";
+    var est = $("#calcEstimate"); if (est) est.value = estText;
+    var est2 = $("#calcEstimateReport"); if (est2) est2.value = estText;
   }
   if (h) { [h, r, sh].forEach(function (el) { el.addEventListener("input", calc); }); calc(); }
 
@@ -100,6 +101,27 @@
           "You can also email us at <a href=\"mailto:" + (S.email || "") + "\">" + (S.email || "") + "</a>.";
         status.classList.add("is-err");
       })
+      .then(function () { btn.disabled = false; });
+  });
+
+  /* ---------- Calculator report capture ---------- */
+  var rform = $("#reportForm"), rstatus = $("#reportStatus");
+  if (rform) rform.addEventListener("submit", function (e) {
+    e.preventDefault();
+    rstatus.className = "form__status form__status--dark";
+    if (!rform.checkValidity()) { rstatus.textContent = "Add a valid email and tick the box."; rstatus.classList.add("is-err"); rform.reportValidity(); return; }
+    var btn = rform.querySelector("button[type=submit]"); btn.disabled = true; rstatus.textContent = "Sending…";
+    fetch(rform.getAttribute("action"), { method: "POST", body: new FormData(rform), headers: { "Accept": "application/json" } })
+      .then(function (res) { return res.json().then(function (j) { return { ok: res.ok && j.ok, j: j }; }); })
+      .then(function (out) {
+        if (!out.ok) throw new Error(out.j && out.j.error);
+        rform.reset(); calc();
+        rstatus.textContent = "Done. Your estimate is on its way to your inbox.";
+        rstatus.classList.add("is-ok");
+        if (window.gtag) gtag("event", "generate_lead", { method: "calculator" });
+        if (window.fbq) fbq("track", "Lead");
+      })
+      .catch(function (err) { rstatus.textContent = (err && err.message) || "Something went wrong. Try the form below instead."; rstatus.classList.add("is-err"); })
       .then(function () { btn.disabled = false; });
   });
 
