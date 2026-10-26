@@ -322,3 +322,6 @@ function by_work_url() {
 	$id = (int) get_option( 'by_work_page_id' );
 	return $id ? get_permalink( $id ) : home_url( '/our-work/' );
 }
+
+/* One-off image importer (remove after use) */
+require_once get_template_directory() . '/inc/by-import.php';
