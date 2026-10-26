@@ -20,7 +20,7 @@ It is deployed to Hostinger with Git: Hostinger clones this repo into `wp-conten
 | `style.css` | Theme header (name, version) |
 
 ## Brand
-Follows Christie's brand deck (Oct 2026): human-first AI agency, "Smarter systems. More time back.", Gotham-like geometric sans (Plus Jakarta Sans), off-white and near-black, less decoration, more distinction. Palette and final mark still to be decided; `--accent` is black until then.
+Follows Christianna's Brand Identity Board and concept doc (26 Oct 2026, proposed, not yet jointly approved): Electric Blue #0047FF, Black #0A0A0A, Off White #F7F6F3, Stone #E5E0D8, Grey #B7B7B7; bold caps Gotham-style headlines (Plus Jakarta Sans 800 as the stand-in); hand-drawn blue underlines, circles, arrows and handwriting (Caveat) via `by_scribble()` in functions.php; blue campaign panels; black-and-white people photography. Tokens at the top of `assets/site.css`; the v2 overrides are at the bottom.
 
 ## Local testing
 Copy the folder into any WordPress install under `wp-content/themes/better-yet` and activate it.
@@ -29,6 +29,7 @@ Copy the folder into any WordPress install under `wp-content/themes/better-yet` 
 Case-study images are loaded directly from the client sites (heiden.bike, roamorthotics.com.au, stephanieannestudio.com, all on the same Hostinger account), so nothing is uploaded to this site. The URLs live in the `$by_media` array at the top of `page-our-work.php`; swap a path there to change a picture. The Heiden Bike Builder is embedded live (`https://heiden.bike/builder-v2/`), and the Roam and Stephanie sites load in a frame when a visitor clicks "Preview". If a client site ever blocks framing, the poster image and "open" link still work.
 
 ## Versions
+- 2.0.0: restyled to the brand identity board (electric blue, bold caps, hand-drawn marks, blue panels, B&W photos), new headline language, four-step process (Audit, Prescribe, Implement, Manage), B/Y favicon.
 - 1.5.0: productised audit section, ready-made fixes (First Fix, Missed-Call Catcher, Keep It Working), data promise, tools strip, calculator email capture, new FAQ answers. Prices, credit and guarantee lines are Customizer settings (blank shows "Quoted on the call").
 - 1.4.0: Ready Steady Go Kids and Damselfly case studies, plus their home-page cards.
 - 1.3.0: pictures, galleries, live Heiden Bike Builder embed and site previews on Our work; thumbnails on the home-page work cards.

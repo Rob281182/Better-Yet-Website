@@ -4,28 +4,33 @@ get_header(); ?>
   <main id="main">
     <!-- HERO -->
     <section class="hero">
-      <div class="wrap hero__grid">
-        <div>
-          <p class="eyebrow">The human-first AI agency</p>
-          <h1>Smarter systems.<br>More time back.</h1>
-          <p class="lead">We find where your business is losing time and money, then put practical, smarter systems in place to fix it. We're not selling AI for the sake of AI. We're giving people their time back.</p>
-          <div class="hero__cta">
-            <a href="#contact" class="btn js-book">Book a free discovery call <span aria-hidden="true">→</span></a>
-            <a href="#calculator" class="btn btn--ghost">See how much time you could get back</a>
+      <div class="wrap">
+        <?php echo str_replace( 'class="scribble ', 'class="hero__loop scribble ', by_scribble( 'loop' ) ); ?>
+        <div class="hero__grid">
+          <div>
+            <p class="eyebrow">The human-first AI agency</p>
+            <h1>Same work.<br><span class="u">A better<?php echo by_scribble( 'underline' ); ?></span> way.</h1>
+            <p class="lead">We find where your business is losing time and money, then put practical, smarter systems in place to fix it. Not AI for the sake of AI. Time back for the people doing the work.</p>
+            <div class="hero__cta">
+              <a href="#audit" class="btn">Start with the audit <span aria-hidden="true">→</span></a>
+              <a href="#calculator" class="btn btn--ghost">Buy back your time</a>
+            </div>
+            <p class="note hero__note"><span class="hand">Fix what slows you down.</span><?php echo by_scribble( 'arrow' ); ?></p>
           </div>
-        </div>
-        <div class="hero__card" aria-hidden="true">
-          <p class="hero__card-label">A Friday, after</p>
-          <div class="flow">
-            <div class="flow__row"><span class="dot"></span>Invoices sent and chased</div>
-            <div class="flow__line"></div>
-            <div class="flow__row"><span class="dot"></span>Every enquiry answered</div>
-            <div class="flow__line"></div>
-            <div class="flow__row"><span class="dot"></span>Next week's jobs booked</div>
-            <div class="flow__line"></div>
-            <div class="flow__row"><span class="dot"></span>You, finishing early</div>
+          <div class="hero__card" aria-hidden="true">
+            <p class="hero__card-label">A Friday, after</p>
+            <p class="hero__card-head">Make work <span class="u">work<?php echo by_scribble( 'circle' ); ?></span> better.</p>
+            <div class="flow">
+              <div class="flow__row"><span class="dot"></span>Invoices sent and chased</div>
+              <div class="flow__line"></div>
+              <div class="flow__row"><span class="dot"></span>Every enquiry answered</div>
+              <div class="flow__line"></div>
+              <div class="flow__row"><span class="dot"></span>Next week's jobs booked</div>
+              <div class="flow__line"></div>
+              <div class="flow__row"><span class="dot"></span>You, finishing early</div>
+            </div>
+            <div class="hero__stat"><span class="hero__stat-num">0</span> hours of busywork</div>
           </div>
-          <div class="hero__stat"><span class="hero__stat-num">0</span> hours of busywork</div>
         </div>
       </div>
     </section>
@@ -34,7 +39,7 @@ get_header(); ?>
     <section class="section section--tight">
       <div class="wrap">
         <p class="eyebrow">The idea</p>
-        <h2 class="h2">Technology should give you more time to be human.</h2>
+        <h2 class="h2">Less manual. <span class="u">More meaningful.<?php echo by_scribble( 'underline' ); ?></span></h2>
         <div class="problems">
           <article class="problem">
             <p class="problem__kicker">The commercial value</p>
@@ -48,6 +53,7 @@ get_header(); ?>
           </article>
         </div>
         <p class="statement">Still spending Fridays chasing invoices? <em>There's a better way.</em></p>
+        <p class="note"><span class="hand hand--sm">Technology should give you more time to be human.</span></p>
       </div>
     </section>
 
@@ -55,25 +61,31 @@ get_header(); ?>
     <section class="section section--alt" id="how">
       <div class="wrap">
         <p class="eyebrow">How it works</p>
-        <h2 class="h2">Find it. Fix it. Keep it working.</h2>
+        <h2 class="h2">Find it. Fix it. <span class="u">Keep it working.<?php echo by_scribble( 'underline' ); ?></span></h2>
         <ol class="steps">
           <li class="step">
             <span class="step__num">01</span>
             <h3>Audit</h3>
-            <p>We find the wasted time, costs and missed opportunities in how your business runs today, and give you a plain-English plan to fix them.</p>
+            <p>We find the wasted time, costs and missed opportunities in how your business runs today.</p>
             <span class="tag">One-off fee</span>
           </li>
           <li class="step">
             <span class="step__num">02</span>
-            <h3>Implement</h3>
-            <p>We put practical, smarter systems in place: connected apps, automatic follow-up, booking, quoting and the reporting you actually need.</p>
-            <span class="tag">Project fee</span>
+            <h3>Prescribe</h3>
+            <p>A plain-English plan: what to fix first, what it costs, what it gives back, and what to leave alone.</p>
+            <span class="tag">In the report</span>
           </li>
           <li class="step">
             <span class="step__num">03</span>
+            <h3>Implement</h3>
+            <p>We put smarter systems in place: connected apps, automatic follow-up, booking, quoting and the reporting you actually need.</p>
+            <span class="tag">Fixed price</span>
+          </li>
+          <li class="step">
+            <span class="step__num">04</span>
             <h3>Manage</h3>
-            <p>We maintain, improve and support everything over time, so it keeps working while you get on with the business.</p>
-            <span class="tag">Monthly retainer</span>
+            <p>We keep it working, improve it and support you over time, so you get on with the business.</p>
+            <span class="tag">Monthly plan</span>
           </li>
         </ol>
         <p class="complementary"><strong>Complementary services:</strong> digital ads &middot; CRM &middot; lead generation &middot; websites &middot; SEO</p>
@@ -123,7 +135,8 @@ get_header(); ?>
     <section class="section section--alt" id="fixes">
       <div class="wrap">
         <p class="eyebrow">Ready-made fixes</p>
-        <h2 class="h2">Small, fixed-price jobs that pay for themselves.</h2>
+        <h2 class="h2">Smart systems. <span class="u">Real results.<?php echo by_scribble( 'underline' ); ?></span></h2>
+        <p class="note"><span class="hand hand--sm">Small, fixed-price jobs that pay for themselves.</span></p>
         <p class="lead">You don't have to start with a big project. These are the fixes we're asked for most, scoped and priced up front.</p>
         <div class="packages">
           <article class="package">
@@ -172,7 +185,8 @@ get_header(); ?>
       <div class="wrap calc">
         <div>
           <p class="eyebrow eyebrow--light">Time-back calculator</p>
-          <h2 class="h2">How much time could you get back?</h2>
+          <h2 class="h2">Buy back <span class="u">your time.<?php echo by_scribble( 'underline' ); ?></span></h2>
+          <p class="note"><span class="hand hand--light">Do the maths →</span></p>
           <p class="muted-light">A rough estimate based on handing over part of your repetitive admin. Your audit gives you the real numbers.</p>
           <form class="calc__form" id="calcForm" onsubmit="return false">
             <label>Hours a week spent on admin and busywork
@@ -215,7 +229,7 @@ get_header(); ?>
     <section class="section" id="who">
       <div class="wrap">
         <p class="eyebrow">Who we help</p>
-        <h2 class="h2">Different businesses. Same feeling.</h2>
+        <h2 class="h2">Different businesses. <span class="u">Same feeling.<?php echo by_scribble( 'underline' ); ?></span></h2>
         <div class="customers">
           <article class="customer"><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
           <article class="customer"><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
@@ -316,7 +330,7 @@ get_header(); ?>
       <div class="wrap contact">
         <div>
           <p class="eyebrow">Get started</p>
-          <h2 class="h2">Less time doing what you have to. More time doing what you love.</h2>
+          <h2 class="h2">Less time doing what you have to. <span class="u">More time doing what you love.<?php echo by_scribble( 'underline' ); ?></span></h2>
           <p>Tell us a little about your business and where the time goes. We'll get back to you within one business day to set up a free 20-minute discovery call.</p>
           <div class="contact__alt">
             <a href="#" class="btn js-book js-book-direct" hidden>Book a discovery call now <span aria-hidden="true">→</span></a>

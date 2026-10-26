@@ -83,7 +83,7 @@ get_header(); ?>
     <section class="hero hero--page">
       <div class="wrap">
         <p class="eyebrow">Our work</p>
-        <h1>Real businesses. Real time back.</h1>
+        <h1>Real businesses. <span class="u">Real time back.<?php echo by_scribble( 'underline' ); ?></span></h1>
         <p class="lead">Five businesses we helped set up and streamline, from a one-person studio to a national franchise. Different trades, same result: the busywork runs itself, and the owner gets on with the work they love.</p>
         <div class="hero__strip" aria-hidden="true">
           <img src="<?php echo esc_url( $h['base'] . $h['strip'][0][0] ); ?>" alt="" loading="eager">
@@ -336,6 +336,7 @@ get_header(); ?>
     <!-- CTA -->
     <section class="section section--dark">
       <div class="wrap cta">
+        <span class="hand hand--light">Progress looks good on you.</span>
         <h2 class="h2">What would you do with the time back?</h2>
         <p class="muted-light">Tell us where the hours go. We'll find the quick wins in a free 20-minute discovery call.</p>
         <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="btn btn--light js-book">Book a discovery call <span aria-hidden="true">→</span></a>

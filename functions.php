@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '1.5.0' );
+define( 'BY_VERSION', '2.0.0' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -97,6 +97,19 @@ add_action( 'customize_register', function ( $wp ) {
 	}
 } );
 
+/* ---------- Hand-drawn blue marks (brand board: scribbles, circles, arrows) ---------- */
+function by_scribble( $kind ) {
+	$a = 'class="scribble scribble--' . esc_attr( $kind ) . '" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"';
+	switch ( $kind ) {
+		case 'underline': return '<svg ' . $a . ' viewBox="0 0 300 24" preserveAspectRatio="none"><path stroke-width="5" d="M4 14c48-8 96-10 150-8 44 1 90 5 142 2M18 20c70-5 150-8 262-6"/></svg>';
+		case 'circle':    return '<svg ' . $a . ' viewBox="0 0 320 120" preserveAspectRatio="none"><path stroke-width="5" d="M232 14C150 2 30 10 16 54c-12 38 70 60 160 56 92-4 136-34 128-60-6-22-48-36-110-40"/></svg>';
+		case 'arrow':     return '<svg ' . $a . ' viewBox="0 0 120 60"><path stroke-width="4" d="M6 44C34 18 70 10 110 22M92 10l20 12-16 16"/></svg>';
+		case 'loop':      return '<svg ' . $a . ' viewBox="0 0 400 200"><path stroke-width="4" d="M20 150c40-90 110-130 150-100 36 28-20 90-60 80-44-10 4-90 70-100 70-10 120 40 150 80 24 32 10 70-40 60-46-10-30-70 30-80 50-8 70 40 60 90"/></svg>';
+		case 'star':      return '<svg ' . $a . ' viewBox="0 0 60 60"><path stroke-width="3.5" d="M30 4l6 20 20 2-16 12 6 20-16-12-16 12 6-20L4 26l20-2z"/></svg>';
+	}
+	return '';
+}
+
 /* ---------- Theme setup and assets ---------- */
 add_action( 'after_setup_theme', function () {
 	add_theme_support( 'title-tag' );
@@ -113,7 +126,7 @@ add_filter( 'document_title_separator', function () { return '|'; } );
 
 add_action( 'wp_enqueue_scripts', function () {
 	$dir = get_template_directory_uri() . '/assets';
-	wp_enqueue_style( 'by-fonts', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap', array(), null );
+	wp_enqueue_style( 'by-fonts', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@500;600&display=swap', array(), null );
 	wp_enqueue_style( 'by-site', $dir . '/site.css', array( 'by-fonts' ), BY_VERSION );
 	wp_enqueue_script( 'by-site', $dir . '/site.js', array(), BY_VERSION, true );
 	$site = array(
