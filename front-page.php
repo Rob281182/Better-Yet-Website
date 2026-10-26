@@ -37,6 +37,12 @@ get_header(); ?>
       </div>
     </section>
 
+    <div class="wrap">
+      <div class="strip strip--3" aria-hidden="true">
+        <?php echo by_asset_img( 'ref-gallery.jpg' ); echo by_asset_img( 'ref-desk.jpg' ); echo by_asset_img( 'ref-cards.jpg' ); ?>
+      </div>
+    </div>
+
     <!-- THE IDEA -->
     <section class="section section--tight">
       <div class="wrap">
@@ -58,6 +64,12 @@ get_header(); ?>
         <p class="note"><span class="hand hand--sm">Technology should give you more time to be human.</span></p>
       </div>
     </section>
+
+    <div class="wrap">
+      <div class="strip strip--2" aria-hidden="true">
+        <?php echo by_asset_img( 'ref-acne.jpg' ); echo by_asset_img( 'ref-wrapped.jpg' ); ?>
+      </div>
+    </div>
 
     <!-- HOW IT WORKS -->
     <section class="section section--alt" id="how">
@@ -134,6 +146,12 @@ get_header(); ?>
     </section>
 
     <!-- READY-MADE FIXES (v1.5.0) -->
+    <div class="wrap">
+      <div class="strip strip--2 strip--alt" aria-hidden="true">
+        <?php echo by_asset_img( 'ref-match.jpg' ); echo by_asset_img( 'ref-playmake.jpg' ); ?>
+      </div>
+    </div>
+
     <section class="section section--alt" id="fixes">
       <div class="wrap">
         <p class="eyebrow">Ready-made fixes</p>
@@ -241,10 +259,10 @@ get_header(); ?>
         <p class="eyebrow">Who we help</p>
         <h2 class="h2">Different businesses. <span class="u">Same feeling.<?php echo by_scribble( 'underline' ); ?></span></h2>
         <div class="customers">
-          <article class="customer"><?php echo by_photo( 'hf-05', 'An artist checking orders on a laptop in her studio', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
-          <article class="customer"><?php echo by_asset_img( 'ref-desk-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
-          <article class="customer"><?php echo by_asset_img( 'ref-cards-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
-          <article class="customer"><?php echo by_photo( 'hf-02', 'A clinic receptionist laughing with a patient', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
+          <article class="customer"><?php echo by_asset_img( 'ref-guggenheim.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
+          <article class="customer"><?php echo by_asset_img( 'ref-eternal.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
+          <article class="customer"><?php echo by_asset_img( 'ref-vibe.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
+          <article class="customer"><?php echo by_asset_img( 'ref-created.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
         </div>
         <p class="tools"><span class="tools__label">Works with the tools you already use:</span> Xero &middot; MYOB &middot; ServiceM8 &middot; Tradify &middot; Cliniko &middot; Halaxy &middot; Shopify &middot; WooCommerce &middot; HubSpot &middot; Google Workspace &middot; Microsoft 365 &middot; and most things with an app</p>
       </div>

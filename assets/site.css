@@ -514,3 +514,15 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 .hero--photo .u .scribble, .hero--photo .hand, .hero--photo .note .scribble { color: var(--accent); }
 .hero--photo .hero__loop { opacity: .7; }
 @media (max-width: 640px) { .hero__shade { background: linear-gradient(180deg, rgba(10,10,10,.88) 0%, rgba(10,10,10,.7) 100%); } }
+
+/* Photo strips between text blocks (Rob, 26 Oct 2026) */
+.strip { display: grid; gap: 14px; margin: 0 0 80px; }
+.strip--3 { grid-template-columns: 1fr 1fr 1fr; margin-top: 48px; }
+.strip--2 { grid-template-columns: 1.15fr 1fr; }
+.strip img { width: 100%; height: 400px; object-fit: cover; object-position: center 30%; display: block; border-radius: var(--radius); background: var(--bg-alt); }
+.strip--2 img { height: 460px; }
+.strip--alt { margin: 0; padding: 0 0 72px; }
+.section--alt + .wrap .strip--alt, .wrap .strip--alt { margin-top: 0; }
+.customer__img--sq { object-position: center top; }
+@media (max-width: 960px) { .strip img, .strip--2 img { height: 300px; } }
+@media (max-width: 640px) { .strip--3 { grid-template-columns: 1fr 1fr; } .strip--3 img:last-child { grid-column: span 2; } .strip--2 { grid-template-columns: 1fr; } .strip img, .strip--2 img { height: 240px; } .strip { margin-bottom: 48px; } }

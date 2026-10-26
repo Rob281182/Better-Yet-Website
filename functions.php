@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.0.6' );
+define( 'BY_VERSION', '2.0.7' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
