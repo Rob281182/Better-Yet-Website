@@ -7,11 +7,11 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.0.7' );
+define( 'BY_VERSION', '2.1.0' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
-	return array(
+	return apply_filters( 'by_defaults', array(
 		'brand'       => 'Better Yet',
 		'tagline'     => 'Smarter systems. More time back.',
 		'email'       => 'hello@betteryet.com.au',
@@ -34,7 +34,7 @@ function by_defaults() {
 		'project_price'  => '',
 		'credit_text'    => '',
 		'guarantee_text' => '',
-	);
+	) );
 }
 
 /* Price helper: returns the set price or a fallback phrase. */
@@ -96,6 +96,8 @@ add_action( 'customize_register', function ( $wp ) {
 		) );
 	}
 } );
+
+require_once get_template_directory() . '/inc/booking.php';
 
 /* ---------- Hand-drawn blue marks (brand board: scribbles, circles, arrows) ---------- */
 function by_scribble( $kind ) {

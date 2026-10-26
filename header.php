@@ -27,7 +27,7 @@
         <a href="<?php echo esc_url( by_work_url() ); ?>">Our work</a>
         <a href="<?php echo esc_url( $h ); ?>#about">About</a>
         <a href="<?php echo esc_url( $h ); ?>#faq">FAQ</a>
-        <a href="<?php echo esc_url( $h ); ?>#contact" class="btn btn--sm js-book">Book a call</a>
+        <a href="<?php echo esc_url( by_book_url() ); ?>" class="btn btn--sm js-book">Book a call</a>
       </nav>
       <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
         <span></span><span></span>

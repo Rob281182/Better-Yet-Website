@@ -138,7 +138,7 @@ get_header(); ?>
               <?php if ( by_has( 'guarantee_text' ) ) : ?><li><?php echo esc_html( by_opt( 'guarantee_text' ) ); ?></li><?php endif; ?>
             </ul>
             <?php endif; ?>
-            <a href="#contact" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
+            <a href="<?php echo esc_url( by_book_url() . '?call=audit' ); ?>" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
             <p class="audit__small">Not sure yet? Start with a free 20-minute discovery call.</p>
           </aside>
         </div>
@@ -361,7 +361,7 @@ get_header(); ?>
           <h2 class="h2">Less time doing what you have to. <span class="u">More time doing what you love.<?php echo by_scribble( 'underline' ); ?></span></h2>
           <p>Tell us a little about your business and where the time goes. We'll get back to you within one business day to set up a free 20-minute discovery call.</p>
           <div class="contact__alt">
-            <a href="#" class="btn js-book js-book-direct" hidden>Book a discovery call now <span aria-hidden="true">→</span></a>
+            <a href="<?php echo esc_url( by_book_url() ); ?>" class="btn js-book">Pick a time for a free call <span aria-hidden="true">→</span></a>
             <p class="contact__line">Email <a href="#" data-email></a></p>
             <p class="contact__line" data-phone-wrap hidden>Phone <a href="#" data-phone></a></p>
           </div>

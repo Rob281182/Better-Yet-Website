@@ -339,7 +339,7 @@ get_header(); ?>
         <span class="hand hand--light">Progress looks good on you.</span>
         <h2 class="h2">What would you do with the time back?</h2>
         <p class="muted-light">Tell us where the hours go. We'll find the quick wins in a free 20-minute discovery call.</p>
-        <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="btn btn--light js-book">Book a discovery call <span aria-hidden="true">→</span></a>
+        <a href="<?php echo esc_url( by_book_url() ); ?>" class="btn btn--light js-book">Book a discovery call <span aria-hidden="true">→</span></a>
       </div>
     </section>
   </main>

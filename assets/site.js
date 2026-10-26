@@ -179,3 +179,91 @@
     img.addEventListener("error", miss);
   });
 })();
+
+/* ---------- Booking widget (/book/) ---------- */
+(function () {
+  var form = document.getElementById("bookWidget");
+  if (!form) return;
+  var S = window.SITE || {};
+  var all = {}; try { all = JSON.parse(form.getAttribute("data-slots") || "{}"); } catch (e) {}
+  var daysEl = document.getElementById("bookDays"), timesEl = document.getElementById("bookTimes");
+  var dateIn = document.getElementById("bookDate"), timeIn = document.getElementById("bookTime");
+  var summary = document.getElementById("bookSummary"), submit = document.getElementById("bookSubmit"), status = document.getElementById("bookStatus");
+  var typeName = function () { var r = form.querySelector("input[name=call_type]:checked"); return r ? r.closest(".bookw__type").querySelector("strong").textContent : ""; };
+  var type = function () { var r = form.querySelector("input[name=call_type]:checked"); return r ? r.value : "discovery"; };
+  var picked = { date: "", time: "" };
+
+  function renderDays() {
+    var slots = all[type()] || {}, keys = Object.keys(slots);
+    daysEl.innerHTML = "";
+    if (!keys.length) { daysEl.innerHTML = "<p class=\"bookw__hint\">No times open right now. Email us and we'll find one.</p>"; return; }
+    keys.forEach(function (k) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "bookw__day"; b.setAttribute("role", "option");
+      b.innerHTML = "<span>" + slots[k].label.split(" ")[0] + "</span><small>" + slots[k].label.split(" ").slice(1).join(" ") + "</small>";
+      b.addEventListener("click", function () { pickDay(k); });
+      daysEl.appendChild(b);
+    });
+    if (picked.date && slots[picked.date]) pickDay(picked.date); else { picked.date = ""; picked.time = ""; timesEl.innerHTML = "<p class=\"bookw__hint\">Choose a day first.</p>"; update(); }
+  }
+  function pickDay(k) {
+    picked.date = k; picked.time = "";
+    var keys = Object.keys(all[type()]);
+    Array.prototype.forEach.call(daysEl.children, function (b, i) { b.classList.toggle("is-on", keys[i] === k); b.setAttribute("aria-selected", keys[i] === k); });
+    var day = all[type()][k];
+    timesEl.innerHTML = "";
+    day.slots.forEach(function (s) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "bookw__time"; b.textContent = s.label; b.setAttribute("role", "option");
+      b.addEventListener("click", function () {
+        picked.time = s.t;
+        Array.prototype.forEach.call(timesEl.children, function (x) { x.classList.toggle("is-on", x === b); x.setAttribute("aria-selected", x === b); });
+        update();
+        var d = form.querySelector("[data-step='4']"); if (d && window.innerWidth < 960) d.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      timesEl.appendChild(b);
+    });
+    update();
+  }
+  function update() {
+    dateIn.value = picked.date; timeIn.value = picked.time;
+    var ok = picked.date && picked.time;
+    submit.disabled = !ok;
+    if (ok) {
+      var day = all[type()][picked.date], slot = day.slots.filter(function (s) { return s.t === picked.time; })[0];
+      summary.hidden = false; summary.textContent = typeName() + ": " + day.full + " at " + (slot ? slot.label : picked.time);
+    } else { summary.hidden = true; }
+  }
+  Array.prototype.forEach.call(form.querySelectorAll("input[name=call_type]"), function (r) { r.addEventListener("change", renderDays); });
+  renderDays();
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    status.className = "form__status";
+    if (!picked.date || !picked.time) { status.textContent = "Pick a day and a time first."; status.classList.add("is-err"); return; }
+    if (!form.checkValidity()) { status.textContent = "Please add your name, email, phone and tick the box."; status.classList.add("is-err"); form.reportValidity(); return; }
+    submit.disabled = true; status.textContent = "Booking…";
+    fetch(form.getAttribute("action"), { method: "POST", body: new FormData(form), headers: { "Accept": "application/json" } })
+      .then(function (res) { return res.json().then(function (j) { return { ok: res.ok && j.ok, j: j, code: res.status }; }); })
+      .then(function (out) {
+        if (!out.ok) {
+          if (out.code === 409) { // slot gone: drop it locally and re-render
+            var d = all[type()][picked.date]; if (d) d.slots = d.slots.filter(function (s) { return s.t !== picked.time; });
+            picked.time = ""; renderDays();
+          }
+          throw new Error(out.j && out.j.error);
+        }
+        form.hidden = true;
+        var done = document.getElementById("bookDone"); done.hidden = false;
+        document.getElementById("bookDoneText").textContent = out.j.type + ", " + out.j.label + ".";
+        document.getElementById("bookDoneHow").textContent = out.j.how || "";
+        var ics = document.getElementById("bookIcs"); ics.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(out.j.ics || "");
+        done.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (window.gtag) gtag("event", "generate_lead", { method: "booking" });
+        if (window.fbq) fbq("track", "Schedule");
+      })
+      .catch(function (err) {
+        status.innerHTML = (err && err.message ? err.message + " " : "Something went wrong. ") + "You can also email <a href=\"mailto:" + (S.email || "") + "\">" + (S.email || "") + "</a>.";
+        status.classList.add("is-err");
+      })
+      .then(function () { submit.disabled = !(picked.date && picked.time); });
+  });
+})();
