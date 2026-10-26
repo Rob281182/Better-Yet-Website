@@ -3,7 +3,9 @@
 get_header(); ?>
   <main id="main">
     <!-- HERO -->
-    <section class="hero">
+    <section class="hero hero--photo">
+      <?php echo by_asset_img( 'ref-hero.jpg', '', 'hero__bg', 'eager' ); ?>
+      <div class="hero__shade" aria-hidden="true"></div>
       <div class="wrap">
         <?php echo str_replace( 'class="scribble ', 'class="hero__loop scribble ', by_scribble( 'loop' ) ); ?>
         <div class="hero__grid">
@@ -34,14 +36,6 @@ get_header(); ?>
         </div>
       </div>
     </section>
-
-    <!-- BANNER (reference image from the mood board, Rob's pick) -->
-    <div class="banner">
-      <?php echo by_asset_img( 'ref-banner.jpg', 'Black and white portrait with a hand-drawn blue scribble', 'banner__img', 'eager' ); ?>
-      <div class="wrap banner__inner">
-        <p class="banner__note"><span class="hand hand--light">Buy back your time.</span></p>
-      </div>
-    </div>
 
     <!-- THE IDEA -->
     <section class="section section--tight">
