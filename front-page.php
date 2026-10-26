@@ -173,6 +173,14 @@ get_header(); ?>
       </div>
     </section>
 
+    <!-- BANNER 2 (mood-board scribble) -->
+    <div class="banner banner--short">
+      <?php echo by_asset_img( 'ref-scribble-banner.jpg', 'Hand-drawn electric blue scribble', 'banner__img' ); ?>
+      <div class="wrap banner__inner">
+        <p class="banner__note banner__note--ink"><span class="hand hand--light">Make work work better.</span></p>
+      </div>
+    </div>
+
     <!-- THE DIFFERENCE -->
     <section class="section" id="services">
       <div class="wrap difference">
@@ -242,7 +250,7 @@ get_header(); ?>
           <article class="customer"><?php echo by_photo( 'hf-05', 'An artist checking orders on a laptop in her studio', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
           <article class="customer"><?php echo by_asset_img( 'ref-desk-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
           <article class="customer"><?php echo by_asset_img( 'ref-cards-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
-          <article class="customer"><?php echo by_asset_img( 'ref-scribble-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
+          <article class="customer"><?php echo by_photo( 'hf-02', 'A clinic receptionist laughing with a patient', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
         </div>
         <p class="tools"><span class="tools__label">Works with the tools you already use:</span> Xero &middot; MYOB &middot; ServiceM8 &middot; Tradify &middot; Cliniko &middot; Halaxy &middot; Shopify &middot; WooCommerce &middot; HubSpot &middot; Google Workspace &middot; Microsoft 365 &middot; and most things with an app</p>
       </div>
