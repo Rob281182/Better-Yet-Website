@@ -32,6 +32,11 @@ get_header(); ?>
             <div class="hero__stat"><span class="hero__stat-num">0</span> hours of busywork</div>
           </div>
         </div>
+        <?php if ( by_img( 'hf-01' ) ) : ?>
+        <div class="hero__strip hero__strip--home" aria-hidden="true">
+          <?php echo by_photo( 'hf-01', '', '', 'eager' ); echo by_photo( 'hf-02', '', '', 'eager' ); echo by_photo( 'hf-03', '', '', 'eager' ); ?>
+        </div>
+        <?php endif; ?>
       </div>
     </section>
 
@@ -231,10 +236,10 @@ get_header(); ?>
         <p class="eyebrow">Who we help</p>
         <h2 class="h2">Different businesses. <span class="u">Same feeling.<?php echo by_scribble( 'underline' ); ?></span></h2>
         <div class="customers">
-          <article class="customer"><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
-          <article class="customer"><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
-          <article class="customer"><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
-          <article class="customer"><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
+          <article class="customer"><?php echo by_photo( 'hf-05', 'An artist checking orders on a laptop in her studio', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
+          <article class="customer"><?php echo by_photo( 'hf-06', 'A cafe owner reading a tablet at the coffee machine', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
+          <article class="customer"><?php echo by_photo( 'hf-07', 'A physio writing notes between patients', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
+          <article class="customer"><?php echo by_photo( 'hf-08', 'An electrician on a ladder with an apprentice below', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
         </div>
         <p class="tools"><span class="tools__label">Works with the tools you already use:</span> Xero &middot; MYOB &middot; ServiceM8 &middot; Tradify &middot; Cliniko &middot; Halaxy &middot; Shopify &middot; WooCommerce &middot; HubSpot &middot; Google Workspace &middot; Microsoft 365 &middot; and most things with an app</p>
       </div>
@@ -266,6 +271,7 @@ get_header(); ?>
           <p>Our test for every recommendation is simple: does it save you time, save you money, or give you more of your life back? If not, we won't suggest it.</p>
         </div>
         <div class="people">
+          <?php echo by_photo( 'hf-09', 'Two business partners working through a plan at a kitchen table', 'about__img' ); ?>
           <div class="person">
             <h3>Christianna</h3>
             <p>Brand, positioning, marketing, digital ads and growth strategy.</p>

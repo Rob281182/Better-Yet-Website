@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.0.0' );
+define( 'BY_VERSION', '2.0.1' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -323,5 +323,15 @@ function by_work_url() {
 	return $id ? get_permalink( $id ) : home_url( '/our-work/' );
 }
 
-/* One-off image importer (remove after use) */
-require_once get_template_directory() . '/inc/by-import.php';
+/* ---------- Brand photos (generated in Higgsfield, stored in wp-content/uploads/better-yet/) ---------- */
+function by_img( $name ) {
+	$up = wp_upload_dir();
+	$rel = 'better-yet/' . $name . '.jpg';
+	if ( ! file_exists( trailingslashit( $up['basedir'] ) . $rel ) ) { return ''; }
+	return trailingslashit( $up['baseurl'] ) . $rel;
+}
+function by_photo( $name, $alt = '', $class = '', $loading = 'lazy' ) {
+	$src = by_img( $name );
+	if ( ! $src ) { return ''; }
+	return '<img class="' . esc_attr( $class ) . '" src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '" loading="' . esc_attr( $loading ) . '">';
+}
