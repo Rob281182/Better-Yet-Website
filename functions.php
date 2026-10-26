@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.0.3' );
+define( 'BY_VERSION', '2.0.4' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -145,7 +145,9 @@ add_action( 'wp_enqueue_scripts', function () {
 } );
 
 add_action( 'wp_head', function () {
-	echo '<link rel="icon" href="' . esc_url( get_template_directory_uri() . '/assets/favicon.svg' ) . '" type="image/svg+xml">' . "\n";
+	echo '<link rel="icon" href="' . esc_url( get_template_directory_uri() . '/assets/favicon.svg?v=' . BY_VERSION ) . '" type="image/svg+xml">' . "\n";
+	echo '<link rel="icon" href="' . esc_url( get_template_directory_uri() . '/assets/favicon-32.png?v=' . BY_VERSION ) . '" type="image/png" sizes="32x32">' . "\n";
+	echo '<link rel="apple-touch-icon" href="' . esc_url( get_template_directory_uri() . '/assets/favicon-180.png?v=' . BY_VERSION ) . '">' . "\n";
 }, 2 );
 
 /* ---------- Enquiries (saved in the dashboard) ---------- */

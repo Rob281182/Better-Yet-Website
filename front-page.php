@@ -65,12 +65,6 @@ get_header(); ?>
       </div>
     </section>
 
-    <div class="wrap">
-      <div class="hero__strip hero__strip--two" aria-hidden="true">
-        <?php echo by_asset_img( 'ref-desk.jpg' ); echo by_asset_img( 'ref-cards.jpg' ); ?>
-      </div>
-    </div>
-
     <!-- HOW IT WORKS -->
     <section class="section section--alt" id="how">
       <div class="wrap">
@@ -245,7 +239,7 @@ get_header(); ?>
         <p class="eyebrow">Who we help</p>
         <h2 class="h2">Different businesses. <span class="u">Same feeling.<?php echo by_scribble( 'underline' ); ?></span></h2>
         <div class="customers">
-          <article class="customer"><?php echo by_asset_img( 'ref-face-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
+          <article class="customer"><?php echo by_photo( 'hf-05', 'An artist checking orders on a laptop in her studio', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
           <article class="customer"><?php echo by_asset_img( 'ref-desk-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
           <article class="customer"><?php echo by_asset_img( 'ref-cards-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
           <article class="customer"><?php echo by_asset_img( 'ref-scribble-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
