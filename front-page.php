@@ -32,13 +32,18 @@ get_header(); ?>
             <div class="hero__stat"><span class="hero__stat-num">0</span> hours of busywork</div>
           </div>
         </div>
-        <?php if ( by_img( 'hf-01' ) ) : ?>
-        <div class="hero__strip hero__strip--home" aria-hidden="true">
-          <?php echo by_photo( 'hf-01', '', '', 'eager' ); echo by_photo( 'hf-02', '', '', 'eager' ); echo by_photo( 'hf-03', '', '', 'eager' ); ?>
-        </div>
-        <?php endif; ?>
       </div>
     </section>
+
+    <?php if ( by_img( 'hf-01' ) ) : ?>
+    <!-- BANNER -->
+    <div class="banner">
+      <?php echo by_photo( 'hf-01', 'A tradie checking his phone in the ute before the first job', 'banner__img', 'eager' ); ?>
+      <div class="wrap banner__inner">
+        <p class="banner__note"><span class="hand hand--light">Buy back your time.</span></p>
+      </div>
+    </div>
+    <?php endif; ?>
 
     <!-- THE IDEA -->
     <section class="section section--tight">
@@ -61,6 +66,14 @@ get_header(); ?>
         <p class="note"><span class="hand hand--sm">Technology should give you more time to be human.</span></p>
       </div>
     </section>
+
+    <?php if ( by_img( 'hf-02' ) ) : ?>
+    <div class="wrap">
+      <div class="hero__strip hero__strip--two" aria-hidden="true">
+        <?php echo by_photo( 'hf-02' ); echo by_photo( 'hf-03' ); ?>
+      </div>
+    </div>
+    <?php endif; ?>
 
     <!-- HOW IT WORKS -->
     <section class="section section--alt" id="how">
