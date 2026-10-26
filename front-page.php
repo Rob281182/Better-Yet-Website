@@ -35,15 +35,13 @@ get_header(); ?>
       </div>
     </section>
 
-    <?php if ( by_img( 'hf-01' ) ) : ?>
-    <!-- BANNER -->
+    <!-- BANNER (reference image from the mood board, Rob's pick) -->
     <div class="banner">
-      <?php echo by_photo( 'hf-01', 'A tradie checking his phone in the ute before the first job', 'banner__img', 'eager' ); ?>
+      <?php echo by_asset_img( 'ref-banner.jpg', 'Black and white portrait with a hand-drawn blue scribble', 'banner__img', 'eager' ); ?>
       <div class="wrap banner__inner">
         <p class="banner__note"><span class="hand hand--light">Buy back your time.</span></p>
       </div>
     </div>
-    <?php endif; ?>
 
     <!-- THE IDEA -->
     <section class="section section--tight">
@@ -67,13 +65,11 @@ get_header(); ?>
       </div>
     </section>
 
-    <?php if ( by_img( 'hf-02' ) ) : ?>
     <div class="wrap">
       <div class="hero__strip hero__strip--two" aria-hidden="true">
-        <?php echo by_photo( 'hf-02' ); echo by_photo( 'hf-03' ); ?>
+        <?php echo by_asset_img( 'ref-desk.jpg' ); echo by_asset_img( 'ref-cards.jpg' ); ?>
       </div>
     </div>
-    <?php endif; ?>
 
     <!-- HOW IT WORKS -->
     <section class="section section--alt" id="how">
@@ -249,10 +245,10 @@ get_header(); ?>
         <p class="eyebrow">Who we help</p>
         <h2 class="h2">Different businesses. <span class="u">Same feeling.<?php echo by_scribble( 'underline' ); ?></span></h2>
         <div class="customers">
-          <article class="customer"><?php echo by_photo( 'hf-05', 'An artist checking orders on a laptop in her studio', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
-          <article class="customer"><?php echo by_photo( 'hf-06', 'A cafe owner reading a tablet at the coffee machine', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
-          <article class="customer"><?php echo by_photo( 'hf-07', 'A physio writing notes between patients', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
-          <article class="customer"><?php echo by_photo( 'hf-08', 'An electrician on a ladder with an apprentice below', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
+          <article class="customer"><?php echo by_asset_img( 'ref-face-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Artists</p><p class="customer__line">More creating.<br>Less invoicing.</p></article>
+          <article class="customer"><?php echo by_asset_img( 'ref-desk-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Small business</p><p class="customer__line">Less admin.<br>More growing.</p></article>
+          <article class="customer"><?php echo by_asset_img( 'ref-cards-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Healthcare</p><p class="customer__line">More patients.<br>Less paperwork.</p></article>
+          <article class="customer"><?php echo by_asset_img( 'ref-scribble-sq.jpg', '', 'customer__img customer__img--sq' ); ?><p class="customer__kicker">Trades</p><p class="customer__line">More tools.<br>Less chasing invoices.</p></article>
         </div>
         <p class="tools"><span class="tools__label">Works with the tools you already use:</span> Xero &middot; MYOB &middot; ServiceM8 &middot; Tradify &middot; Cliniko &middot; Halaxy &middot; Shopify &middot; WooCommerce &middot; HubSpot &middot; Google Workspace &middot; Microsoft 365 &middot; and most things with an app</p>
       </div>
@@ -284,7 +280,6 @@ get_header(); ?>
           <p>Our test for every recommendation is simple: does it save you time, save you money, or give you more of your life back? If not, we won't suggest it.</p>
         </div>
         <div class="people">
-          <?php echo by_photo( 'hf-09', 'Two business partners working through a plan at a kitchen table', 'about__img' ); ?>
           <div class="person">
             <h3>Christianna</h3>
             <p>Brand, positioning, marketing, digital ads and growth strategy.</p>

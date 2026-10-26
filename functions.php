@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.0.2' );
+define( 'BY_VERSION', '2.0.3' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -329,6 +329,10 @@ function by_img( $name ) {
 	$rel = 'better-yet/' . $name . '.jpg';
 	if ( ! file_exists( trailingslashit( $up['basedir'] ) . $rel ) ) { return ''; }
 	return trailingslashit( $up['baseurl'] ) . $rel;
+}
+function by_asset_img( $file, $alt = '', $class = '', $loading = 'lazy' ) {
+	$src = get_template_directory_uri() . '/assets/img/' . $file;
+	return '<img class="' . esc_attr( $class ) . '" src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '" loading="' . esc_attr( $loading ) . '">';
 }
 function by_photo( $name, $alt = '', $class = '', $loading = 'lazy' ) {
 	$src = by_img( $name );

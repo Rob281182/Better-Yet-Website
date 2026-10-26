@@ -472,13 +472,9 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 .cta .hand { display: block; margin: 0 auto 10px; transform: rotate(-3deg); }
 .statement { font-family: var(--font-head); font-weight: 800; text-transform: uppercase; font-size: clamp(1.4rem, 3vw, 2.4rem); letter-spacing: -0.03em; line-height: 1; margin: 48px 0 0; max-width: 20ch; }
 
-/* Photography: black and white with a blue wash where we link out, artwork stays in colour */
-.media img, .hero__strip img, .customer__img, .gallery--4 img { filter: grayscale(1) contrast(1.05); }
-.gallery--art img, .gallery--products img, .gallery--2 img, .media--light img { filter: none; }
+/* Photography: client work stays in colour (Rob, 26 Oct 2026) */
 .customer--link { position: relative; }
-.customer--link .customer__img { transition: filter .25s; }
-.customer--link:hover .customer__img { filter: grayscale(1) contrast(1.05) sepia(1) hue-rotate(190deg) saturate(6); }
-.embed__poster { filter: grayscale(1); opacity: .5; }
+.embed__poster { opacity: .55; }
 .embed { background: var(--ink); }
 .embed__overlay { background: linear-gradient(180deg, rgba(0,71,255,.55), rgba(0,71,255,.85)); }
 .embed__note { color: rgba(255,255,255,.85); }
@@ -494,7 +490,7 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 
 /* Brand photos (Higgsfield, 26 Oct 2026) */
 .banner { position: relative; width: 100%; height: clamp(320px, 46vw, 620px); overflow: hidden; background: var(--ink); }
-.banner__img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; display: block; filter: grayscale(1) contrast(1.08); }
+.banner__img { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; display: block; }
 .banner__inner { position: absolute; left: 0; right: 0; bottom: 28px; }
 .banner__note { margin: 0; display: inline-block; background: var(--accent); padding: 10px 22px 12px; border-radius: var(--radius); transform: rotate(-2deg); }
 .banner__note .hand { font-size: clamp(1.6rem, 3vw, 2.4rem); transform: none; }
