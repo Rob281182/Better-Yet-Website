@@ -576,3 +576,5 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 .book__main, .book__side { min-width: 0; }
 .bookw__days { max-width: 100%; }
 .bookw__done .h2.reveal, .form--flat.reveal { opacity: 1; transform: none; }
+.bookw { grid-template-columns: minmax(0, 1fr); }
+.bookw__step { min-width: 0; }
