@@ -26,7 +26,7 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
       <aside class="book__side">
         <p class="eyebrow">What happens</p>
         <ol class="book__steps">
-          <li><strong>Pick a time.</strong> Times are shown in <?php echo esc_html( str_replace( '_', ' ', by_opt( 'booking_tz' ) ) ); ?> (<?php echo esc_html( $tzlabel ); ?>). You get a confirmation email with a calendar invite straight away.</li>
+          <li><strong>Pick a time.</strong> <span id="bookTzNote">Times are shown in <?php echo esc_html( str_replace( '_', ' ', by_opt( 'booking_tz' ) ) ); ?> (<?php echo esc_html( $tzlabel ); ?>).</span> You get a confirmation email with a calendar invite straight away.</li>
           <li><strong>We talk.</strong> <?php echo esc_html( by_opt( 'booking_how' ) ); ?> You'll speak with Christianna or Robert, not a sales team.</li>
           <li><strong>You get a next step.</strong> A couple of quick wins you can do yourself, and whether <?php echo esc_html( by_opt( 'audit_name' ) ); ?> makes sense for you. If it doesn't, we'll say so.</li>
         </ol>

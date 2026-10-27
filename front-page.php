@@ -14,8 +14,8 @@ get_header(); ?>
             <h1>Same work.<br><span class="u">A better<?php echo by_scribble( 'underline' ); ?></span> way.</h1>
             <p class="lead">We find where your business is losing time and money, then put practical, smarter systems in place to fix it. Not AI for the sake of AI. Time back for the people doing the work.</p>
             <div class="hero__cta">
-              <a href="#audit" class="btn">Start with the audit <span aria-hidden="true">→</span></a>
-              <a href="#calculator" class="btn btn--ghost">Buy back your time</a>
+              <a href="<?php echo esc_url( by_book_url() . '?call=audit' ); ?>" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
+              <a href="<?php echo esc_url( by_book_url() ); ?>" class="btn btn--ghost">Or a free 20-minute call</a>
             </div>
             <p class="note hero__note"><span class="hand">Fix what slows you down.</span><?php echo by_scribble( 'arrow' ); ?></p>
           </div>
@@ -217,17 +217,17 @@ get_header(); ?>
           <p class="note"><span class="hand hand--light">Do the maths →</span></p>
           <p class="muted-light">A rough estimate based on handing over part of your repetitive admin. Your audit gives you the real numbers.</p>
           <form class="calc__form" id="calcForm" onsubmit="return false">
-            <label>Hours a week spent on admin and busywork
-              <output id="hoursOut">15</output>
-              <input type="range" id="hours" min="1" max="80" value="15">
+            <label for="hours">Hours a week spent on admin and busywork
+              <output id="hoursOut" for="hours">15</output>
+              <input type="range" id="hours" name="hours" min="1" max="80" value="15" aria-describedby="hoursOut">
             </label>
-            <label>What an hour of that time costs ($)
-              <output id="rateOut">$50</output>
-              <input type="range" id="rate" min="25" max="200" step="5" value="50">
+            <label for="rate">What an hour of that time costs ($)
+              <output id="rateOut" for="rate">$50</output>
+              <input type="range" id="rate" name="rate" min="25" max="200" step="5" value="50" aria-describedby="rateOut">
             </label>
-            <label>Share that could realistically run itself
-              <output id="shareOut">30%</output>
-              <input type="range" id="share" min="10" max="60" step="5" value="30">
+            <label for="share">Share that could realistically run itself
+              <output id="shareOut" for="share">30%</output>
+              <input type="range" id="share" name="share" min="10" max="60" step="5" value="30" aria-describedby="shareOut">
             </label>
           </form>
         </div>
@@ -361,7 +361,7 @@ get_header(); ?>
           <h2 class="h2">Less time doing what you have to. <span class="u">More time doing what you love.<?php echo by_scribble( 'underline' ); ?></span></h2>
           <p>Tell us a little about your business and where the time goes. We'll get back to you within one business day to set up a free 20-minute discovery call.</p>
           <div class="contact__alt">
-            <a href="<?php echo esc_url( by_book_url() ); ?>" class="btn js-book">Pick a time for a free call <span aria-hidden="true">→</span></a>
+            <a href="<?php echo esc_url( by_book_url() ); ?>" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
             <p class="contact__line">Email <a href="#" data-email></a></p>
             <p class="contact__line" data-phone-wrap hidden>Phone <a href="#" data-phone></a></p>
           </div>
@@ -390,7 +390,7 @@ get_header(); ?>
           <input type="hidden" name="calc_estimate" id="calcEstimate">
           <input type="hidden" name="action" value="by_enquiry">
           <?php wp_nonce_field( 'by_enquiry', 'by_nonce' ); ?>
-          <div class="hp" aria-hidden="true"><label>Leave this empty<input name="website" tabindex="-1" autocomplete="off"></label></div>
+          <div class="hp" aria-hidden="true"><label>Leave this empty<input name="website" tabindex="-1" autocomplete="off" type="text"></label></div>
           <label class="check"><input type="checkbox" name="consent" required> <span>I agree to be contacted about my enquiry. See our <a href="<?php echo esc_url( by_privacy_url() ); ?>">privacy policy</a>.</span></label>
           <button class="btn" type="submit">Send enquiry <span aria-hidden="true">→</span></button>
           <p class="form__status" id="formStatus" role="status"></p>

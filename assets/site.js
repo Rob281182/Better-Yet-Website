@@ -192,6 +192,19 @@
   var typeName = function () { var r = form.querySelector("input[name=call_type]:checked"); return r ? r.closest(".bookw__type").querySelector("strong").textContent : ""; };
   var type = function () { var r = form.querySelector("input[name=call_type]:checked"); return r ? r.value : "discovery"; };
   var picked = { date: "", time: "" };
+  // Show times in the visitor's own time zone (slots carry the business time zone in their ISO offset)
+  var vtz = ""; try { vtz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+  var tzNote = form.querySelector(".bookw__tz"), sideNote = document.getElementById("bookTzNote");
+  function localLabel(s) {
+    if (!vtz || !s.iso) return s.label;
+    try { return new Date(s.iso).toLocaleTimeString("en-AU", { hour: "numeric", minute: "2-digit", timeZone: vtz }).replace(/\s?(am|pm)/i, " $1"); } catch (e) { return s.label; }
+  }
+  function tzName() {
+    if (!vtz) return "";
+    try { var p = new Intl.DateTimeFormat("en-AU", { timeZone: vtz, timeZoneName: "short" }).formatToParts(new Date()); var z = p.filter(function (x) { return x.type === "timeZoneName"; })[0]; return (z ? z.value : "") + " (" + vtz.replace(/_/g, " ") + ")"; } catch (e) { return vtz; }
+  }
+  if (vtz && tzNote) { tzNote.textContent = "(your time, " + tzName() + ")"; }
+  if (vtz && sideNote) { sideNote.textContent = "Times are shown in your time zone, " + tzName() + "."; }
 
   function renderDays() {
     var slots = all[type()] || {}, keys = Object.keys(slots);
@@ -212,7 +225,7 @@
     var day = all[type()][k];
     timesEl.innerHTML = "";
     day.slots.forEach(function (s) {
-      var b = document.createElement("button"); b.type = "button"; b.className = "bookw__time"; b.textContent = s.label; b.setAttribute("role", "option");
+      var b = document.createElement("button"); b.type = "button"; b.className = "bookw__time"; b.textContent = localLabel(s); b.setAttribute("role", "option");
       b.addEventListener("click", function () {
         picked.time = s.t;
         Array.prototype.forEach.call(timesEl.children, function (x) { x.classList.toggle("is-on", x === b); x.setAttribute("aria-selected", x === b); });
@@ -229,7 +242,7 @@
     submit.disabled = !ok;
     if (ok) {
       var day = all[type()][picked.date], slot = day.slots.filter(function (s) { return s.t === picked.time; })[0];
-      summary.hidden = false; summary.textContent = typeName() + ": " + day.full + " at " + (slot ? slot.label : picked.time);
+      summary.hidden = false; summary.textContent = typeName() + ": " + day.full + " at " + (slot ? localLabel(slot) : picked.time) + (vtz ? " (" + tzName() + ")" : "");
     } else { summary.hidden = true; }
   }
   Array.prototype.forEach.call(form.querySelectorAll("input[name=call_type]"), function (r) { r.addEventListener("change", renderDays); });

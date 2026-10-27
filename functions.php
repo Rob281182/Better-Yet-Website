@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.1.0' );
+define( 'BY_VERSION', '2.1.1' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -98,6 +98,7 @@ add_action( 'customize_register', function ( $wp ) {
 } );
 
 require_once get_template_directory() . '/inc/booking.php';
+require_once get_template_directory() . '/inc/hygiene.php';
 
 /* ---------- Hand-drawn blue marks (brand board: scribbles, circles, arrows) ---------- */
 function by_scribble( $kind ) {
