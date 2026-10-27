@@ -57,15 +57,15 @@ add_action( 'wp_head', function () {
 
 /* ---------- Case-study images: serve local copies instead of hotlinking client sites ----------
  * The templates still reference the client URLs (one list to maintain). On output, any image URL that has a
- * local copy in wp-content/uploads/better-yet/work/ is swapped for it. Copies are fetched once by visiting the
- * page with ?by_import_work=<key> (remove the key branch after running).
+ * local copy in wp-content/uploads/better-yet/work/ is swapped for it. Copies are fetched by a logged-in admin visiting the
+ * page with ?by_import_work=1 (already run on 27 Oct 2026; re-run after adding images).
  */
 function by_media_map() { return get_option( 'by_media_map', array() ); }
 function by_media_hosts() { return array( 'heiden.bike', 'roamorthotics.com.au', 'stephanieannestudio.com', 'www.readysteadygokids.com.au', 'rsgk-assets-dev.s3.ap-southeast-2.amazonaws.com', 'www.damselfly.com.au', 'damselfly.com.au', 'cdn.shopify.com' );
 }
 add_action( 'template_redirect', function () {
 	if ( ! ( is_front_page() || is_page( 'our-work' ) ) ) return;
-	$import = isset( $_GET['by_import_work'] ) && 'wq8Lt4pZ2m' === $_GET['by_import_work'];
+	$import = isset( $_GET['by_import_work'] ) && current_user_can( 'manage_options' ); // admins: visit /?by_import_work=1 and /our-work/?by_import_work=1 to (re)fetch copies
 	ob_start( function ( $html ) use ( $import ) {
 		$map   = by_media_map();
 		$hosts = by_media_hosts();
