@@ -24,6 +24,7 @@ function by_page_meta() {
 	$desc  = $brand . ' helps Australian small businesses find where time and money are being lost, then fixes it with practical automation and smarter systems. Start with ' . by_opt( 'audit_name' ) . '.';
 	if ( is_page( 'book' ) )      $desc = 'Book a free 20-minute call or a ' . by_opt( 'audit_name' ) . ' session with ' . $brand . '. Pick a time that suits you; confirmation and calendar invite sent straight away.';
 	if ( is_page( 'our-work' ) )  $desc = 'What ' . $brand . ' has built for real businesses: an automated bike builder, a clinic front door, an artist\'s online studio, franchise enrolments and a custom candle shop.';
+	if ( is_page( 'contact' ) )   $desc = 'Tell ' . $brand . ' where your week goes. We reply within one business day with times for a free 20-minute call.';
 	if ( is_page( 'privacy-policy' ) ) $desc = 'How ' . $brand . ' handles the personal information collected through this website.';
 	return apply_filters( 'by_page_meta', array( 'description' => $desc ) );
 }

@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.1.2' );
+define( 'BY_VERSION', '2.2.0' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -34,6 +34,11 @@ function by_defaults() {
 		'project_price'  => '',
 		'credit_text'    => '',
 		'guarantee_text' => '',
+		// Home page proof (v2.2.0)
+		'location'       => '',
+		'hours_back'     => '',
+		'proof_roam'     => '',
+		'proof_steph'    => '',
 	) );
 }
 
@@ -81,6 +86,10 @@ add_action( 'customize_register', function ( $wp ) {
 		'project_price'  => array( 'Projects price', 'text', 'e.g. "from $3,000 + GST".' ),
 		'credit_text'    => array( 'Audit credit line', 'text', 'Optional. e.g. "The full audit fee is credited against any build booked within 60 days." Blank hides it.' ),
 		'guarantee_text' => array( 'Guarantee line', 'text', 'Optional. e.g. "If we can\'t find at least 5 hours a week to hand back, you don\'t pay." Blank hides it.' ),
+		'location'       => array( 'Where you are based', 'text', 'e.g. "Brisbane" or "Melbourne". Shown in About and the footer. Blank says "Australia-wide" only.' ),
+		'hours_back'     => array( 'Hours handed back so far', 'text', 'A number for the proof strip under the hero, e.g. "1,200". Blank hides it.' ),
+		'proof_roam'     => array( 'Roam Orthotics proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
+		'proof_steph'    => array( 'Stephanie Anne Studio proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
 	);
 	$d = by_defaults();
 	foreach ( $fields as $key => $f ) {
@@ -129,7 +138,7 @@ add_filter( 'document_title_separator', function () { return '|'; } );
 
 add_action( 'wp_enqueue_scripts', function () {
 	$dir = get_template_directory_uri() . '/assets';
-	wp_enqueue_style( 'by-fonts', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@500;600&display=swap', array(), null );
+	wp_enqueue_style( 'by-fonts', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Montserrat:wght@800;900&family=Caveat:wght@500;600&display=swap', array(), null );
 	wp_enqueue_style( 'by-site', $dir . '/site.css', array( 'by-fonts' ), BY_VERSION );
 	wp_enqueue_script( 'by-site', $dir . '/site.js', array(), BY_VERSION, true );
 	$site = array(
@@ -250,7 +259,7 @@ function by_enquiry_handler() {
 		$brand = by_opt( 'brand' );
 		$txt   = "Hi {$d['name']},\n\nHere is your time-back estimate from the {$brand} calculator:\n\n{$d['calc_estimate']}\n\n"
 		       . "That is a rough figure based on handing over part of your repetitive admin. " . by_opt( 'audit_name' ) . " turns it into real numbers: your top five time drains in hours and dollars, the fixes ranked, and a fixed price for the first one.\n\n"
-		       . "Reply to this email and tell us what eats your week, or book a free 20-minute call: " . ( by_opt( 'booking_url' ) ? by_opt( 'booking_url' ) : home_url( '/#contact' ) ) . "\n\n{$brand}\n" . by_opt( 'tagline' ) . "\n" . home_url( '/' );
+		       . "Reply to this email and tell us what eats your week, or book a free 20-minute call: " . ( by_opt( 'booking_url' ) ? by_opt( 'booking_url' ) : by_contact_url() ) . "\n\n{$brand}\n" . by_opt( 'tagline' ) . "\n" . home_url( '/' );
 		$from  = is_array( $to ) ? $to[0] : $to;
 		wp_mail( $d['email'], 'Your time-back estimate from ' . $brand, $txt, array( 'Reply-To: ' . $brand . ' <' . $from . '>' ) );
 	}
@@ -326,6 +335,21 @@ add_action( 'init', function () {
 function by_work_url() {
 	$id = (int) get_option( 'by_work_page_id' );
 	return $id ? get_permalink( $id ) : home_url( '/our-work/' );
+}
+
+/* ---------- "Contact" page (v2.2.0): the enquiry form moved off the home page ---------- */
+add_action( 'init', function () {
+	if ( get_option( 'by_contact_page_id' ) ) return;
+	$page = get_page_by_path( 'contact' );
+	$id   = $page ? $page->ID : wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Contact', 'post_name' => 'contact', 'post_content' => '' ) );
+	if ( $id && ! is_wp_error( $id ) ) {
+		update_post_meta( $id, '_wp_page_template', 'page-contact.php' );
+		update_option( 'by_contact_page_id', $id );
+	}
+} );
+function by_contact_url() {
+	$id = (int) get_option( 'by_contact_page_id' );
+	return $id ? get_permalink( $id ) : home_url( '/contact/' );
 }
 
 /* ---------- Brand photos (generated in Higgsfield, stored in wp-content/uploads/better-yet/) ---------- */

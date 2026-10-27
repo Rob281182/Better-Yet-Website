@@ -13,15 +13,12 @@
     <div class="wrap nav__inner">
       <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo" aria-label="Home"><span data-brand><?php echo esc_html( by_opt( 'brand' ) ); ?></span><span class="mark">.</span></a>
       <nav class="nav__links" id="navLinks" aria-label="Main">
-        <a href="<?php echo esc_url( $h ); ?>#how">How it works</a>
-        <a href="<?php echo esc_url( $h ); ?>#audit">The audit</a>
-        <a href="<?php echo esc_url( $h ); ?>#services">The difference</a>
-        <a href="<?php echo esc_url( $h ); ?>#calculator">Calculator</a>
-        <a href="<?php echo esc_url( $h ); ?>#who">Who we help</a>
-        <a href="<?php echo esc_url( by_work_url() ); ?>">Our work</a>
+        <a href="<?php echo esc_url( by_work_url() ); ?>">Work</a>
+        <a href="<?php echo esc_url( $h ); ?>#audit">How it works</a>
+        <a href="<?php echo esc_url( $h ); ?>#pricing">Pricing</a>
         <a href="<?php echo esc_url( $h ); ?>#about">About</a>
         <a href="<?php echo esc_url( $h ); ?>#faq">FAQ</a>
-        <a href="<?php echo esc_url( by_book_url() ); ?>" class="btn btn--sm js-book">Book the audit</a>
+        <a href="<?php echo esc_url( by_book_url() . '?call=audit' ); ?>" class="btn btn--sm js-book">Book the audit <span aria-hidden="true">→</span></a>
       </nav>
       <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
         <span></span><span></span>

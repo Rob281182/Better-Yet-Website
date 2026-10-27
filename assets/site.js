@@ -64,7 +64,7 @@
   if (h) { [h, r, sh].forEach(function (el) { el.addEventListener("input", calc); }); calc(); }
 
   /* ---------- Reveal on scroll ---------- */
-  var revealEls = $$(".section .h2, .problem, .step, .customer, .nots li, .person, .calc__result, .form");
+  var revealEls = $$(".section .h2, .problem, .step, .customer, .nots li, .person, .calc__result, .form, .h3x, .fix, .wcase, .founder, .auditb__h2, .calcb__result");
   if ("IntersectionObserver" in window && !reduce) {
     revealEls.forEach(function (el) { el.classList.add("reveal"); });
     var io = new IntersectionObserver(function (entries) {
@@ -125,6 +125,15 @@
       .then(function () { btn.disabled = false; });
   });
 
+  /* ---------- Home page (v2.2.0): ticker loop and "Email me this estimate" ---------- */
+  var ticker = $("#ticker");
+  if (ticker) { ticker.innerHTML += ticker.innerHTML; ticker.setAttribute("aria-hidden", "false"); }
+  var tog = $("#estimateToggle");
+  if (tog && rform) tog.addEventListener("click", function () {
+    var open = rform.hidden; rform.hidden = !open; tog.setAttribute("aria-expanded", open);
+    if (open) { var em = $("#reportEmail"); if (em) em.focus(); }
+  });
+
   /* ---------- Optional analytics ---------- */
   function loadScript(src) { var s = document.createElement("script"); s.async = true; s.src = src; document.head.appendChild(s); }
   if (S.ga4Id) {
@@ -173,7 +182,7 @@
 
 /* ---------- Hide any hotlinked picture that fails to load ---------- */
 (function () {
-  Array.prototype.slice.call(document.querySelectorAll(".gallery__item img, .media img, .customer__img, .hero__strip img")).forEach(function (img) {
+  Array.prototype.slice.call(document.querySelectorAll(".gallery__item img, .media img, .customer__img, .wcase__img, .hero__strip img")).forEach(function (img) {
     function miss() { var f = img.closest(".gallery__item, .media") || img; f.classList.add("is-missing"); if (f === img) img.style.display = "none"; }
     if (img.complete && img.naturalWidth === 0 && img.src) miss();
     img.addEventListener("error", miss);
