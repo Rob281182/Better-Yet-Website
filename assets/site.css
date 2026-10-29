@@ -728,7 +728,8 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 .founders { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
 .founder { display: grid; gap: 4px; font-size: .88rem; color: var(--ink-soft); }
 .founder strong { color: var(--ink); margin-top: 10px; }
-.founder__img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top; display: block; background: var(--bg-alt); filter: grayscale(1); }
+.founder__img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top; display: block; background: var(--bg-alt); }
+.founder__img--head { object-position: center 20%; }
 .faqb { border-top: 1px solid var(--rule); padding: 0; }
 .faqb:last-of-type { border-bottom: 1px solid var(--rule); }
 .faqb summary { padding: 18px 36px 18px 0; font-family: var(--font-body); font-weight: 700; font-size: .98rem; min-height: 56px; display: flex; align-items: center; }

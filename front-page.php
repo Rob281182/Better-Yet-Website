@@ -228,17 +228,17 @@ $where  = trim( (string) by_opt( 'location' ) );
           <p class="aboutb__line"><?php echo $where ? esc_html( $where ) . '-based, working Australia-wide. ' : 'Working with businesses Australia-wide. '; ?>You deal with us, not a sales team.</p>
           <div class="founders">
             <div class="founder">
-              <?php echo by_asset_img( 'ref-cards.jpg', '', 'founder__img' ); ?>
+              <?php echo by_asset_img( 'founder-christianna.jpg', 'Christianna, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
               <strong>Christianna</strong>
               <span>Brand, marketing, ads and growth.</span>
             </div>
             <div class="founder">
-              <?php echo by_asset_img( 'ref-wrapped.jpg', '', 'founder__img' ); ?>
+              <?php echo by_asset_img( 'founder-rob.jpg', 'Robert, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
               <strong>Robert</strong>
               <span>AI tools, CRM, integrations and builds.</span>
             </div>
             <div class="founder">
-              <?php echo by_asset_img( 'ref-match.jpg', '', 'founder__img' ); ?>
+              <?php echo by_asset_img( 'founders-together.jpg', 'Christianna and Robert working at a table', 'founder__img' ); ?>
               <strong>The studio</strong>
               <span><?php echo $where ? esc_html( $where ) . '-based, working' : 'Working'; ?> Australia-wide.</span>
             </div>
