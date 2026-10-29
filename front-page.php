@@ -228,7 +228,7 @@ $where  = trim( (string) by_opt( 'location' ) );
           <p class="aboutb__line"><?php echo $where ? esc_html( $where ) . '-based, working Australia-wide. ' : 'Working with businesses Australia-wide. '; ?>You deal with us, not a sales team.</p>
           <div class="founders">
             <div class="founder">
-              <?php echo by_asset_img( 'founder-christianna.jpg', 'Christianna, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
+              <?php echo by_asset_img( 'founder-christianna-2.jpg', 'Christianna, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
               <strong>Christianna</strong>
               <span>Brand, marketing, ads and growth.</span>
             </div>
