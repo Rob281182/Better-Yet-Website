@@ -637,14 +637,16 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 
 /* Marked-up photo */
 .markup { position: relative; margin: 0; }
-.markup__img { width: 100%; height: clamp(300px, 46vw, 640px); object-fit: cover; object-position: center 40%; display: block; filter: grayscale(1) contrast(1.05); background: var(--bg-alt); }
+.markup3 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 72px; align-items: center; }
+.markup3__text .h3x { margin-bottom: 20px; }
+.markup__img { width: 100%; aspect-ratio: 3 / 4; max-height: 720px; object-fit: cover; object-position: center 30%; display: block; filter: grayscale(1) contrast(1.05); background: var(--bg-alt); }
 .markup__note { position: absolute; pointer-events: none; }
 .markup__note .hand { font-size: clamp(1.2rem, 2.4vw, 1.9rem); text-shadow: 0 1px 2px rgba(0,0,0,.35); transform: rotate(-5deg); color: var(--accent); filter: drop-shadow(0 0 2px #fff); }
-.markup__note--a { left: 10%; top: 28%; }
-.markup__note--b { right: 10%; top: 16%; }
-.markup__note--c { left: 46%; bottom: 24%; }
-.markup__circle { position: absolute; left: 7%; top: 20%; width: 30%; height: 24%; color: var(--accent); }
-.markup__arrow { position: absolute; left: 36%; bottom: 20%; width: 9%; height: auto; color: var(--accent); transform: rotate(10deg); }
+.markup__note--a { left: 4%; top: 50%; }
+.markup__note--b { right: 4%; top: 7%; }
+.markup__note--c { left: 6%; bottom: 16%; }
+.markup__circle { position: absolute; left: 2%; top: 56%; width: 44%; height: 14%; color: var(--accent); }
+.markup__arrow { position: absolute; right: 30%; top: 12%; width: 16%; height: auto; color: var(--accent); transform: scaleX(-1) rotate(-20deg); }
 .markup figcaption { font-size: .78rem; color: var(--ink-soft); padding-top: 10px; }
 
 /* The audit (black) */
@@ -764,7 +766,8 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
   .fix__price { grid-column: 2; text-align: left; }
   .close3__grid { grid-template-columns: 1fr; }
   .close3__text { padding: 72px 24px; }
-  .markup__note--c { left: 40%; }
+  .markup3 { grid-template-columns: 1fr; }
+  .markup3 .markup { order: 2; }
   .footer__inner--v3 { grid-template-columns: 1fr; }
   .footer__mid { text-align: left; }
 }
@@ -774,9 +777,7 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
   .hero3__h1 { font-size: clamp(2.6rem, 15vw, 4rem); }
   .workrow, .founders { grid-template-columns: 1fr; }
   .founder__img { aspect-ratio: 4 / 3; }
-  .markup__img { height: 300px; }
-  .markup__note .hand { font-size: 1rem; }
-  .markup__note--b { right: 4%; }
+  .markup__note .hand { font-size: 1.05rem; }
   .proof__stat { margin-left: 0; }
   .calcb__capture-row { grid-template-columns: 1fr; }
   .close3__text { padding: 56px 16px; }

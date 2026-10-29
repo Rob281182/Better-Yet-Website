@@ -61,20 +61,20 @@ $where  = trim( (string) by_opt( 'location' ) );
 
     <!-- YOUR WEEK, MARKED UP -->
     <section class="section3" id="markup">
-      <div class="wrap">
-        <div class="split">
-          <h2 class="h3x">You already know what's slowing you down. We put a number on it.</h2>
-          <p class="split__aside">Most of it hides in plain sight: the invoice book on the dash, the call you couldn't take, the quote you typed twice.</p>
-        </div>
+      <div class="wrap markup3">
         <figure class="markup">
-          <?php echo by_asset_img( 'ref-desk.jpg', 'Someone working at a desk, with hand-written notes marking where the time goes', 'markup__img' ); ?>
-          <span class="markup__note markup__note--a"><span class="hand hand--light">Invoice chasing, 3 hrs/wk</span></span>
-          <span class="markup__note markup__note--b"><span class="hand hand--light">Quotes typed twice</span></span>
-          <span class="markup__note markup__note--c"><span class="hand hand--light">Missed calls, 9 a week</span></span>
+          <?php echo by_asset_img( 'founders-studio.jpg', 'Robert showing Christianna a printed report while she works at a laptop, with hand-written notes marking where the time goes', 'markup__img' ); ?>
+          <span class="markup__note markup__note--a"><span class="hand hand--light">Quotes typed twice</span></span>
+          <span class="markup__note markup__note--b"><span class="hand hand--light">Missed calls, 9 a week</span></span>
+          <span class="markup__note markup__note--c"><span class="hand hand--light">Invoice chasing, 3 hrs/wk</span></span>
           <?php echo str_replace( 'class="scribble ', 'class="markup__circle scribble ', by_scribble( 'circle' ) ); ?>
           <?php echo str_replace( 'class="scribble ', 'class="markup__arrow scribble ', by_scribble( 'arrow' ) ); ?>
           <figcaption>Illustrative annotations. Your audit puts real numbers on your own week.</figcaption>
         </figure>
+        <div class="markup3__text">
+          <h2 class="h3x">You already know what's slowing you down. We put a number on it.</h2>
+          <p class="split__aside">Most of it hides in plain sight: the invoice book on the dash, the call you couldn't take, the quote you typed twice.</p>
+        </div>
       </div>
     </section>
 
