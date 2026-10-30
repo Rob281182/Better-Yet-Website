@@ -46,22 +46,23 @@
   if (stat) stat.textContent = "0";
 
   /* ---------- Time-back calculator ---------- */
-  var h = $("#hours"), r = $("#rate"), sh = $("#share");
+  var h = $("#hours"), r = $("#rate"), sh = $("#share"), pp = $("#people");
   var fmt = function (n) { return Math.round(n).toLocaleString("en-AU"); };
   function calc() {
-    var hours = +h.value, rate = +r.value, share = +sh.value / 100;
-    var yearHours = hours * share * 48;              // 48 working weeks
+    var hours = +h.value, rate = +r.value, share = +sh.value / 100, people = pp ? +pp.value : 1;
+    var yearHours = people * hours * share * 48;     // 48 working weeks
+    if (pp) $("#peopleOut").textContent = people;
     var yearDollars = yearHours * rate;
     $("#hoursOut").textContent = hours;
     $("#rateOut").textContent = "$" + rate;
     $("#shareOut").textContent = sh.value + "%";
     $("#resHours").textContent = fmt(yearHours);
     $("#resDollars").textContent = "$" + fmt(yearDollars);
-    var estText = hours + " hrs/wk admin @ $" + rate + "/hr, " + sh.value + "% automatable = ~" + fmt(yearHours) + " hrs / $" + fmt(yearDollars) + " a year";
+    var estText = (people > 1 ? people + " people x " : "") + hours + " hrs/wk admin @ $" + rate + "/hr, " + sh.value + "% automatable = ~" + fmt(yearHours) + " hrs / $" + fmt(yearDollars) + " a year (estimate)";
     var est = $("#calcEstimate"); if (est) est.value = estText;
     var est2 = $("#calcEstimateReport"); if (est2) est2.value = estText;
   }
-  if (h) { [h, r, sh].forEach(function (el) { el.addEventListener("input", calc); }); calc(); }
+  if (h) { [h, r, sh, pp].filter(Boolean).forEach(function (el) { el.addEventListener("input", calc); }); calc(); }
 
   /* ---------- Reveal on scroll ---------- */
   var revealEls = $$(".section .h2, .problem, .step, .customer, .nots li, .person, .calc__result, .form, .h3x, .fix, .wcase, .founder, .auditb__h2, .calcb__result");

@@ -27,6 +27,14 @@ get_header(); ?>
             <label>Business name<input name="business" autocomplete="organization"></label>
           </div>
           <div class="form__row">
+            <label>Team size
+              <select name="team_size">
+                <option value="">Choose one</option>
+                <option>1–5</option><option>6–20</option><option>21–100</option><option>100+</option>
+              </select>
+            </label>
+          </div>
+          <div class="form__row">
             <label>Email<input name="email" type="email" required autocomplete="email"></label>
             <label>Phone<input name="phone" type="tel" autocomplete="tel"></label>
           </div>

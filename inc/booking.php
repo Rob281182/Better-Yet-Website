@@ -164,6 +164,7 @@ function by_booking_handler() {
 		'email'    => sanitize_email( $f( 'email', 200 ) ),
 		'phone'    => $f( 'phone', 40 ),
 		'business' => $f( 'business', 160 ),
+		'team_size' => by_team_size( $f( 'team_size', 10 ) ),
 		'notes'    => isset( $_POST['notes'] ) ? mb_substr( sanitize_textarea_field( wp_unslash( $_POST['notes'] ) ), 0, 2000 ) : '',
 		'consent'  => ! empty( $_POST['consent'] ),
 	);
@@ -182,7 +183,7 @@ function by_booking_handler() {
 	$label = $start->format( 'l j F Y, g:i a' ) . ' to ' . $end->format( 'g:i a' ) . ' (' . $start->format( 'T' ) . ')';
 	$brand = by_opt( 'brand' );
 
-	$body = "When: {$label}\nCall: {$types[$type]['name']} ({$mins} min)\nBusiness: {$d['business']}\nEmail: {$d['email']}\nPhone: {$d['phone']}\n\nWhat's slowing them down:\n{$d['notes']}\n";
+	$body = "When: {$label}\nCall: {$types[$type]['name']} ({$mins} min)\nBusiness: {$d['business']}\nTeam size: {$d['team_size']}\nEmail: {$d['email']}\nPhone: {$d['phone']}\n\nWhat's slowing them down:\n{$d['notes']}\n";
 	$post_id = wp_insert_post( array( 'post_type' => 'by_booking', 'post_status' => 'private', 'post_title' => $d['name'] . ( $d['business'] ? ' (' . $d['business'] . ')' : '' ), 'post_content' => $body ) );
 	if ( $post_id && ! is_wp_error( $post_id ) ) {
 		$utc = clone $start; $utc->setTimezone( new DateTimeZone( 'UTC' ) );

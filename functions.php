@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.3.1' );
+define( 'BY_VERSION', '2.4.0' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -26,28 +26,37 @@ function by_defaults() {
 		'pixel_id'    => '',
 		// Offer and pricing (v1.5.0). Leave a price blank and the site says "Quoted on the call".
 		'audit_name'     => 'The Time-Back Audit',
-		'audit_price'     => '$995',
+		'audit_price'     => '$990',
 		'audit_founding'  => '',
-		'concierge_price' => 'from $500 to $2,000 a month',
+		'concierge_price' => 'from $500 to $2,000 a month', // legacy single band, no longer shown
+		'essentials_price' => '$500 a month',
+		'growth_price'     => 'from $2,000 a month',
+		'gst_suffix'       => '',
 		'app_price'       => 'from $2,000 to $5,000 per app',
 		'fix_price'       => '',
 		'call_price'      => '',
 		'plan_price'      => '',
 		'project_price'   => '',
 		'credit_text'     => '',
-		'guarantee_text' => '',
+		'guarantee_text' => 'Find 10x your fee, or it\'s free.',
 		// Home page proof (v2.2.0)
 		'location'       => '',
 		'hours_back'     => '',
 		'proof_roam'     => '',
 		'proof_steph'    => '',
+		// Testimonials (v2.4.0): the section appears once at least one quote is filled in.
+		't1_quote' => '', 't1_name' => '', 't1_biz' => '',
+		't2_quote' => '', 't2_name' => '', 't2_biz' => '',
+		't3_quote' => '', 't3_name' => '', 't3_biz' => '',
 	) );
 }
 
-/* Price helper: returns the set price or a fallback phrase. */
+/* Price helper: returns the set price (plus the GST suffix, once set) or a fallback phrase. */
 function by_price( $key, $fallback = 'Quoted on the call' ) {
 	$v = trim( (string) by_opt( $key ) );
-	return $v !== '' ? $v : $fallback;
+	if ( $v === '' ) return $fallback;
+	$gst = trim( (string) by_opt( 'gst_suffix' ) );
+	return $gst !== '' && strpos( $v, 'GST' ) === false ? $v . ' ' . $gst : $v;
 }
 function by_has( $key ) { return trim( (string) by_opt( $key ) ) !== ''; }
 
@@ -80,22 +89,30 @@ add_action( 'customize_register', function ( $wp ) {
 		'ga4_id'      => array( 'Google Analytics 4 ID', 'text', 'e.g. G-XXXXXXXXXX' ),
 		'pixel_id'    => array( 'Meta Pixel ID', 'text', 'For Instagram/Facebook ads. Enquiries are tracked as Lead.' ),
 		'audit_name'     => array( 'Audit name', 'text', 'Shown as the product name of the audit.' ),
-		'audit_price'    => array( 'Audit price', 'text', 'Fixed price of the audit (Rob, 30 Oct 2026: $995).' ),
+		'audit_price'    => array( 'Audit price', 'text', 'Fixed price of the audit ($990 from 31 Oct 2026, so the guarantee is 10x = $9,900).' ),
 		'audit_founding' => array( 'Audit founding offer', 'text', 'Optional line under the price, e.g. "Founding price $695 + GST for our first three clients".' ),
-		'concierge_price' => array( 'Concierge, websites and hosting price', 'text', 'Monthly band shown in Pricing (Rob, 30 Oct 2026: from $500 to $2,000 a month).' ),
+		'essentials_price' => array( 'Concierge Essentials price', 'text', 'Website hosting, maintenance and support. e.g. "$500 a month".' ),
+		'growth_price'     => array( 'Concierge Growth price', 'text', 'Ongoing systems, automation and optimisation. e.g. "from $2,000 a month".' ),
+		'gst_suffix'       => array( 'GST label', 'text', 'Added after every price once GST registration is confirmed, e.g. "+ GST". Blank shows prices without a GST label.' ),
 		'app_price'       => array( 'Custom apps and integrations price', 'text', 'Per-app band shown in Pricing (Rob, 30 Oct 2026: from $2,000 to $5,000 per app).' ),
 		'credit_text'    => array( 'Audit credit line', 'text', 'Optional. e.g. "The full audit fee is credited against any build booked within 60 days." Blank hides it.' ),
-		'guarantee_text' => array( 'Guarantee line', 'text', 'Optional. e.g. "If we can\'t find at least 5 hours a week to hand back, you don\'t pay." Blank hides it.' ),
+		'guarantee_text' => array( 'Guarantee line', 'text', 'Shown in the hero and under the audit price. Proposed: "Find 10x your fee, or it\'s free." Blank hides it.' ),
 		'location'       => array( 'Where you are based', 'text', 'e.g. "Brisbane" or "Melbourne". Shown in About and the footer. Blank says "Australia-wide" only.' ),
 		'hours_back'     => array( 'Hours handed back so far', 'text', 'A number for the proof strip under the hero, e.g. "1,200". Blank hides it.' ),
 		'proof_roam'     => array( 'Roam Orthotics proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
 		'proof_steph'    => array( 'Stephanie Anne Studio proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
 	);
+	foreach ( array( 1, 2, 3 ) as $n ) {
+		$fields[ "t{$n}_quote" ] = array( "Testimonial {$n}: quote", 'textarea', 1 === $n ? 'Client-approved words only. The "In their words" section on the home page appears once any quote is filled in.' : '' );
+		$fields[ "t{$n}_name" ]  = array( "Testimonial {$n}: name", 'text', 'e.g. Stephanie' );
+		$fields[ "t{$n}_biz" ]   = array( "Testimonial {$n}: business", 'text', 'e.g. Stephanie Anne Studio' );
+	}
 	$d = by_defaults();
 	foreach ( $fields as $key => $f ) {
 		$san = 'sanitize_text_field';
 		if ( 'url' === $f[1] ) $san = 'esc_url_raw';
 		if ( 'email' === $f[1] ) $san = 'sanitize_email';
+		if ( 'textarea' === $f[1] ) $san = 'sanitize_textarea_field';
 		$wp->add_setting( 'by_' . $key, array( 'default' => $d[ $key ], 'sanitize_callback' => $san ) );
 		$wp->add_control( 'by_' . $key, array(
 			'label'       => $f[0],
@@ -196,6 +213,11 @@ add_action( 'manage_by_enquiry_posts_custom_column', function ( $col, $id ) {
 	if ( isset( $map[ $col ] ) ) echo esc_html( get_post_meta( $id, $map[ $col ], true ) );
 }, 10, 2 );
 
+/* Team-size bands used on the forms (Christianna's list, 31 Oct 2026). */
+function by_team_size( $v ) {
+	return in_array( $v, array( '1–5', '6–20', '21–100', '100+' ), true ) ? $v : '';
+}
+
 function by_enquiry_handler() {
 	$fail = function ( $msg, $code ) { wp_send_json( array( 'ok' => false, 'error' => $msg ), $code ); };
 
@@ -213,6 +235,7 @@ function by_enquiry_handler() {
 		'kind'          => $kind,
 		'name'          => $f( 'name', 120 ),
 		'business'      => $f( 'business', 160 ),
+		'team_size'     => by_team_size( $f( 'team_size', 10 ) ),
 		'email'         => sanitize_email( $f( 'email' ) ),
 		'phone'         => $f( 'phone', 40 ),
 		'interest'      => $f( 'interest', 80 ),
@@ -234,7 +257,7 @@ function by_enquiry_handler() {
 	set_transient( $key, 1, 30 );
 
 	// 1. Save in the dashboard
-	$body = "Business: {$d['business']}\nEmail: {$d['email']}\nPhone: {$d['phone']}\nInterest: {$d['interest']}\n";
+	$body = "Business: {$d['business']}\nTeam size: {$d['team_size']}\nEmail: {$d['email']}\nPhone: {$d['phone']}\nInterest: {$d['interest']}\n";
 	if ( $d['calc_estimate'] ) $body .= "Calculator: {$d['calc_estimate']}\n";
 	$body .= "\nWhere time is being lost:\n{$d['message']}\n";
 	$post_id = wp_insert_post( array(

@@ -1,6 +1,8 @@
 <?php
 /**
  * Front page (v2.2.0): rebuilt to Christianna's homepage mockup (27 Oct 2026).
+ * v2.4.0: Christianna's Sunday list (31 Oct 2026): new hero, $990 audit + guarantee, "Ways to work with us"
+ * with two Concierge tiers, larger-teams section, testimonials slot, people slider in the calculator.
  * "The auditor's pen, in blue": B&W photos = the business, blue hand-drawn marks = the intervention, big type = the verdict.
  * One CTA verb everywhere: Book the audit. Prices and the proof numbers live in Appearance > Customize > Better Yet settings.
  */
@@ -8,7 +10,8 @@ get_header();
 $book   = by_book_url();
 $audit  = $book . '?call=audit';
 $work   = by_work_url();
-$price  = by_has( 'audit_price' ) ? by_opt( 'audit_price' ) : 'Priced on the call';
+$price  = by_price( 'audit_price', 'Priced on the call' );
+$guar   = trim( (string) by_opt( 'guarantee_text' ) );
 $credit = by_has( 'credit_text' ) ? by_opt( 'credit_text' ) : 'One fixed fee, no surprises. You keep the report either way.';
 $where  = trim( (string) by_opt( 'location' ) );
 ?>
@@ -17,15 +20,16 @@ $where  = trim( (string) by_opt( 'location' ) );
     <!-- HERO: the verdict -->
     <section class="hero3">
       <div class="wrap">
-        <p class="eyebrow3">For trades and clinics, studios and shops, growing companies and corporates</p>
-        <h1 class="hero3__h1">Same work.<br>Better <span class="hero3__yet u"><span class="hand hand--yet">yet.</span><?php echo by_scribble( 'underline' ); ?></span></h1>
+        <p class="eyebrow3">For businesses with better things to do.</p>
+        <h1 class="hero3__h1">Less busywork.<br><span class="hero3__yet u">Better<?php echo by_scribble( 'underline' ); ?></span> business.</h1>
         <div class="hero3__row">
-          <p class="hero3__lead">AI, automation and smarter systems for businesses of every size, from a one-person studio to a national company. It starts with a one-week audit of where the time actually goes.</p>
+          <p class="hero3__lead">We find where your business is losing time and money, then build smarter systems to get it back. Start with a <?php echo esc_html( $price ); ?> audit.</p>
           <div class="hero3__cta">
             <a href="<?php echo esc_url( $audit ); ?>" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
             <a href="<?php echo esc_url( $work ); ?>" class="link-ink">See what we've built</a>
           </div>
         </div>
+        <?php if ( $guar ) : ?><p class="hero3__guarantee"><span class="hand"><?php echo esc_html( $guar ); ?></span></p><?php endif; ?>
         <figure class="hero3__photo">
           <?php echo by_asset_img( 'ref-hero.jpg', 'Black and white portrait with a hand-drawn electric blue scribble', 'hero3__img', 'eager' ); ?>
         </figure>
@@ -85,8 +89,16 @@ $where  = trim( (string) by_opt( 'location' ) );
           <p class="eyebrow3 eyebrow3--light"><?php echo esc_html( by_opt( 'audit_name' ) ); ?></p>
           <h2 class="auditb__h2">One conversation.<br>One report.<br>Your week back.</h2>
           <p class="auditb__price"><?php echo esc_html( $price ); ?></p>
+          <?php if ( $guar ) : ?><p class="auditb__guarantee"><?php echo esc_html( $guar ); ?></p><?php endif; ?>
           <p class="auditb__credit"><?php echo esc_html( $credit ); ?></p>
-          <?php if ( by_has( 'guarantee_text' ) ) : ?><p class="auditb__credit"><?php echo esc_html( by_opt( 'guarantee_text' ) ); ?></p><?php endif; ?>
+          <p class="auditb__label">What you get</p>
+          <ul class="auditb__gets">
+            <li>Your top five time drains, costed in hours and dollars</li>
+            <li>A fix plan ranked by payback, with prices for each fix</li>
+            <li>Quick wins you can make yourself, no build needed</li>
+            <li>The written report, yours to keep</li>
+          </ul>
+          <p class="auditb__next"><strong>Next step:</strong> pick a time for your 90-minute session. Booking takes two minutes.</p>
           <a href="<?php echo esc_url( $audit ); ?>" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
         </div>
         <div class="auditb__right">
@@ -100,25 +112,25 @@ $where  = trim( (string) by_opt( 'location' ) );
       </div>
     </section>
 
-    <!-- FIXES, PRICED -->
+    <!-- WAYS TO WORK WITH US (the audit lives in its own block above) -->
     <section class="section3" id="pricing">
       <div class="wrap">
         <div class="split split--tight">
-          <h2 class="h3x">Fixes, priced.</h2>
-          <p class="split__aside">Three ways to work with us, each with the price up front. Built on the tools you already use.</p>
+          <h2 class="h3x">Ways to work with us</h2>
+          <p class="split__aside">After the audit, pick what fits. Prices up front, built on the tools you already use.</p>
         </div>
         <ol class="fixes">
           <li class="fix">
             <span class="row__num">01</span>
-            <h3><?php echo esc_html( by_opt( 'audit_name' ) ); ?></h3>
-            <p class="fix__ba"><s>Guessing where the week goes</s><span class="fix__after"><span aria-hidden="true">→</span> Your top five time drains costed, fixes ranked, in one week</span></p>
-            <span class="fix__price"><?php echo esc_html( $price ); ?></span>
+            <h3>Concierge Essentials</h3>
+            <p class="fix__ba"><s>A website nobody looks after and no one to call</s><span class="fix__after"><span aria-hidden="true">→</span> Hosting, updates, backups and security, plus up to 2 hours of edits and support a month</span></p>
+            <span class="fix__price"><?php echo esc_html( by_price( 'essentials_price', 'Priced on the call' ) ); ?></span>
           </li>
           <li class="fix">
             <span class="row__num">02</span>
-            <h3>Concierge, websites and hosting</h3>
-            <p class="fix__ba"><s>A website nobody looks after and no one to call</s><span class="fix__after"><span aria-hidden="true">→</span> Built, hosted, kept current, and a person on the end of the phone</span></p>
-            <span class="fix__price"><?php echo esc_html( by_price( 'concierge_price', 'Priced on the call' ) ); ?></span>
+            <h3>Concierge Growth</h3>
+            <p class="fix__ba"><s>Systems that slowly drift out of date</s><span class="fix__after"><span aria-hidden="true">→</span> Everything in Essentials, plus about 10 hours a month on systems and automation, one improvement shipped each month and a monthly check-in</span></p>
+            <span class="fix__price"><?php echo esc_html( by_price( 'growth_price', 'Priced on the call' ) ); ?></span>
           </li>
           <li class="fix">
             <span class="row__num">03</span>
@@ -127,8 +139,19 @@ $where  = trim( (string) by_opt( 'location' ) );
             <span class="fix__price"><?php echo esc_html( by_price( 'app_price', 'Priced on the call' ) ); ?></span>
           </li>
         </ol>
-        <p class="fixes__foot">Every job is scoped and priced in writing before it starts. Keep-it-running support is included in the monthly concierge plans.</p>
+        <p class="fixes__foot">Every build is scoped and priced in writing before it starts. Unused Concierge hours don't roll over; bigger jobs are quoted separately.</p>
       </div>
+    </section>
+
+    <!-- GROWING TEAMS AND LARGER BUSINESSES (short version until the dedicated page exists) -->
+    <section class="section3 section3--tight" id="teams">
+      <div class="wrap"><div class="teams">
+        <h2 class="h3x">Growing team? Bigger business?</h2>
+        <div>
+          <p class="split__aside">More people means more handoffs, more tools and more places for time to leak. For teams of 20 or more we scope a deeper review of how work moves between people, sites and systems, priced to your setup.</p>
+          <a href="<?php echo esc_url( $book ); ?>" class="link-ink">Talk to us about your team <span aria-hidden="true">→</span></a>
+        </div>
+      </div></div>
     </section>
 
     <!-- CALCULATOR: blue block -->
@@ -137,8 +160,10 @@ $where  = trim( (string) by_opt( 'location' ) );
         <div>
           <h2 class="calcb__h2">What's your Friday worth?</h2>
           <form class="calcb__form" id="calcForm" onsubmit="return false">
-            <label for="hours"><span>Hours a week on admin and busywork</span><output id="hoursOut" for="hours">15</output>
-              <input type="range" id="hours" name="hours" min="1" max="80" value="15" aria-describedby="hoursOut"></label>
+            <label for="people"><span>People doing admin</span><output id="peopleOut" for="people">1</output>
+              <input type="range" id="people" name="people" min="1" max="50" value="1" aria-describedby="peopleOut"></label>
+            <label for="hours"><span>Hours a week each, on admin and busywork</span><output id="hoursOut" for="hours">15</output>
+              <input type="range" id="hours" name="hours" min="1" max="40" value="15" aria-describedby="hoursOut"></label>
             <label for="rate"><span>What an hour of that time costs</span><output id="rateOut" for="rate">$50</output>
               <input type="range" id="rate" name="rate" min="25" max="200" step="5" value="50" aria-describedby="rateOut"></label>
             <label for="share"><span>Share that could run itself</span><output id="shareOut" for="share">30%</output>
@@ -146,8 +171,8 @@ $where  = trim( (string) by_opt( 'location' ) );
           </form>
         </div>
         <div class="calcb__result" aria-live="polite">
-          <p class="calcb__big"><span id="resHours">216</span><small>hours back a year</small></p>
-          <p class="calcb__big"><span id="resDollars">$10,800</span><small>in time value a year</small></p>
+          <p class="calcb__big"><span id="resHours">216</span><small>estimated hours back a year</small></p>
+          <p class="calcb__big"><span id="resDollars">$10,800</span><small>estimated time value a year</small></p>
           <div class="calcb__actions">
             <a href="<?php echo esc_url( $audit ); ?>" class="btn btn--light js-book">Book the audit <span aria-hidden="true">→</span></a>
             <button type="button" class="link-light calcb__toggle" id="estimateToggle" aria-expanded="false" aria-controls="reportForm">Email me this estimate</button>
@@ -166,7 +191,7 @@ $where  = trim( (string) by_opt( 'location' ) );
             <label class="calcb__consent"><input type="checkbox" name="consent" value="yes" required> <span>Send me my estimate and the occasional useful email. No spam, unsubscribe any time.</span></label>
             <p class="form__status form__status--dark" id="reportStatus" aria-live="polite"></p>
           </form>
-          <p class="calcb__note">A rough estimate over 48 working weeks. Your audit gives the real numbers.</p>
+          <p class="calcb__note">An estimate, not a quote: people × hours a week × the share that could run itself × 48 working weeks, valued at your hourly cost. Your audit gives the real numbers.</p>
         </div>
       </div>
     </section>
@@ -201,6 +226,28 @@ $where  = trim( (string) by_opt( 'location' ) );
       </div>
     </section>
 
+    <!-- TESTIMONIALS: filled in from Customize > Better Yet settings; hidden until at least one quote exists -->
+    <?php
+    $quotes = array();
+    foreach ( array( 1, 2, 3 ) as $n ) {
+      if ( by_has( "t{$n}_quote" ) ) $quotes[] = array( by_opt( "t{$n}_quote" ), by_opt( "t{$n}_name" ), by_opt( "t{$n}_biz" ) );
+    }
+    if ( $quotes ) : ?>
+    <section class="section3 section3--tight" id="testimonials">
+      <div class="wrap">
+        <p class="eyebrow3">In their words</p>
+        <div class="quotes quotes--<?php echo count( $quotes ); ?>">
+          <?php foreach ( $quotes as $q ) : ?>
+          <figure class="quote">
+            <blockquote><p><?php echo nl2br( esc_html( $q[0] ) ); ?></p></blockquote>
+            <figcaption><strong><?php echo esc_html( $q[1] ); ?></strong><?php if ( $q[2] ) echo '<span>' . esc_html( $q[2] ) . '</span>'; ?></figcaption>
+          </figure>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+    <?php endif; ?>
+
     <!-- AI FOR PEOPLE WHO DON'T LOVE AI: stone block -->
     <section class="section3 section3--stone" id="who">
       <div class="wrap forwho">
@@ -229,17 +276,17 @@ $where  = trim( (string) by_opt( 'location' ) );
           <p class="aboutb__line"><?php echo $where ? esc_html( $where ) . '-based, working Australia-wide. ' : 'Working with businesses Australia-wide. '; ?>You deal with us, not a sales team.</p>
           <div class="founders">
             <div class="founder">
-              <?php echo by_asset_img( 'founder-christianna-2.jpg', 'Christianna, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
+              <?php echo by_asset_img( 'founder-christianna-bw.jpg', 'Christianna, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
               <strong>Christianna</strong>
               <span>Brand, marketing, ads and growth.</span>
             </div>
             <div class="founder">
-              <?php echo by_asset_img( 'founder-rob.jpg', 'Robert, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
+              <?php echo by_asset_img( 'founder-rob-bw.jpg', 'Robert, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
               <strong>Robert</strong>
               <span>AI tools, CRM, integrations and builds.</span>
             </div>
             <div class="founder">
-              <?php echo by_asset_img( 'founders-together.jpg', 'Christianna and Robert working at a table', 'founder__img' ); ?>
+              <?php echo by_asset_img( 'founders-together-bw.jpg', 'Christianna and Robert working at a table', 'founder__img founder__img--head' ); ?>
               <strong>The studio</strong>
               <span><?php echo $where ? esc_html( $where ) . '-based, working' : 'Working'; ?> Australia-wide.</span>
             </div>
@@ -256,12 +303,12 @@ $where  = trim( (string) by_opt( 'location' ) );
             <p>Usually not. We connect and improve what you already use.</p>
           </details>
           <details class="faqb">
-            <summary>Is my data used to train AI?</summary>
-            <p>No. A person checks anything uncertain, and you own everything we build, including the logins.</p>
+            <summary>What happens to my data?</summary>
+            <p>It stays yours. We only access the systems we need for the job, we don't use your data to train AI, and we choose tools that keep it private. A person checks anything uncertain, and you own everything we build, including the logins. Read our <a href="<?php echo esc_url( by_privacy_url() ); ?>">privacy policy</a>.</p>
           </details>
           <details class="faqb">
             <summary>What does the audit cost?</summary>
-            <p><?php echo esc_html( $price ); ?>. <?php echo esc_html( $credit ); ?></p>
+            <p><?php echo esc_html( $price ); ?>. <?php echo esc_html( $credit ); ?><?php if ( $guar ) echo ' ' . esc_html( $guar ); ?></p>
           </details>
           <details class="faqb">
             <summary>How long does it take?</summary>

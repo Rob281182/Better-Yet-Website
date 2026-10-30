@@ -85,6 +85,14 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
                   <label>Business<input type="text" name="business" autocomplete="organization"></label>
                 </div>
                 <div class="form__row">
+                  <label>Team size
+                    <select name="team_size">
+                      <option value="">Choose one</option>
+                      <option>1–5</option><option>6–20</option><option>21–100</option><option>100+</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="form__row">
                   <label>Email<input type="email" name="email" required autocomplete="email"></label>
                   <label>Phone<input type="tel" name="phone" required autocomplete="tel" placeholder="So we can call you"></label>
                 </div>
