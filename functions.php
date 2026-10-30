@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.2.5' );
+define( 'BY_VERSION', '2.3.0' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -26,13 +26,15 @@ function by_defaults() {
 		'pixel_id'    => '',
 		// Offer and pricing (v1.5.0). Leave a price blank and the site says "Quoted on the call".
 		'audit_name'     => 'The Time-Back Audit',
-		'audit_price'    => '',
-		'audit_founding' => '',
-		'fix_price'      => '',
-		'call_price'     => '',
-		'plan_price'     => '',
-		'project_price'  => '',
-		'credit_text'    => '',
+		'audit_price'     => '$995',
+		'audit_founding'  => '',
+		'concierge_price' => 'from $500 to $2,000 a month',
+		'app_price'       => 'from $2,000 to $5,000 per app',
+		'fix_price'       => '',
+		'call_price'      => '',
+		'plan_price'      => '',
+		'project_price'   => '',
+		'credit_text'     => '',
 		'guarantee_text' => '',
 		// Home page proof (v2.2.0)
 		'location'       => '',
@@ -78,12 +80,10 @@ add_action( 'customize_register', function ( $wp ) {
 		'ga4_id'      => array( 'Google Analytics 4 ID', 'text', 'e.g. G-XXXXXXXXXX' ),
 		'pixel_id'    => array( 'Meta Pixel ID', 'text', 'For Instagram/Facebook ads. Enquiries are tracked as Lead.' ),
 		'audit_name'     => array( 'Audit name', 'text', 'Shown as the product name of the audit.' ),
-		'audit_price'    => array( 'Audit price', 'text', 'e.g. "$995 + GST". Blank shows "Quoted on the call". Competitor report suggests $995 + GST.' ),
+		'audit_price'    => array( 'Audit price', 'text', 'Fixed price of the audit (Rob, 30 Oct 2026: $995).' ),
 		'audit_founding' => array( 'Audit founding offer', 'text', 'Optional line under the price, e.g. "Founding price $695 + GST for our first three clients".' ),
-		'fix_price'      => array( 'First fix price', 'text', 'e.g. "from $1,500 + GST". One workflow built in 2 to 3 weeks.' ),
-		'call_price'     => array( 'Missed-call catcher price', 'text', 'e.g. "from $1,200 setup + $150 a month".' ),
-		'plan_price'     => array( 'Keep it working plan price', 'text', 'e.g. "from $300 a month". Report suggests $300 to $600.' ),
-		'project_price'  => array( 'Projects price', 'text', 'e.g. "from $3,000 + GST".' ),
+		'concierge_price' => array( 'Concierge, websites and hosting price', 'text', 'Monthly band shown in Pricing (Rob, 30 Oct 2026: from $500 to $2,000 a month).' ),
+		'app_price'       => array( 'Custom apps and integrations price', 'text', 'Per-app band shown in Pricing (Rob, 30 Oct 2026: from $2,000 to $5,000 per app).' ),
 		'credit_text'    => array( 'Audit credit line', 'text', 'Optional. e.g. "The full audit fee is credited against any build booked within 60 days." Blank hides it.' ),
 		'guarantee_text' => array( 'Guarantee line', 'text', 'Optional. e.g. "If we can\'t find at least 5 hours a week to hand back, you don\'t pay." Blank hides it.' ),
 		'location'       => array( 'Where you are based', 'text', 'e.g. "Brisbane" or "Melbourne". Shown in About and the footer. Blank says "Australia-wide" only.' ),

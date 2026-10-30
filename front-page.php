@@ -8,8 +8,8 @@ get_header();
 $book   = by_book_url();
 $audit  = $book . '?call=audit';
 $work   = by_work_url();
-$price  = by_has( 'audit_price' ) ? 'From ' . by_opt( 'audit_price' ) : 'Priced on the call';
-$credit = by_has( 'credit_text' ) ? by_opt( 'credit_text' ) : 'Fixed fee, agreed before we start. You keep the report either way.';
+$price  = by_has( 'audit_price' ) ? by_opt( 'audit_price' ) : 'Priced on the call';
+$credit = by_has( 'credit_text' ) ? by_opt( 'credit_text' ) : 'One fixed fee, no surprises. You keep the report either way.';
 $where  = trim( (string) by_opt( 'location' ) );
 ?>
   <main id="main">
@@ -105,29 +105,29 @@ $where  = trim( (string) by_opt( 'location' ) );
       <div class="wrap">
         <div class="split split--tight">
           <h2 class="h3x">Fixes, priced.</h2>
-          <p class="split__aside">Small jobs that pay for themselves. Built on the tools you already use.</p>
+          <p class="split__aside">Three ways to work with us, each with the price up front. Built on the tools you already use.</p>
         </div>
         <ol class="fixes">
           <li class="fix">
             <span class="row__num">01</span>
-            <h3>The First Fix</h3>
-            <p class="fix__ba"><s>One workflow eating your week</s><span class="fix__after"><span aria-hidden="true">→</span> Built and running in two to three weeks</span></p>
-            <span class="fix__price"><?php echo esc_html( by_price( 'fix_price', 'Priced on the call' ) ); ?></span>
+            <h3><?php echo esc_html( by_opt( 'audit_name' ) ); ?></h3>
+            <p class="fix__ba"><s>Guessing where the week goes</s><span class="fix__after"><span aria-hidden="true">→</span> Your top five time drains costed, fixes ranked, in one week</span></p>
+            <span class="fix__price"><?php echo esc_html( $price ); ?></span>
           </li>
           <li class="fix">
             <span class="row__num">02</span>
-            <h3>The Missed-Call Catcher</h3>
-            <p class="fix__ba"><s>Calls go to voicemail while you're on the tools</s><span class="fix__after"><span aria-hidden="true">→</span> Every missed call gets a text back in seconds</span></p>
-            <span class="fix__price"><?php echo esc_html( by_price( 'call_price', 'Priced on the call' ) ); ?></span>
+            <h3>Concierge, websites and hosting</h3>
+            <p class="fix__ba"><s>A website nobody looks after and no one to call</s><span class="fix__after"><span aria-hidden="true">→</span> Built, hosted, kept current, and a person on the end of the phone</span></p>
+            <span class="fix__price"><?php echo esc_html( by_price( 'concierge_price', 'Priced on the call' ) ); ?></span>
           </li>
           <li class="fix">
             <span class="row__num">03</span>
-            <h3>Keep It Working</h3>
-            <p class="fix__ba"><s>Automations that quietly break when an app updates</s><span class="fix__after"><span aria-hidden="true">→</span> We watch it, fix it, and tweak it. Cancel any month</span></p>
-            <span class="fix__price"><?php echo esc_html( by_price( 'plan_price', 'Priced on the call' ) ); ?></span>
+            <h3>Custom apps and integrations</h3>
+            <p class="fix__ba"><s>Retyping between tools that don't talk</s><span class="fix__after"><span aria-hidden="true">→</span> Booking, quoting, CRM and automation built to fit and connected to what you use</span></p>
+            <span class="fix__price"><?php echo esc_html( by_price( 'app_price', 'Priced on the call' ) ); ?></span>
           </li>
         </ol>
-        <p class="fixes__foot">Bigger projects (connected systems, CRM, booking, reporting) are quoted from your audit<?php if ( by_has( 'project_price' ) ) echo ', ' . esc_html( by_opt( 'project_price' ) ); ?>.</p>
+        <p class="fixes__foot">Every job is scoped and priced in writing before it starts. Keep-it-running support is included in the monthly concierge plans.</p>
       </div>
     </section>
 
