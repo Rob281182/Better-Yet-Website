@@ -17,10 +17,10 @@ $where  = trim( (string) by_opt( 'location' ) );
     <!-- HERO: the verdict -->
     <section class="hero3">
       <div class="wrap">
-        <p class="eyebrow3">For trades, clinics, studios and shops</p>
+        <p class="eyebrow3">For trades and clinics, studios and shops, growing companies and corporates</p>
         <h1 class="hero3__h1">Same work.<br>Better <span class="hero3__yet u"><span class="hand hand--yet">yet.</span><?php echo by_scribble( 'underline' ); ?></span></h1>
         <div class="hero3__row">
-          <p class="hero3__lead">AI, automation and smarter systems for small businesses. It starts with a one-week audit of where your time actually goes.</p>
+          <p class="hero3__lead">AI, automation and smarter systems for businesses of every size, from a one-person studio to a national company. It starts with a one-week audit of where the time actually goes.</p>
           <div class="hero3__cta">
             <a href="<?php echo esc_url( $audit ); ?>" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
             <a href="<?php echo esc_url( $work ); ?>" class="link-ink">See what we've built</a>
@@ -216,6 +216,7 @@ $where  = trim( (string) by_opt( 'location' ) );
           <li><a href="<?php echo esc_url( $audit ); ?>">Clinics <span aria-hidden="true">→</span></a></li>
           <li><a href="<?php echo esc_url( $audit ); ?>">Creatives <span aria-hidden="true">→</span></a></li>
           <li><a href="<?php echo esc_url( $audit ); ?>">Shops <span aria-hidden="true">→</span></a></li>
+          <li><a href="<?php echo esc_url( $audit ); ?>">Corporate teams <span aria-hidden="true">→</span></a></li>
         </ul>
       </div>
     </section>
