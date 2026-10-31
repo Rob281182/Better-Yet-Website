@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.4.0' );
+define( 'BY_VERSION', '2.4.1' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -48,6 +48,8 @@ function by_defaults() {
 		't1_quote' => '', 't1_name' => '', 't1_biz' => '',
 		't2_quote' => '', 't2_name' => '', 't2_biz' => '',
 		't3_quote' => '', 't3_name' => '', 't3_biz' => '',
+		't4_quote' => '', 't4_name' => '', 't4_biz' => '',
+		't5_quote' => '', 't5_name' => '', 't5_biz' => '',
 	) );
 }
 
@@ -102,8 +104,8 @@ add_action( 'customize_register', function ( $wp ) {
 		'proof_roam'     => array( 'Roam Orthotics proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
 		'proof_steph'    => array( 'Stephanie Anne Studio proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
 	);
-	foreach ( array( 1, 2, 3 ) as $n ) {
-		$fields[ "t{$n}_quote" ] = array( "Testimonial {$n}: quote", 'textarea', 1 === $n ? 'Client-approved words only. The "In their words" section on the home page appears once any quote is filled in.' : '' );
+	foreach ( array( 1, 2, 3, 4, 5 ) as $n ) {
+		$fields[ "t{$n}_quote" ] = array( "Testimonial {$n}: quote", 'textarea', 1 === $n ? 'Client-approved words only. The "In their words" section appears to the public once any quote is filled in. Until then, logged-in admins see draft quotes marked DRAFT.' : '' );
 		$fields[ "t{$n}_name" ]  = array( "Testimonial {$n}: name", 'text', 'e.g. Stephanie' );
 		$fields[ "t{$n}_biz" ]   = array( "Testimonial {$n}: business", 'text', 'e.g. Stephanie Anne Studio' );
 	}

@@ -226,28 +226,6 @@ $where  = trim( (string) by_opt( 'location' ) );
       </div>
     </section>
 
-    <!-- TESTIMONIALS: filled in from Customize > Better Yet settings; hidden until at least one quote exists -->
-    <?php
-    $quotes = array();
-    foreach ( array( 1, 2, 3 ) as $n ) {
-      if ( by_has( "t{$n}_quote" ) ) $quotes[] = array( by_opt( "t{$n}_quote" ), by_opt( "t{$n}_name" ), by_opt( "t{$n}_biz" ) );
-    }
-    if ( $quotes ) : ?>
-    <section class="section3 section3--tight" id="testimonials">
-      <div class="wrap">
-        <p class="eyebrow3">In their words</p>
-        <div class="quotes quotes--<?php echo count( $quotes ); ?>">
-          <?php foreach ( $quotes as $q ) : ?>
-          <figure class="quote">
-            <blockquote><p><?php echo nl2br( esc_html( $q[0] ) ); ?></p></blockquote>
-            <figcaption><strong><?php echo esc_html( $q[1] ); ?></strong><?php if ( $q[2] ) echo '<span>' . esc_html( $q[2] ) . '</span>'; ?></figcaption>
-          </figure>
-          <?php endforeach; ?>
-        </div>
-      </div>
-    </section>
-    <?php endif; ?>
-
     <!-- AI FOR PEOPLE WHO DON'T LOVE AI: stone block -->
     <section class="section3 section3--stone" id="who">
       <div class="wrap forwho">
@@ -276,7 +254,7 @@ $where  = trim( (string) by_opt( 'location' ) );
           <p class="aboutb__line"><?php echo $where ? esc_html( $where ) . '-based, working Australia-wide. ' : 'Working with businesses Australia-wide. '; ?>You deal with us, not a sales team.</p>
           <div class="founders">
             <div class="founder">
-              <?php echo by_asset_img( 'founder-christianna-bw.jpg', 'Christianna, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
+              <?php echo by_asset_img( 'founder-christianna-bw2.jpg', 'Christianna, co-founder of Better Yet', 'founder__img founder__img--head' ); ?>
               <strong>Christianna</strong>
               <span>Brand, marketing, ads and growth.</span>
             </div>
@@ -321,6 +299,41 @@ $where  = trim( (string) by_opt( 'location' ) );
         </div>
       </div>
     </section>
+
+    <!-- TESTIMONIALS: filled in from Customize > Better Yet settings; hidden until at least one quote exists -->
+    <?php
+    $quotes = array();
+    foreach ( array( 1, 2, 3, 4, 5 ) as $n ) {
+      if ( by_has( "t{$n}_quote" ) ) $quotes[] = array( by_opt( "t{$n}_quote" ), by_opt( "t{$n}_name" ), by_opt( "t{$n}_biz" ) );
+    }
+    // Draft wording to take to each client. Shown ONLY to logged-in admins, never to the public,
+    // until approved quotes are pasted into Customize > Better Yet settings.
+    $drafts = ! $quotes && current_user_can( 'edit_theme_options' );
+    if ( $drafts ) {
+      $quotes = array(
+        array( 'Riders design their own frame online and the geometry lands straight in our CRM. I spend far less time quoting by email and more time building bikes.', '', 'Heiden Cycle Works' ),
+        array( 'Referrals, NDIS paperwork and scans all come through one front door now. Nothing slips through, and the admin takes a fraction of the time it used to.', '', 'Roam Orthotics' ),
+        array( 'My originals and prints sell online while I paint. I haven\'t typed an invoice since.', '', 'Stephanie Anne Studio' ),
+        array( 'Enrolments across our franchise run online from start to finish, so our team spends its time with families instead of forms.', '', 'Ready Steady Go Kids' ),
+        array( 'Customers design their piece online and the order arrives with everything we need. Fewer back-and-forth emails, more time at the bench.', '', 'Damselfly Jewellery' ),
+      );
+    }
+    if ( $quotes ) : ?>
+    <section class="section3 section3--tight" id="testimonials">
+      <div class="wrap">
+        <p class="eyebrow3">In their words</p>
+        <?php if ( $drafts ) : ?><p class="quotes__draft"><strong>DRAFT, only visible to logged-in admins.</strong> Confirm each quote with the client, then paste the approved wording into Customize → Better Yet settings → Testimonials. Once any approved quote is saved, these drafts disappear and the section goes public.</p><?php endif; ?>
+        <div class="quotes quotes--<?php echo min( 3, count( $quotes ) ); ?><?php echo $drafts ? ' quotes--drafts' : ''; ?>">
+          <?php foreach ( $quotes as $q ) : ?>
+          <figure class="quote">
+            <blockquote><p><?php echo nl2br( esc_html( $q[0] ) ); ?></p></blockquote>
+            <figcaption><strong><?php echo esc_html( $q[1] ); ?></strong><?php if ( $q[2] ) echo '<span>' . esc_html( $q[2] ) . '</span>'; ?></figcaption>
+          </figure>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+    <?php endif; ?>
 
     <!-- CLOSING CTA: black block -->
     <section class="close3">
