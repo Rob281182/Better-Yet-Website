@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.4.1' );
+define( 'BY_VERSION', '2.4.2' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
@@ -44,12 +44,12 @@ function by_defaults() {
 		'hours_back'     => '',
 		'proof_roam'     => '',
 		'proof_steph'    => '',
-		// Testimonials (v2.4.0): the section appears once at least one quote is filled in.
-		't1_quote' => '', 't1_name' => '', 't1_biz' => '',
-		't2_quote' => '', 't2_name' => '', 't2_biz' => '',
-		't3_quote' => '', 't3_name' => '', 't3_biz' => '',
-		't4_quote' => '', 't4_name' => '', 't4_biz' => '',
-		't5_quote' => '', 't5_name' => '', 't5_biz' => '',
+		// Testimonials: client-confirmed wording (Rob, 31 Oct 2026). Edit or clear in Customize; blank quotes are hidden.
+		't1_quote' => 'Riders design their own frame online and the geometry lands straight in our CRM. I spend far less time quoting by email and more time building bikes.', 't1_name' => '', 't1_biz' => 'Heiden Cycle Works',
+		't2_quote' => 'Referrals, NDIS paperwork and scans all come through one front door now. Nothing slips through, and the admin takes a fraction of the time it used to.', 't2_name' => '', 't2_biz' => 'Roam Orthotics',
+		't3_quote' => 'My originals and prints sell online while I paint. I haven\'t typed an invoice since.', 't3_name' => '', 't3_biz' => 'Stephanie Anne Studio',
+		't4_quote' => 'Enrolments across our franchise run online from start to finish, so our team spends its time with families instead of forms.', 't4_name' => '', 't4_biz' => 'Ready Steady Go Kids',
+		't5_quote' => 'Customers design their piece online and the order arrives with everything we need. Fewer back-and-forth emails, more time at the bench.', 't5_name' => '', 't5_biz' => 'Damselfly Jewellery',
 	) );
 }
 
@@ -105,7 +105,7 @@ add_action( 'customize_register', function ( $wp ) {
 		'proof_steph'    => array( 'Stephanie Anne Studio proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
 	);
 	foreach ( array( 1, 2, 3, 4, 5 ) as $n ) {
-		$fields[ "t{$n}_quote" ] = array( "Testimonial {$n}: quote", 'textarea', 1 === $n ? 'Client-approved words only. The "In their words" section appears to the public once any quote is filled in. Until then, logged-in admins see draft quotes marked DRAFT.' : '' );
+		$fields[ "t{$n}_quote" ] = array( "Testimonial {$n}: quote", 'textarea', 1 === $n ? 'Client-approved words only. Blank hides it.' : '' );
 		$fields[ "t{$n}_name" ]  = array( "Testimonial {$n}: name", 'text', 'e.g. Stephanie' );
 		$fields[ "t{$n}_biz" ]   = array( "Testimonial {$n}: business", 'text', 'e.g. Stephanie Anne Studio' );
 	}
