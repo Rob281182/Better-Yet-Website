@@ -312,9 +312,14 @@ $where  = trim( (string) by_opt( 'location' ) );
         <p class="eyebrow3">In their words</p>
         <div class="quotes quotes--<?php echo min( 3, count( $quotes ) ); ?>">
           <?php foreach ( $quotes as $q ) : ?>
-          <figure class="quote">
+          <?php $who = $q[1] ? $q[1] : $q[2]; $initial = function_exists( 'mb_substr' ) ? mb_substr( $who, 0, 1 ) : substr( $who, 0, 1 ); ?>
+          <figure class="quote review">
+            <figcaption class="review__head">
+              <span class="review__avatar" aria-hidden="true"><?php echo esc_html( strtoupper( $initial ) ); ?></span>
+              <span class="review__who"><strong><?php echo esc_html( $who ); ?></strong><span><?php echo $q[1] && $q[2] ? esc_html( $q[2] ) : 'Client'; ?></span></span>
+            </figcaption>
+            <p class="review__stars" role="img" aria-label="Rated 5 out of 5"><?php echo str_repeat( '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.5l2.6 5.5 6 .8-4.4 4.1 1.1 5.9L10 15l-5.3 2.8 1.1-5.9L1.4 7.8l6-.8z"/></svg>', 5 ); ?></p>
             <blockquote><p><?php echo nl2br( esc_html( $q[0] ) ); ?></p></blockquote>
-            <figcaption><strong><?php echo esc_html( $q[1] ); ?></strong><?php if ( $q[2] ) echo '<span>' . esc_html( $q[2] ) . '</span>'; ?></figcaption>
           </figure>
           <?php endforeach; ?>
         </div>
