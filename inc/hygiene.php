@@ -21,11 +21,13 @@ add_action( 'send_headers', function () { if ( by_is_staging() && ! headers_sent
 /* Per-page description and Open Graph */
 function by_page_meta() {
 	$brand = by_opt( 'brand' );
-	$desc  = $brand . ' helps Australian businesses of every size, from sole traders to corporates, find where time and money are being lost, then fixes it with practical automation and smarter systems. Start with ' . by_opt( 'audit_name' ) . '.';
+	$desc  = $brand . ' finds where your week goes, then fixes it: invoices that chase themselves, bookings that fill themselves and apps that talk to each other. For Australian businesses from one-person studios to national companies. Start with a ' . by_price( 'audit_price', '' ) . ' audit. Find 10x your fee, or it\'s free.';
+	if ( is_page( 'audit' ) )     $desc = by_opt( 'audit_name' ) . ': one 90-minute session, a written report in five business days, your top time drains costed and a fix plan priced. ' . by_price( 'audit_price', '' ) . '. Find 10x your fee, or it\'s free.';
 	if ( is_page( 'book' ) )      $desc = 'Book a free 20-minute call or a ' . by_opt( 'audit_name' ) . ' session with ' . $brand . '. Pick a time that suits you; confirmation and calendar invite sent straight away.';
 	if ( is_page( 'our-work' ) )  $desc = 'What ' . $brand . ' has built for real businesses: an automated bike builder, a clinic front door, an artist\'s online studio, franchise enrolments and a custom candle shop.';
 	if ( is_page( 'contact' ) )   $desc = 'Tell ' . $brand . ' where your week goes. We reply within one business day with times for a free 20-minute call.';
-	if ( is_page( 'privacy-policy' ) ) $desc = 'How ' . $brand . ' handles the personal information collected through this website.';
+	$pp = (int) get_option( 'wp_page_for_privacy_policy' );
+	if ( is_page( 'privacy' ) || ( $pp && is_page( $pp ) ) ) $desc = 'Where your data lives when ' . $brand . ' works on your systems, who can access it, why it is never used to train AI, and how this website handles personal information.';
 	return apply_filters( 'by_page_meta', array( 'description' => $desc ) );
 }
 add_action( 'wp_head', function () {

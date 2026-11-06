@@ -4,6 +4,8 @@
  * v2.4.0: Christianna's Sunday list (31 Oct 2026): new hero, $990 audit + guarantee, "Ways to work with us"
  * with two Concierge tiers, larger-teams section, testimonials slot, people slider in the calculator.
  * "The auditor's pen, in blue": B&W photos = the business, blue hand-drawn marks = the intervention, big type = the verdict.
+ * v2.5.0: Christianna's launch list (5 Nov 2026): concrete hero sub-line, price strip, "Or just fix the one thing" grid,
+ * "Somewhere in your business, right now" panels, guarantee terms in the FAQ, who-it's-for links, testimonial labels.
  * One CTA verb everywhere: Book the audit. Prices and the proof numbers live in Appearance > Customize > Better Yet settings.
  */
 get_header();
@@ -13,20 +15,23 @@ $work   = by_work_url();
 $price  = by_price( 'audit_price', 'Priced on the call' );
 $guar   = trim( (string) by_opt( 'guarantee_text' ) );
 $credit = by_has( 'credit_text' ) ? by_opt( 'credit_text' ) : 'One fixed fee, no surprises. You keep the report either way.';
+$terms  = $guar ? by_guarantee_terms() : '';
 $where  = trim( (string) by_opt( 'location' ) );
+$strip  = by_price_strip();
 ?>
   <main id="main">
 
     <!-- HERO: the verdict -->
     <section class="hero3">
       <div class="wrap">
-        <p class="eyebrow3">For businesses with better things to do.</p>
+        <p class="eyebrow3">From one-person studios to national companies</p>
         <h1 class="hero3__h1">Less busywork.<br><span class="hero3__yet u">Better<?php echo by_scribble( 'underline' ); ?></span> business.</h1>
         <div class="hero3__row">
-          <p class="hero3__lead">We find where your business is losing time and money, then build smarter systems to get it back. Start with a <?php echo esc_html( $price ); ?> audit.</p>
+          <p class="hero3__lead">We find where your week goes, then fix it: invoices that chase themselves, bookings that fill themselves, apps that talk to each other, and a website someone looks after. It starts with a <?php echo esc_html( $price ); ?> audit<?php echo $guar ? ', guaranteed' : ''; ?>.</p>
           <div class="hero3__cta">
             <a href="<?php echo esc_url( $audit ); ?>" class="btn js-book">Book the audit <span aria-hidden="true">→</span></a>
             <a href="<?php echo esc_url( $work ); ?>" class="link-ink">See what we've built</a>
+            <?php if ( $strip ) : ?><p class="hero3__prices"><?php echo esc_html( $strip ); ?></p><?php endif; ?>
           </div>
         </div>
         <?php if ( $guar ) : ?><p class="hero3__guarantee"><span class="hand"><?php echo esc_html( $guar ); ?></span></p><?php endif; ?>
@@ -50,6 +55,20 @@ $where  = trim( (string) by_opt( 'location' ) );
       </div>
     </div>
 
+    <!-- OR JUST FIX THE ONE THING: six concrete jobs with prices -->
+    <?php $grid = by_jobs_grid( $book ); if ( $grid ) : ?>
+    <section class="section3 section3--jobs" id="fixes">
+      <div class="wrap">
+        <div class="split split--tight">
+          <h2 class="h3x">Or just fix the one thing.</h2>
+          <p class="split__aside">Know exactly what's bugging you? Skip the audit. Each job is scoped and priced in writing before we start, on the tools you already use.</p>
+        </div>
+        <?php echo $grid; // escaped in by_jobs_grid() ?>
+        <p class="fixes__foot">Not sure which one you need? <a class="link-ink" href="<?php echo esc_url( $book ); ?>">Book a free 20-minute call</a></p>
+      </div>
+    </section>
+    <?php endif; ?>
+
     <!-- PROOF STRIP -->
     <div class="wrap">
       <div class="proof">
@@ -63,22 +82,35 @@ $where  = trim( (string) by_opt( 'location' ) );
       </div>
     </div>
 
-    <!-- YOUR WEEK, MARKED UP -->
-    <section class="section3" id="markup">
-      <div class="wrap markup3">
-        <figure class="markup">
-          <?php echo by_asset_img( 'founders-studio.jpg', 'Robert showing Christianna a printed report while she works at a laptop, with hand-written notes marking where the time goes', 'markup__img' ); ?>
-          <span class="markup__note markup__note--a"><span class="hand hand--light">Quotes typed twice</span></span>
-          <span class="markup__note markup__note--b"><span class="hand hand--light">Missed calls, 9 a week</span></span>
-          <span class="markup__note markup__note--c"><span class="hand hand--light">Invoice chasing, 3 hrs/wk</span></span>
-          <?php echo str_replace( 'class="scribble ', 'class="markup__circle scribble ', by_scribble( 'circle' ) ); ?>
-          <?php echo str_replace( 'class="scribble ', 'class="markup__arrow scribble ', by_scribble( 'arrow' ) ); ?>
-          <figcaption>Illustrative annotations. Your audit puts real numbers on your own week.</figcaption>
-        </figure>
-        <div class="markup3__text">
-          <h2 class="h3x">You already know what's slowing you down. We put a number on it.</h2>
-          <p class="split__aside">Most of it hides in plain sight: the invoice book on the dash, the call you couldn't take, the quote you typed twice.</p>
+    <!-- SOMEWHERE IN YOUR BUSINESS, RIGHT NOW (from the mockup; replaces the marked-up photo) -->
+    <section class="section3 section3--stone" id="markup">
+      <div class="wrap">
+        <div class="split split--tight">
+          <h2 class="h3x">Somewhere in your business, right now.</h2>
+          <p class="split__aside">Most of it hides in plain sight. You already know what's slowing you down. The audit puts a number on it.</p>
         </div>
+        <ul class="nowp">
+          <li class="nowp__item">
+            <span class="nowp__time hand">9:14 am</span>
+            <p class="nowp__now">A new customer rings while you're with a client. Nobody picks up, so they call the next business on Google.</p>
+            <p class="nowp__fix"><span aria-hidden="true">→</span> Missed-call text-back replies in seconds.</p>
+          </li>
+          <li class="nowp__item">
+            <span class="nowp__time hand">11:40 am</span>
+            <p class="nowp__now">Someone is typing the same quote into a spreadsheet, then again into Xero.</p>
+            <p class="nowp__fix"><span aria-hidden="true">→</span> Enter it once and it lands everywhere.</p>
+          </li>
+          <li class="nowp__item">
+            <span class="nowp__time hand">4:45 pm</span>
+            <p class="nowp__now">An invoice ticks past 30 days overdue. No one has noticed, and no one wants to chase it.</p>
+            <p class="nowp__fix"><span aria-hidden="true">→</span> Polite reminders go out on their own.</p>
+          </li>
+          <li class="nowp__item">
+            <span class="nowp__time hand">9:20 pm</span>
+            <p class="nowp__now">You're on the couch answering "do you have anything Thursday?" in your DMs.</p>
+            <p class="nowp__fix"><span aria-hidden="true">→</span> Clients book themselves into the gaps.</p>
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -89,7 +121,8 @@ $where  = trim( (string) by_opt( 'location' ) );
           <p class="eyebrow3 eyebrow3--light"><?php echo esc_html( by_opt( 'audit_name' ) ); ?></p>
           <h2 class="auditb__h2">One conversation.<br>One report.<br>Your week back.</h2>
           <p class="auditb__price"><?php echo esc_html( $price ); ?></p>
-          <?php if ( $guar ) : ?><p class="auditb__guarantee"><?php echo esc_html( $guar ); ?></p><?php endif; ?>
+          <?php if ( $guar ) : ?><p class="auditb__guarantee"><?php echo esc_html( $guar ); ?></p>
+          <p class="auditb__terms">If we don't find at least 10 times the fee in yearly savings, you get your money back. <a href="#faq-guarantee">How it works</a></p><?php endif; ?>
           <p class="auditb__credit"><?php echo esc_html( $credit ); ?></p>
           <p class="auditb__label">What you get</p>
           <ul class="auditb__gets">
@@ -237,11 +270,11 @@ $where  = trim( (string) by_opt( 'location' ) );
           <p class="forwho__more"><span class="hand hand--line">Your business, minus the busywork.</span></p>
         </div>
         <ul class="forwho__list">
-          <li><a href="<?php echo esc_url( $audit ); ?>">Trades <span aria-hidden="true">→</span></a></li>
-          <li><a href="<?php echo esc_url( $audit ); ?>">Clinics <span aria-hidden="true">→</span></a></li>
-          <li><a href="<?php echo esc_url( $audit ); ?>">Creatives <span aria-hidden="true">→</span></a></li>
-          <li><a href="<?php echo esc_url( $audit ); ?>">Shops <span aria-hidden="true">→</span></a></li>
-          <li><a href="<?php echo esc_url( $audit ); ?>">Corporate teams <span aria-hidden="true">→</span></a></li>
+          <li><a href="#fixes">Trades <span aria-hidden="true">→</span></a></li>
+          <li><a href="<?php echo esc_url( $work . '#roam' ); ?>">Clinics <span aria-hidden="true">→</span></a></li>
+          <li><a href="<?php echo esc_url( $work . '#stephanie' ); ?>">Creatives <span aria-hidden="true">→</span></a></li>
+          <li><a href="<?php echo esc_url( $work . '#damselfly' ); ?>">Shops <span aria-hidden="true">→</span></a></li>
+          <li><a href="#teams">Corporate teams <span aria-hidden="true">→</span></a></li>
         </ul>
       </div>
     </section>
@@ -282,12 +315,18 @@ $where  = trim( (string) by_opt( 'location' ) );
           </details>
           <details class="faqb">
             <summary>What happens to my data?</summary>
-            <p>It stays yours. We only access the systems we need for the job, we don't use your data to train AI, and we choose tools that keep it private. A person checks anything uncertain, and you own everything we build, including the logins. Read our <a href="<?php echo esc_url( by_privacy_url() ); ?>">privacy policy</a>.</p>
+            <p>It stays yours. We only access the systems we need for the job, we don't use your data to train AI, and we choose tools that keep it private. A person checks anything uncertain, and you own everything we build, including the logins. <a href="<?php echo esc_url( by_privacy_url() ); ?>">Data and privacy</a>.</p>
           </details>
           <details class="faqb">
             <summary>What does the audit cost?</summary>
-            <p><?php echo esc_html( $price ); ?>. <?php echo esc_html( $credit ); ?><?php if ( $guar ) echo ' ' . esc_html( $guar ); ?></p>
+            <p><?php echo esc_html( $price ); ?>. <?php echo esc_html( $credit ); ?><?php if ( $guar ) echo ' ' . esc_html( $guar ); ?> <a href="<?php echo esc_url( by_audit_url() ); ?>">More about the audit</a>.</p>
           </details>
+          <?php if ( $guar ) : ?>
+          <details class="faqb" id="faq-guarantee">
+            <summary>How does the guarantee work?</summary>
+            <p><?php echo esc_html( $terms ); ?></p>
+          </details>
+          <?php endif; ?>
           <details class="faqb">
             <summary>How long does it take?</summary>
             <p>About a week: a 90-minute session, your report within five business days, then a 30-minute walkthrough.</p>
@@ -304,7 +343,7 @@ $where  = trim( (string) by_opt( 'location' ) );
     <?php
     $quotes = array();
     foreach ( array( 1, 2, 3, 4, 5 ) as $n ) {
-      if ( by_has( "t{$n}_quote" ) ) $quotes[] = array( by_opt( "t{$n}_quote" ), by_opt( "t{$n}_name" ), by_opt( "t{$n}_biz" ) );
+      if ( by_has( "t{$n}_quote" ) ) $quotes[] = array( by_opt( "t{$n}_quote" ), by_opt( "t{$n}_name" ), by_opt( "t{$n}_biz" ), by_opt( "t{$n}_role" ) );
     }
     if ( $quotes ) : ?>
     <section class="section3 section3--tight" id="testimonials">
@@ -316,7 +355,7 @@ $where  = trim( (string) by_opt( 'location' ) );
           <figure class="quote review">
             <figcaption class="review__head">
               <span class="review__avatar" aria-hidden="true"><?php echo esc_html( strtoupper( $initial ) ); ?></span>
-              <span class="review__who"><strong><?php echo esc_html( $who ); ?></strong><span><?php echo $q[1] && $q[2] ? esc_html( $q[2] ) : 'Client'; ?></span></span>
+              <span class="review__who"><strong><?php echo esc_html( $who ); ?></strong><span><?php echo esc_html( $q[1] && $q[2] ? $q[2] . ( $q[3] ? ', ' . $q[3] : '' ) : ( $q[3] ? $q[3] : 'Client' ) ); ?></span></span>
             </figcaption>
             <p class="review__stars" role="img" aria-label="Rated 5 out of 5"><?php echo str_repeat( '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.5l2.6 5.5 6 .8-4.4 4.1 1.1 5.9L10 15l-5.3 2.8 1.1-5.9L1.4 7.8l6-.8z"/></svg>', 5 ); ?></p>
             <blockquote><p><?php echo nl2br( esc_html( $q[0] ) ); ?></p></blockquote>

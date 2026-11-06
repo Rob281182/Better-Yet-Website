@@ -126,9 +126,16 @@
       .then(function () { btn.disabled = false; });
   });
 
+  /* FAQ links such as #faq-guarantee open the answer they point to (v2.5.0) */
+  $$('a[href*="#faq-"]').forEach(function (l) {
+    l.addEventListener("click", function () { var t = document.getElementById(l.hash.slice(1)); if (t && t.tagName === "DETAILS") t.open = true; });
+  });
+  if (location.hash.indexOf("#faq-") === 0) { var fq = document.getElementById(location.hash.slice(1)); if (fq && fq.tagName === "DETAILS") fq.open = true; }
+
   /* ---------- Home page (v2.2.0): ticker loop and "Email me this estimate" ---------- */
   var ticker = $("#ticker");
-  if (ticker) { ticker.innerHTML += ticker.innerHTML; ticker.setAttribute("aria-hidden", "false"); }
+  // Duplicate the chores for the seamless loop only when it moves (v2.5.0: with motion off, one clean list)
+  if (ticker && !reduce) { ticker.innerHTML += ticker.innerHTML; }
   var tog = $("#estimateToggle");
   if (tog && rform) tog.addEventListener("click", function () {
     var open = rform.hidden; rform.hidden = !open; tog.setAttribute("aria-expanded", open);
@@ -215,6 +222,7 @@
   }
   if (vtz && tzNote) { tzNote.textContent = "(your time, " + tzName() + ")"; }
   if (vtz && sideNote) { sideNote.textContent = "Times are shown in your time zone, " + tzName() + "."; }
+  var vtzIn = document.getElementById("bookVisitorTz"); if (vtzIn) vtzIn.value = vtz;
 
   function renderDays() {
     var slots = all[type()] || {}, keys = Object.keys(slots);

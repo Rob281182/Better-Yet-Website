@@ -812,3 +812,68 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 @media (max-width: 860px) {
   .teams, .quotes, .quotes--2 { grid-template-columns: 1fr; }
 }
+
+/* ---------- v2.5.0: Christianna's launch list (5 Nov 2026) ---------- */
+/* Price strip under the hero buttons */
+.hero3__prices { flex-basis: 100%; width: 0; min-width: 100%; margin: 4px 0 0; font-size: .9rem; font-weight: 700; color: var(--ink); letter-spacing: .01em; }
+
+/* Or just fix the one thing: six jobs with prices */
+.section3--jobs { padding-top: 72px; padding-bottom: 40px; }
+.jobs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.job { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.job__link { display: grid; grid-template-rows: auto auto 1fr auto; gap: 8px; height: 100%; padding: 26px 24px 22px; text-decoration: none; color: var(--ink); transition: background .15s; }
+.job__link:hover { background: #fff; }
+.job__num { font-size: .78rem; font-weight: 800; letter-spacing: .06em; color: var(--ink-soft); }
+.job__name { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; line-height: 1.15; }
+.job__what { font-size: .93rem; color: var(--ink-soft); line-height: 1.5; }
+.job__price { margin-top: 10px; font-weight: 800; color: var(--accent); }
+.job__price span { display: inline-block; transition: transform .15s; }
+.job__link:hover .job__price span { transform: translateX(4px); }
+.fixes__foot .link-ink { margin-left: 6px; }
+
+/* Somewhere in your business, right now */
+.nowp { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.nowp__item { background: var(--ink); color: #fff; padding: 26px 22px 24px; display: flex; flex-direction: column; gap: 12px; min-height: 260px; }
+.nowp__time { font-size: 1.9rem; color: #7FA0FF; transform: rotate(-3deg); transform-origin: left; align-self: flex-start; line-height: 1; }
+.nowp__now { margin: 0; font-size: 1rem; line-height: 1.5; color: rgba(255,255,255,.92); flex: 1; }
+.nowp__fix { margin: 0; font-weight: 700; font-size: .95rem; color: #fff; border-top: 1px solid rgba(255,255,255,.2); padding-top: 12px; }
+.nowp__fix span { color: #7FA0FF; margin-right: 4px; }
+
+/* Guarantee detail */
+.auditb__terms { color: rgba(255,255,255,.8); margin: 0 0 12px; font-size: .92rem; }
+.auditb__terms a { color: #fff; }
+.bookw__type-guar { display: block; margin-top: 8px; font-weight: 700; font-size: .88rem; color: var(--accent); }
+.bookw__type-guar a { color: inherit; font-weight: 500; margin-left: 4px; }
+
+/* /audit/ landing page */
+.hero3--audit { padding-bottom: 8px; }
+.auditp__price { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin: 0 0 8px; }
+.auditp__amount { font-family: var(--font-display); font-weight: 900; letter-spacing: -0.04em; font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 1; }
+.auditp__guar { font-size: clamp(1.5rem, 2.8vw, 2.2rem); transform: rotate(-2deg); border: 2px solid currentColor; border-radius: 999px; padding: .1em .7em .18em; }
+.close3__grid--solo { grid-template-columns: 1fr; min-height: 0; }
+
+/* Data and privacy */
+.dp__lead { max-width: 36em; }
+.dp { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 64px; }
+.dp__item { border-top: 1px solid var(--rule); padding: 28px 0 8px; }
+.dp__item h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; margin: 0 0 10px; }
+.dp__item p { color: var(--ink-soft); font-size: .97rem; line-height: 1.6; }
+.dp__ask { margin: 24px 0 0; font-weight: 600; }
+.dp__policy-h { margin-bottom: 24px; max-width: none; }
+
+@media (max-width: 960px) {
+  .jobs { grid-template-columns: 1fr 1fr; }
+  .nowp { grid-template-columns: 1fr 1fr; }
+  .dp { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .jobs, .nowp { grid-template-columns: 1fr; }
+  .nowp__item { min-height: 0; }
+  .job__link { padding: 22px 18px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker { white-space: normal; }
+  .ticker__track { display: flex; flex-wrap: wrap; row-gap: 8px; }
+  .job__link, .job__price span, .forwho__list a span { transition: none; }
+}
+.hero3--audit .hero3__h1 { margin-bottom: 36px; }

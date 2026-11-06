@@ -302,7 +302,7 @@ get_header(); ?>
       <div class="wrap">
         <div class="case__grid case__grid--even">
           <div>
-            <p class="eyebrow">Lifestyle brand &middot; Online store</p>
+            <p class="eyebrow">Our own brand, where we test everything first &middot; Online store</p>
             <h2 class="h2">Damselfly</h2>
             <p class="case__sub">More making. Less packing-slip admin. <a href="<?php echo esc_url( $d['site'] ); ?>" target="_blank" rel="noopener">damselfly.com.au</a></p>
             <p>Damselfly is our co-founder Christianna's own label: twenty years of jewellery, quote candles and now custom candles and convertible phone straps, worn by the odd pop star along the way. It is also our testing ground. Anything we recommend to a client has usually been tried on Damselfly first.</p>

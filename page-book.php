@@ -26,14 +26,14 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
       <aside class="book__side">
         <p class="eyebrow">What happens</p>
         <ol class="book__steps">
-          <li><strong>Pick a time.</strong> <span id="bookTzNote">Times are shown in <?php echo esc_html( str_replace( '_', ' ', by_opt( 'booking_tz' ) ) ); ?> (<?php echo esc_html( $tzlabel ); ?>).</span> You get a confirmation email with a calendar invite straight away.</li>
+          <li><strong>Pick a time.</strong> <span id="bookTzNote">Times are shown in your own time zone.</span> You get a confirmation email with a calendar invite straight away.</li>
           <li><strong>We talk.</strong> <?php echo esc_html( by_opt( 'booking_how' ) ); ?> You'll speak with Christianna or Robert, not a sales team.</li>
           <li><strong>You get a next step.</strong> A couple of quick wins you can do yourself, and whether <?php echo esc_html( by_opt( 'audit_name' ) ); ?> makes sense for you. If it doesn't, we'll say so.</li>
         </ol>
         <p class="note"><span class="hand hand--sm">No prep needed. Bring the thing that annoys you most.</span></p>
         <div class="book__alt">
           <p class="book__alt-h">Prefer not to book?</p>
-          <p>Email <a href="mailto:<?php echo esc_attr( by_opt( 'email' ) ); ?>" data-email><?php echo esc_html( by_opt( 'email' ) ); ?></a><?php if ( by_opt( 'phone' ) ) : ?> or call <a href="tel:<?php echo esc_attr( preg_replace( '/\s+/', '', by_opt( 'phone' ) ) ); ?>"><?php echo esc_html( by_opt( 'phone' ) ); ?></a><?php endif; ?>, or <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>">send a message</a> and we'll come back within one business day.</p>
+          <p>Email <a href="mailto:<?php echo esc_attr( by_opt( 'email' ) ); ?>" data-email><?php echo esc_html( by_opt( 'email' ) ); ?></a><?php if ( by_opt( 'phone' ) ) : ?> or call <a href="tel:<?php echo esc_attr( preg_replace( '/\s+/', '', by_opt( 'phone' ) ) ); ?>"><?php echo esc_html( by_opt( 'phone' ) ); ?></a><?php endif; ?>, or <a href="<?php echo esc_url( by_contact_url() ); ?>">send a message</a> and we'll come back within one business day.</p>
         </div>
       </aside>
 
@@ -50,6 +50,7 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
             <input type="hidden" name="by_nonce" value="<?php echo esc_attr( wp_create_nonce( 'by_booking' ) ); ?>">
             <input type="hidden" name="date" id="bookDate" value="">
             <input type="hidden" name="time" id="bookTime" value="">
+            <input type="hidden" name="visitor_tz" id="bookVisitorTz" value="">
             <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
             <div class="bookw__step" data-step="1">
@@ -61,6 +62,7 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
                   <span class="bookw__type-card">
                     <span class="bookw__type-top"><strong><?php echo esc_html( $t['name'] ); ?></strong><span class="tag"><?php echo esc_html( $t['mins'] ); ?> min &middot; <?php echo esc_html( $t['price'] ); ?></span></span>
                     <span class="bookw__type-blurb"><?php echo esc_html( $t['blurb'] ); ?></span>
+                    <?php if ( ! empty( $t['guarantee'] ) ) : ?><span class="bookw__type-guar"><?php echo esc_html( $t['guarantee'] ); ?> <a href="<?php echo esc_url( by_audit_url() . '#guarantee' ); ?>">How it works</a></span><?php endif; ?>
                   </span>
                 </label>
                 <?php endforeach; ?>
