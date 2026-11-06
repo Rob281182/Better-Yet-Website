@@ -48,6 +48,8 @@ function by_call_types() {
 		'discovery' => array( 'name' => 'Discovery call', 'mins' => 20, 'price' => 'Free', 'blurb' => 'Tell us where the hours go. We tell you, honestly, whether we can help and what we would look at first.' ),
 	);
 	$types['audit'] = array( 'name' => by_opt( 'audit_name' ) . ' session', 'mins' => 75, 'price' => by_price( 'audit_price', 'Price confirmed before the call' ), 'blurb' => 'Already decided? Book the 60 to 90 minute working session that starts the audit. We confirm the fee and send an invoice before the call.' );
+	$g = trim( (string) by_opt( 'guarantee_text' ) );
+	if ( $g ) $types['audit']['guarantee'] = $g;
 	return $types;
 }
 
@@ -181,6 +183,16 @@ function by_booking_handler() {
 	$start = new DateTime( $date . ' ' . $time, $tz );
 	$end   = clone $start; $end->modify( '+' . $mins . ' minutes' );
 	$label = $start->format( 'l j F Y, g:i a' ) . ' to ' . $end->format( 'g:i a' ) . ' (' . $start->format( 'T' ) . ')';
+	// v2.5.0: the visitor sees and is emailed the time in their own time zone (sent by the booking page)
+	$vlabel = $label;
+	$vtz_in = isset( $_POST['visitor_tz'] ) ? sanitize_text_field( wp_unslash( $_POST['visitor_tz'] ) ) : '';
+	if ( $vtz_in && in_array( $vtz_in, timezone_identifiers_list(), true ) && $vtz_in !== $tz->getName() ) {
+		$vtz = new DateTimeZone( $vtz_in );
+		$vs  = clone $start; $vs->setTimezone( $vtz );
+		$ve  = clone $end;   $ve->setTimezone( $vtz );
+		$vlabel = $vs->format( 'l j F Y, g:i a' ) . ' to ' . $ve->format( 'g:i a' ) . ' (' . $vs->format( 'T' ) . ', ' . str_replace( '_', ' ', $vtz_in ) . ')';
+		$label .= ' / their time: ' . $vs->format( 'g:i a T' ) . ' (' . str_replace( '_', ' ', $vtz_in ) . ')';
+	}
 	$brand = by_opt( 'brand' );
 
 	$body = "When: {$label}\nCall: {$types[$type]['name']} ({$mins} min)\nBusiness: {$d['business']}\nTeam size: {$d['team_size']}\nEmail: {$d['email']}\nPhone: {$d['phone']}\n\nWhat's slowing them down:\n{$d['notes']}\n";
@@ -210,7 +222,7 @@ function by_booking_handler() {
 	$mailed = wp_mail( $to, "New booking: {$d['name']}, " . $start->format( 'D j M g:i a' ), "New call booked on the website\n\nName: {$d['name']}\n" . $body . "\nManage bookings: " . admin_url( 'edit.php?post_type=by_booking' ), array( 'Reply-To: ' . $d['name'] . ' <' . $d['email'] . '>' ), array( $icsf ) );
 
 	// Confirm to the visitor
-	$txt = "Hi {$d['name']},\n\nYou're booked in.\n\n{$types[$type]['name']} with {$brand}\n{$label}\n\n" . by_opt( 'booking_how' ) . "\n\n"
+	$txt = "Hi {$d['name']},\n\nYou're booked in.\n\n{$types[$type]['name']} with {$brand}\n{$vlabel}\n\n" . by_opt( 'booking_how' ) . "\n\n"
 	     . "Before the call, it helps to jot down the two or three jobs that eat your week. No preparation beyond that.\n\n"
 	     . "Need to change the time? Reply to this email.\n\n{$brand}\n" . by_opt( 'tagline' ) . "\n" . home_url( '/' );
 	wp_mail( $d['email'], "Confirmed: {$types[$type]['name']} with {$brand}, " . $start->format( 'D j M g:i a' ), $txt, array( 'Reply-To: ' . $brand . ' <' . $from . '>' ), array( $icsf ) );
@@ -219,7 +231,7 @@ function by_booking_handler() {
 	$hook = by_opt( 'webhook_url' );
 	if ( $hook ) wp_remote_post( $hook, array( 'timeout' => 8, 'headers' => array( 'Content-Type' => 'application/json' ), 'body' => wp_json_encode( array_merge( $d, array( 'kind' => 'booking', 'call_type' => $type, 'start' => $start->format( 'c' ), 'end' => $end->format( 'c' ) ) ) ) ) );
 
-	if ( $post_id || $mailed ) wp_send_json( array( 'ok' => true, 'label' => $label, 'type' => $types[ $type ]['name'], 'ics' => $ics, 'how' => by_opt( 'booking_how' ) ) );
+	if ( $post_id || $mailed ) wp_send_json( array( 'ok' => true, 'label' => $vlabel, 'type' => $types[ $type ]['name'], 'ics' => $ics, 'how' => by_opt( 'booking_how' ) ) );
 	$fail( 'Sorry, we could not save your booking right now.', 500 );
 }
 add_action( 'admin_post_nopriv_by_booking', 'by_booking_handler' );

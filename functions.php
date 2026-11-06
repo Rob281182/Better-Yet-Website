@@ -7,13 +7,13 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.4.3' );
+define( 'BY_VERSION', '2.5.0' );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
 	return apply_filters( 'by_defaults', array(
 		'brand'       => 'Better Yet',
-		'tagline'     => 'Smarter systems. More time back.',
+		'tagline'     => 'Less busywork. Better business.', // matches the hero headline (v2.5.0)
 		'email'       => 'hello@betteryet.com.au',
 		'notify'      => '',   // where enquiries are emailed; blank = site admin email
 		'phone'       => '',
@@ -39,17 +39,26 @@ function by_defaults() {
 		'project_price'   => '',
 		'credit_text'     => '',
 		'guarantee_text' => 'Find 10x your fee, or it\'s free.',
+		// v2.5.0 (Christianna's launch list, 5 Nov 2026): price strip under the hero and the "Or just fix the one thing" grid.
+		// Job prices are placeholders for Rob to confirm (all at or above the $2,000 build floor).
+		'price_strip' => 'Audit $990 · Builds from $2,000 · Concierge from $500 a month',
+		'j1_name' => 'Missed-call text-back',  'j1_what' => 'Every call you miss gets a text back in seconds, so the job doesn\'t go to the next business on Google.', 'j1_price' => 'from $2,000',
+		'j2_name' => 'Online booking',         'j2_what' => 'Clients book, pay a deposit and get reminders on their own. No more back-and-forth by text.',            'j2_price' => 'from $2,000',
+		'j3_name' => 'Invoicing on autopilot', 'j3_what' => 'Quotes turn into invoices, reminders chase late payers, and it all lands in Xero or MYOB.',               'j3_price' => 'from $2,000',
+		'j4_name' => 'CRM setup',              'j4_what' => 'Every enquiry, client and follow-up in one place, set up around how you actually sell.',                'j4_price' => 'from $2,500',
+		'j5_name' => 'Connecting your apps',   'j5_what' => 'Your forms, inbox, accounts and calendar talk to each other, so nobody types the same thing twice.',     'j5_price' => 'from $2,000',
+		'j6_name' => 'Website build or move',  'j6_what' => 'A fast new site, or your current one moved somewhere looked after, with hosting and updates handled.',  'j6_price' => 'from $3,000',
 		// Home page proof (v2.2.0)
 		'location'       => '',
 		'hours_back'     => '',
 		'proof_roam'     => '',
 		'proof_steph'    => '',
 		// Testimonials: client-confirmed wording (Rob, 31 Oct 2026). Edit or clear in Customize; blank quotes are hidden.
-		't1_quote' => 'Riders design their own frame online and the geometry lands straight in our CRM. I spend far less time quoting by email and more time building bikes.', 't1_name' => '', 't1_biz' => 'Heiden Cycle Works',
-		't2_quote' => 'Referrals, NDIS paperwork and scans all come through one front door now. Nothing slips through, and the admin takes a fraction of the time it used to.', 't2_name' => '', 't2_biz' => 'Roam Orthotics',
-		't3_quote' => 'My originals and prints sell online while I paint. I haven\'t typed an invoice since.', 't3_name' => '', 't3_biz' => 'Stephanie Anne Studio',
-		't4_quote' => 'Enrolments across our franchise run online from start to finish, so our team spends its time with families instead of forms.', 't4_name' => '', 't4_biz' => 'Ready Steady Go Kids',
-		't5_quote' => 'Customers design their piece online and the order arrives with everything we need. Fewer back-and-forth emails, more time at the bench.', 't5_name' => '', 't5_biz' => 'Damselfly Jewellery',
+		't1_quote' => 'Riders design their own frame online and the geometry lands straight in our CRM. I spend far less time quoting by email and more time building bikes.', 't1_name' => '', 't1_biz' => 'Heiden Cycle Works', 't1_role' => 'Custom bikes',
+		't2_quote' => 'Referrals, NDIS paperwork and scans all come through one front door now. Nothing slips through, and the admin takes a fraction of the time it used to.', 't2_name' => '', 't2_biz' => 'Roam Orthotics', 't2_role' => 'Mobile clinic',
+		't3_quote' => 'My originals and prints sell online while I paint. I haven\'t typed an invoice since.', 't3_name' => '', 't3_biz' => 'Stephanie Anne Studio', 't3_role' => 'Artist',
+		't4_quote' => 'Enrolments across our franchise run online from start to finish, so our team spends its time with families instead of forms.', 't4_name' => '', 't4_biz' => 'Ready Steady Go Kids', 't4_role' => 'Kids sport franchise',
+		't5_quote' => 'Customers design their piece online and the order arrives with everything we need. Fewer back-and-forth emails, more time at the bench.', 't5_name' => '', 't5_biz' => 'Damselfly Jewellery', 't5_role' => 'Our own brand, where we test everything first',
 	) );
 }
 
@@ -64,12 +73,16 @@ function by_has( $key ) { return trim( (string) by_opt( $key ) ) !== ''; }
 
 function by_opt( $key ) {
 	$d = by_defaults();
-	return get_theme_mod( 'by_' . $key, isset( $d[ $key ] ) ? $d[ $key ] : '' );
+	$v = get_theme_mod( 'by_' . $key, isset( $d[ $key ] ) ? $d[ $key ] : '' );
+	// Values saved in Customize before v2.5.0 that the launch list retired: fall back to the new default.
+	$retired = array( 'tagline' => array( 'Smarter systems. More time back.' ) );
+	if ( isset( $retired[ $key ] ) && in_array( trim( (string) $v ), $retired[ $key ], true ) ) $v = $d[ $key ];
+	return $v;
 }
 
 function by_privacy_url() {
 	$url = get_privacy_policy_url();
-	return $url ? $url : home_url( '/privacy-policy/' );
+	return $url ? $url : home_url( '/privacy/' );
 }
 
 add_action( 'customize_register', function ( $wp ) {
@@ -99,12 +112,19 @@ add_action( 'customize_register', function ( $wp ) {
 		'app_price'       => array( 'Custom apps and integrations price', 'text', 'Per-app band shown in Pricing (Rob, 30 Oct 2026: from $2,000 to $5,000 per app).' ),
 		'credit_text'    => array( 'Audit credit line', 'text', 'Optional. e.g. "The full audit fee is credited against any build booked within 60 days." Blank hides it.' ),
 		'guarantee_text' => array( 'Guarantee line', 'text', 'Shown in the hero and under the audit price. Proposed: "Find 10x your fee, or it\'s free." Blank hides it.' ),
+		'price_strip'    => array( 'Price strip under the hero', 'text', 'One line under the hero buttons. The GST label, once set, is added at the end.' ),
 		'location'       => array( 'Where you are based', 'text', 'e.g. "Brisbane" or "Melbourne". Shown in About and the footer. Blank says "Australia-wide" only.' ),
 		'hours_back'     => array( 'Hours handed back so far', 'text', 'A number for the proof strip under the hero, e.g. "1,200". Blank hides it.' ),
 		'proof_roam'     => array( 'Roam Orthotics proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
 		'proof_steph'    => array( 'Stephanie Anne Studio proof line', 'text', 'One measured result and/or a client quote for the home page work card. Blank shows a descriptive line.' ),
 	);
+	foreach ( array( 1, 2, 3, 4, 5, 6 ) as $n ) {
+		$fields[ "j{$n}_name" ]  = array( "Fix the one thing {$n}: name", 'text', 1 === $n ? 'The six-job grid under the hero. Blank name hides the card.' : '' );
+		$fields[ "j{$n}_what" ]  = array( "Fix the one thing {$n}: what it does", 'textarea', '' );
+		$fields[ "j{$n}_price" ] = array( "Fix the one thing {$n}: price", 'text', 'e.g. "from $2,000". Blank says "Quoted on the call".' );
+	}
 	foreach ( array( 1, 2, 3, 4, 5 ) as $n ) {
+		$fields[ "t{$n}_role" ]  = array( "Testimonial {$n}: label", 'text', 'Shown under the business name, e.g. "Artist". Blank says "Client".' );
 		$fields[ "t{$n}_quote" ] = array( "Testimonial {$n}: quote", 'textarea', 1 === $n ? 'Client-approved words only. Blank hides it.' : '' );
 		$fields[ "t{$n}_name" ]  = array( "Testimonial {$n}: name", 'text', 'e.g. Stephanie' );
 		$fields[ "t{$n}_biz" ]   = array( "Testimonial {$n}: business", 'text', 'e.g. Stephanie Anne Studio' );
@@ -329,8 +349,8 @@ HTML;
 	$id = wp_insert_post( array(
 		'post_type'    => 'page',
 		'post_status'  => 'publish',
-		'post_title'   => 'Privacy policy',
-		'post_name'    => 'privacy-policy',
+		'post_title'   => 'Data and privacy',
+		'post_name'    => 'privacy',
 		'post_content' => $content,
 	) );
 	if ( $id && ! is_wp_error( $id ) ) update_option( 'wp_page_for_privacy_policy', $id );
@@ -392,4 +412,98 @@ function by_photo( $name, $alt = '', $class = '', $loading = 'lazy' ) {
 	$src = by_img( $name );
 	if ( ! $src ) { return ''; }
 	return '<img class="' . esc_attr( $class ) . '" src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '" loading="' . esc_attr( $loading ) . '">';
+}
+
+/* ---------- v2.5.0: /audit/ landing page (ads point here), created once ---------- */
+add_action( 'init', function () {
+	if ( get_option( 'by_audit_page_id' ) ) return;
+	$page = get_page_by_path( 'audit' );
+	$id   = $page ? $page->ID : wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'The Time-Back Audit', 'post_name' => 'audit', 'post_content' => '' ) );
+	if ( $id && ! is_wp_error( $id ) ) {
+		update_post_meta( $id, '_wp_page_template', 'page-audit.php' );
+		update_option( 'by_audit_page_id', $id );
+	}
+} );
+function by_audit_url() {
+	$id = (int) get_option( 'by_audit_page_id' );
+	return $id ? get_permalink( $id ) : home_url( '/audit/' );
+}
+
+/* ---------- v2.5.0: privacy lives at /privacy/ as "Data and privacy" ----------
+ * The privacy page was created as /privacy-policy-2/ because WordPress already had a draft at /privacy-policy/.
+ * Move the site's privacy page to the "privacy" slug once, and send the old addresses there.
+ */
+add_action( 'init', function () {
+	if ( get_option( 'by_privacy_moved' ) ) return;
+	$id = (int) get_option( 'wp_page_for_privacy_policy' );
+	if ( ! $id || 'publish' !== get_post_status( $id ) ) {
+		$existing = get_page_by_path( 'privacy' );
+		$id = $existing ? $existing->ID : 0;
+	}
+	if ( $id ) {
+		$clash = get_page_by_path( 'privacy' );
+		if ( $clash && (int) $clash->ID !== $id ) wp_update_post( array( 'ID' => $clash->ID, 'post_name' => 'privacy-old' ) );
+		wp_update_post( array( 'ID' => $id, 'post_name' => 'privacy', 'post_title' => 'Data and privacy' ) );
+		update_option( 'wp_page_for_privacy_policy', $id );
+		update_option( 'by_privacy_moved', 1 );
+	}
+}, 20 );
+add_action( 'template_redirect', function () {
+	if ( ! is_404() ) return;
+	$path = trim( (string) wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '', PHP_URL_PATH ), '/' );
+	if ( in_array( $path, array( 'privacy-policy', 'privacy-policy-2', 'data', 'data-and-privacy' ), true ) ) {
+		wp_safe_redirect( by_privacy_url(), 301 );
+		exit;
+	}
+} );
+/* The privacy page uses page-privacy.php (data promise first, then the website policy) whatever its slug. */
+add_filter( 'template_include', function ( $tpl ) {
+	$id = (int) get_option( 'wp_page_for_privacy_policy' );
+	if ( $id && is_page( $id ) ) {
+		$t = locate_template( 'page-privacy.php' );
+		if ( $t ) return $t;
+	}
+	return $tpl;
+} );
+
+/* ---------- v2.5.0: shared pieces for the home page and /audit/ ---------- */
+
+/* The guarantee in full: what counts and how to qualify. Used in the FAQ, on /audit/ and on the booking page. */
+function by_guarantee_terms() {
+	$fee = (int) preg_replace( '/[^0-9]/', '', (string) by_opt( 'audit_price' ) );
+	$fee_txt = $fee ? '$' . number_format( $fee ) : 'the audit fee';
+	$ten_txt = $fee ? '$' . number_format( $fee * 10 ) : '10 times the fee';
+	return 'If the audit doesn\'t find at least ' . $ten_txt . ' a year in savings, we refund the ' . $fee_txt . ' in full. We count it the way the report does: hours saved over a year, times what an hour of that time costs you, plus software and subscriptions you can cut. To qualify, come to the 90-minute session and share what we ask for beforehand, usually a look at your tools and a rough picture of your week. No forms, no argument.';
+}
+
+/* The price strip under the hero buttons, with the GST label once it is set. */
+function by_price_strip() {
+	$strip = trim( (string) by_opt( 'price_strip' ) );
+	if ( '' === $strip ) return '';
+	$gst = trim( (string) by_opt( 'gst_suffix' ) );
+	return $gst !== '' && strpos( $strip, 'GST' ) === false ? $strip . ' · All prices ' . $gst : $strip;
+}
+
+/* "Or just fix the one thing": six concrete jobs with prices (Customize > Better Yet settings). */
+function by_jobs() {
+	$jobs = array();
+	foreach ( array( 1, 2, 3, 4, 5, 6 ) as $n ) {
+		if ( ! by_has( "j{$n}_name" ) ) continue;
+		$jobs[] = array( 'name' => by_opt( "j{$n}_name" ), 'what' => by_opt( "j{$n}_what" ), 'price' => by_price( "j{$n}_price", 'Quoted on the call' ) );
+	}
+	return $jobs;
+}
+function by_jobs_grid( $cta_url ) {
+	$jobs = by_jobs();
+	if ( ! $jobs ) return '';
+	$out = '<ul class="jobs">';
+	foreach ( $jobs as $i => $j ) {
+		$out .= '<li class="job"><a class="job__link" href="' . esc_url( $cta_url ) . '">'
+		      . '<span class="job__num">' . sprintf( '%02d', $i + 1 ) . '</span>'
+		      . '<span class="job__name">' . esc_html( $j['name'] ) . '</span>'
+		      . '<span class="job__what">' . esc_html( $j['what'] ) . '</span>'
+		      . '<span class="job__price">' . esc_html( $j['price'] ) . ' <span aria-hidden="true">→</span></span>'
+		      . '</a></li>';
+	}
+	return $out . '</ul>';
 }
