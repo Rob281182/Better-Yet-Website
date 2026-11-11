@@ -57,7 +57,7 @@ function by_defaults() {
 		't1_quote' => 'Riders design their own frame online and the geometry lands straight in our CRM. I spend far less time quoting by email and more time building bikes.', 't1_name' => '', 't1_biz' => 'Heiden Cycle Works', 't1_role' => 'Custom bikes',
 		't2_quote' => 'Referrals, NDIS paperwork and scans all come through one front door now. Nothing slips through, and the admin takes a fraction of the time it used to.', 't2_name' => '', 't2_biz' => 'Roam Orthotics', 't2_role' => 'Mobile clinic',
 		't3_quote' => 'My originals and prints sell online while I paint. I haven\'t typed an invoice since.', 't3_name' => '', 't3_biz' => 'Stephanie Anne Studio', 't3_role' => 'Artist',
-		't4_quote' => 'Enrolments across our franchise run online from start to finish, so our team spends its time with families instead of forms.', 't4_name' => '', 't4_biz' => 'Ready Steady Go Kids', 't4_role' => 'Kids sport franchise',
+		't4_quote' => '', 't4_name' => '', 't4_biz' => '', 't4_role' => 'Kids sport franchise',
 		't5_quote' => 'Customers design their piece online and the order arrives with everything we need. Fewer back-and-forth emails, more time at the bench.', 't5_name' => '', 't5_biz' => 'Damselfly Jewellery', 't5_role' => 'Our own brand, where we test everything first',
 	) );
 }
