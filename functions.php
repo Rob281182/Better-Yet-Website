@@ -7,7 +7,28 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.4.4' );
+define( 'BY_VERSION', '2.4.5' );
+
+/*
+ * Carry Customize settings across a theme folder change (2.4.5).
+ * WordPress stores Customize values per theme folder ("theme_mods_<folder>").
+ * When the theme runs from a new folder whose settings are empty, copy them
+ * once from the old "betteryet" folder so prices, testimonials etc. survive.
+ */
+add_action( 'after_setup_theme', function () {
+	$slug = get_stylesheet();
+	if ( 'betteryet' === $slug || get_option( 'by_mods_migrated_' . $slug ) ) return;
+	$old  = get_option( 'theme_mods_betteryet' );
+	$mine = get_option( 'theme_mods_' . $slug );
+	$has_by = false;
+	if ( is_array( $mine ) ) {
+		foreach ( array_keys( $mine ) as $k ) { if ( 0 === strpos( (string) $k, 'by_' ) ) { $has_by = true; break; } }
+	}
+	if ( is_array( $old ) && ! $has_by ) {
+		update_option( 'theme_mods_' . $slug, array_merge( is_array( $mine ) ? $mine : array(), $old ) );
+	}
+	update_option( 'by_mods_migrated_' . $slug, time(), false );
+}, 1 );
 
 /* ---------- Settings ---------- */
 function by_defaults() {
