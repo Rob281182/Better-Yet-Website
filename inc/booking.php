@@ -3,6 +3,8 @@
  * Booking: a /book/ page with on-site time-slot booking (no plugin needed).
  * Bookings are saved under "Bookings" in the dashboard, emailed to the team, confirmed to the
  * visitor with a calendar (.ics) file, and optionally POSTed to the CRM webhook.
+ * Paid sessions go through Stripe Checkout first, and confirmed bookings land in Google Calendar with a Meet link
+ * when those are set up (see inc/integrations.php, Settings > Payments & calendar).
  * If a Calendly/Cal.com style link is set and "Embed booking link" is ticked, the page embeds that instead.
  */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
@@ -47,7 +49,11 @@ function by_call_types() {
 	$types = array(
 		'discovery' => array( 'name' => 'Discovery call', 'mins' => 20, 'price' => 'Free', 'blurb' => 'Tell us where the hours go. We tell you, honestly, whether we can help and what we would look at first.' ),
 	);
-	$types['audit'] = array( 'name' => by_opt( 'audit_name' ) . ' session', 'mins' => 75, 'price' => by_price( 'audit_price', 'Price confirmed before the call' ), 'blurb' => 'Already decided? Book the 60 to 90 minute working session that starts the audit. We confirm the fee and send an invoice before the call.' );
+	$paid = function_exists( 'by_call_amount' ) && by_call_amount( 'audit' ) > 0;
+	$types['audit'] = array( 'name' => by_opt( 'audit_name' ) . ' session', 'mins' => 75, 'price' => by_price( 'audit_price', 'Price confirmed before the call' ), 'paid' => $paid,
+		'blurb' => $paid
+			? 'Already decided? Book the 60 to 90 minute working session that starts the audit, and pay the fee securely by card to lock in your time.'
+			: 'Already decided? Book the 60 to 90 minute working session that starts the audit. We confirm the fee and send an invoice before the call.' );
 	return $types;
 }
 
@@ -80,11 +86,16 @@ function by_book_url() {
 }
 
 add_filter( 'manage_by_booking_posts_columns', function ( $cols ) {
-	return array( 'cb' => $cols['cb'], 'by_when' => 'When', 'title' => 'Who', 'by_type' => 'Call', 'by_email' => 'Email', 'by_phone' => 'Phone', 'date' => 'Booked' );
+	return array( 'cb' => $cols['cb'], 'by_when' => 'When', 'title' => 'Who', 'by_type' => 'Call', 'by_status' => 'Status', 'by_email' => 'Email', 'by_phone' => 'Phone', 'date' => 'Booked' );
 } );
 add_action( 'manage_by_booking_posts_custom_column', function ( $col, $id ) {
 	$map = array( 'by_when' => '_by_when_label', 'by_type' => '_by_type_label', 'by_email' => '_by_email', 'by_phone' => '_by_phone' );
 	if ( isset( $map[ $col ] ) ) echo esc_html( get_post_meta( $id, $map[ $col ], true ) );
+	if ( 'by_status' === $col ) {
+		echo esc_html( by_booking_status_label( $id ) );
+		$m = get_post_meta( $id, '_by_meet', true );
+		if ( $m ) echo '<br><a href="' . esc_url( $m ) . '" target="_blank" rel="noopener">Meet link</a>';
+	}
 }, 10, 2 );
 add_filter( 'manage_edit-by_booking_sortable_columns', function ( $c ) { $c['by_when'] = 'by_when'; return $c; } );
 add_action( 'pre_get_posts', function ( $q ) {
@@ -103,10 +114,14 @@ function by_booked_slots() {
 		'meta_query' => array( array( 'key' => '_by_when', 'value' => gmdate( 'Y-m-d H:i', time() - DAY_IN_SECONDS ), 'compare' => '>=' ) ) ) );
 	$out = array();
 	foreach ( $q->posts as $id ) {
+		$st = get_post_meta( $id, '_by_status', true );
+		if ( 'cancelled' === $st ) continue;
+		if ( 'awaiting_payment' === $st && (int) get_post_meta( $id, '_by_hold_until', true ) < time() ) continue; // unpaid hold expired
 		$when = get_post_meta( $id, '_by_when', true ); // UTC "Y-m-d H:i"
 		$mins = (int) get_post_meta( $id, '_by_mins', true ) ?: 30;
 		if ( $when ) $out[] = array( 'utc' => strtotime( $when . ' UTC' ), 'mins' => $mins );
 	}
+	if ( function_exists( 'by_gcal_busy' ) ) $out = array_merge( $out, by_gcal_busy() );
 	return $out;
 }
 /** All bookable start times for the next N days: [ 'Y-m-d' => [ ['t'=>'09:00','iso'=>'2026-10-27T09:00:00+10:00'], ... ] ] */
@@ -177,60 +192,157 @@ function by_booking_handler() {
 	if ( isset( $avail[ $date ] ) ) foreach ( $avail[ $date ]['slots'] as $s ) { if ( $s['t'] === $time ) { $ok = $s; break; } }
 	if ( ! $ok ) $fail( 'That time was just taken or is no longer available. Please pick another slot.', 409 );
 
-	$tz    = by_booking_tz();
-	$start = new DateTime( $date . ' ' . $time, $tz );
-	$end   = clone $start; $end->modify( '+' . $mins . ' minutes' );
-	$label = $start->format( 'l j F Y, g:i a' ) . ' to ' . $end->format( 'g:i a' ) . ' (' . $start->format( 'T' ) . ')';
-	$brand = by_opt( 'brand' );
+	$tz     = by_booking_tz();
+	$start  = new DateTime( $date . ' ' . $time, $tz );
+	$amount = function_exists( 'by_call_amount' ) ? by_call_amount( $type ) : 0;
 
-	$body = "When: {$label}\nCall: {$types[$type]['name']} ({$mins} min)\nBusiness: {$d['business']}\nTeam size: {$d['team_size']}\nEmail: {$d['email']}\nPhone: {$d['phone']}\n\nWhat's slowing them down:\n{$d['notes']}\n";
-	$post_id = wp_insert_post( array( 'post_type' => 'by_booking', 'post_status' => 'private', 'post_title' => $d['name'] . ( $d['business'] ? ' (' . $d['business'] . ')' : '' ), 'post_content' => $body ) );
-	if ( $post_id && ! is_wp_error( $post_id ) ) {
-		$utc = clone $start; $utc->setTimezone( new DateTimeZone( 'UTC' ) );
-		update_post_meta( $post_id, '_by_when', $utc->format( 'Y-m-d H:i' ) );
-		update_post_meta( $post_id, '_by_when_label', $start->format( 'D j M, g:i a' ) );
-		update_post_meta( $post_id, '_by_mins', $mins );
-		update_post_meta( $post_id, '_by_type', $type );
-		update_post_meta( $post_id, '_by_type_label', $types[ $type ]['name'] );
-		update_post_meta( $post_id, '_by_email', $d['email'] );
-		update_post_meta( $post_id, '_by_phone', $d['phone'] );
-	}
+	$post_id = wp_insert_post( array( 'post_type' => 'by_booking', 'post_status' => 'private', 'post_title' => $d['name'] . ( $d['business'] ? ' (' . $d['business'] . ')' : '' ), 'post_content' => '' ) );
+	if ( ! $post_id || is_wp_error( $post_id ) ) $fail( 'Sorry, we could not save your booking right now.', 500 );
+	$utc = clone $start; $utc->setTimezone( new DateTimeZone( 'UTC' ) );
+	update_post_meta( $post_id, '_by_when', $utc->format( 'Y-m-d H:i' ) );
+	update_post_meta( $post_id, '_by_when_label', $start->format( 'D j M, g:i a' ) );
+	update_post_meta( $post_id, '_by_mins', $mins );
+	update_post_meta( $post_id, '_by_type', $type );
+	update_post_meta( $post_id, '_by_type_label', $types[ $type ]['name'] );
+	update_post_meta( $post_id, '_by_email', $d['email'] );
+	update_post_meta( $post_id, '_by_phone', $d['phone'] );
+	update_post_meta( $post_id, '_by_data', $d );
+	update_post_meta( $post_id, '_by_key', wp_generate_password( 20, false ) );
 	if ( $ip ) set_transient( 'by_book_' . md5( $ip ), 1, 60 );
 
+	if ( $amount > 0 ) {
+		// Paid session: hold the slot for 30 minutes and send them to Stripe Checkout.
+		update_post_meta( $post_id, '_by_status', 'awaiting_payment' );
+		update_post_meta( $post_id, '_by_hold_until', time() + 31 * MINUTE_IN_SECONDS );
+		by_booking_write_body( $post_id );
+		$url = by_stripe_checkout( $post_id, $amount, $types[ $type ]['name'] . ' with ' . by_opt( 'brand' ), $d['email'], by_booking_label( $post_id ) );
+		if ( ! $url ) { wp_delete_post( $post_id, true ); $fail( 'Sorry, the payment page would not open. Please try again, or email us and we will book you in.', 502 ); }
+		wp_send_json( array( 'ok' => true, 'redirect' => $url ) );
+	}
+
+	$out = by_booking_confirm( $post_id );
+	if ( $out ) wp_send_json( array_merge( array( 'ok' => true ), $out ) );
+	$fail( 'Sorry, we could not save your booking right now.', 500 );
+}
+
+/** "Monday 1 December 2026, 9:00 am to 10:15 am (AEST)" for a booking. */
+function by_booking_label( $post_id ) {
+	$tz    = by_booking_tz();
+	$start = new DateTime( '@' . strtotime( get_post_meta( $post_id, '_by_when', true ) . ' UTC' ) ); $start->setTimezone( $tz );
+	$end   = clone $start; $end->modify( '+' . ( (int) get_post_meta( $post_id, '_by_mins', true ) ?: 30 ) . ' minutes' );
+	return $start->format( 'l j F Y, g:i a' ) . ' to ' . $end->format( 'g:i a' ) . ' (' . $start->format( 'T' ) . ')';
+}
+function by_booking_write_body( $post_id ) {
+	$d    = (array) get_post_meta( $post_id, '_by_data', true );
+	$g    = function ( $k ) use ( $d ) { return isset( $d[ $k ] ) ? $d[ $k ] : ''; };
+	$st   = by_booking_status_label( $post_id );
+	$paid = get_post_meta( $post_id, '_by_paid', true );
+	$meet = get_post_meta( $post_id, '_by_meet', true );
+	$body = 'When: ' . by_booking_label( $post_id ) . "\nCall: " . get_post_meta( $post_id, '_by_type_label', true ) . ' (' . get_post_meta( $post_id, '_by_mins', true ) . " min)\nStatus: {$st}\n"
+	      . ( $paid ? "Paid: {$paid}\n" : '' ) . ( $meet ? "Google Meet: {$meet}\n" : '' )
+	      . 'Business: ' . $g( 'business' ) . "\nTeam size: " . $g( 'team_size' ) . "\nEmail: " . $g( 'email' ) . "\nPhone: " . $g( 'phone' ) . "\n\nWhat's slowing them down:\n" . $g( 'notes' ) . "\n";
+	wp_update_post( array( 'ID' => $post_id, 'post_content' => $body ) );
+	return $body;
+}
+function by_booking_status_label( $post_id ) {
+	$s = get_post_meta( $post_id, '_by_status', true );
+	if ( 'awaiting_payment' === $s ) {
+		return (int) get_post_meta( $post_id, '_by_hold_until', true ) < time() ? 'Payment not completed' : 'Awaiting payment';
+	}
+	if ( 'cancelled' === $s ) return 'Payment cancelled';
+	return get_post_meta( $post_id, '_by_paid', true ) ? 'Paid, confirmed' : 'Confirmed';
+}
+
+/**
+ * Confirm a booking: create the Google Calendar event (with Meet link), email the team and the client,
+ * and POST to the CRM webhook. Safe to call more than once; only the first call does anything.
+ * Returns the data the booking page shows on the "You're in" screen.
+ */
+function by_booking_confirm( $post_id ) {
+	$d     = (array) get_post_meta( $post_id, '_by_data', true );
+	if ( empty( $d['email'] ) ) return null;
+	$brand = by_opt( 'brand' );
+	$tz    = by_booking_tz();
+	$start = new DateTime( '@' . strtotime( get_post_meta( $post_id, '_by_when', true ) . ' UTC' ) ); $start->setTimezone( $tz );
+	$mins  = (int) get_post_meta( $post_id, '_by_mins', true ) ?: 30;
+	$end   = clone $start; $end->modify( '+' . $mins . ' minutes' );
+	$tname = get_post_meta( $post_id, '_by_type_label', true );
+	$label = by_booking_label( $post_id );
+
+	// Only the first caller (webhook or return page) runs the side effects.
+	if ( ! add_post_meta( $post_id, '_by_confirmed', time(), true ) ) {
+		$meet = get_post_meta( $post_id, '_by_meet', true );
+		return array( 'label' => $label, 'type' => $tname, 'meet' => $meet, 'how' => by_booking_how( $meet ), 'ics' => by_booking_ics( $start, $end, $tname . ' with ' . $brand, by_booking_how( $meet ), $d['email'] ) );
+	}
+	update_post_meta( $post_id, '_by_status', 'confirmed' );
+	delete_post_meta( $post_id, '_by_hold_until' );
+
+	$meet = '';
+	if ( function_exists( 'by_gcal_create_event' ) ) {
+		$ev = by_gcal_create_event( $post_id );
+		if ( $ev ) {
+			update_post_meta( $post_id, '_by_gcal_event', $ev['id'] );
+			update_post_meta( $post_id, '_by_meet', $ev['meet'] );
+			update_post_meta( $post_id, '_by_gcal_link', $ev['link'] );
+			$meet = $ev['meet'];
+		}
+	}
+	$how  = by_booking_how( $meet );
+	$paid = get_post_meta( $post_id, '_by_paid', true );
+	$body = by_booking_write_body( $post_id );
+
 	// Calendar file
-	$ics  = by_booking_ics( $start, $end, $types[ $type ]['name'] . ' with ' . $brand, "With {$d['name']}" . ( $d['business'] ? " ({$d['business']})" : '' ) . "\n" . by_opt( 'booking_how' ), $d['email'] );
+	$ics  = by_booking_ics( $start, $end, $tname . ' with ' . $brand, "With {$d['name']}" . ( $d['business'] ? " ({$d['business']})" : '' ) . "\n" . $how, $d['email'], $meet );
+	if ( ! function_exists( 'wp_tempnam' ) ) require_once ABSPATH . 'wp-admin/includes/file.php'; // not loaded on the front end / REST
 	$tmp  = wp_tempnam( 'better-yet-call.ics' );
 	file_put_contents( $tmp, $ics );
 	$icsf = dirname( $tmp ) . '/better-yet-call.ics';
 	@rename( $tmp, $icsf ) || $icsf = $tmp;
 
-	// Email the team
+	// Email the team (skip the .ics when the event is already in Google Calendar)
 	$to   = by_opt( 'notify' ) ? array_map( 'trim', explode( ',', by_opt( 'notify' ) ) ) : get_option( 'admin_email' );
 	$from = is_array( $to ) ? $to[0] : $to;
-	$mailed = wp_mail( $to, "New booking: {$d['name']}, " . $start->format( 'D j M g:i a' ), "New call booked on the website\n\nName: {$d['name']}\n" . $body . "\nManage bookings: " . admin_url( 'edit.php?post_type=by_booking' ), array( 'Reply-To: ' . $d['name'] . ' <' . $d['email'] . '>' ), array( $icsf ) );
+	$gl   = get_post_meta( $post_id, '_by_gcal_link', true );
+	wp_mail( $to, ( $paid ? 'New paid booking: ' : 'New booking: ' ) . "{$d['name']}, " . $start->format( 'D j M g:i a' ),
+		"New call booked on the website\n\nName: {$d['name']}\n" . $body . ( $gl ? "\nIn your calendar: {$gl}" : '' ) . "\nManage bookings: " . admin_url( 'edit.php?post_type=by_booking' ),
+		array( 'Reply-To: ' . $d['name'] . ' <' . $d['email'] . '>' ), $gl ? array() : array( $icsf ) );
 
-	// Confirm to the visitor
-	$txt = "Hi {$d['name']},\n\nYou're booked in.\n\n{$types[$type]['name']} with {$brand}\n{$label}\n\n" . by_opt( 'booking_how' ) . "\n\n"
+	// Confirm to the visitor (Google also sends them its own invite when the calendar is connected)
+	$txt = "Hi {$d['name']},\n\nYou're booked in.\n\n{$tname} with {$brand}\n{$label}\n\n" . $how . "\n\n"
+	     . ( $paid ? "Payment received: {$paid}. Stripe has emailed your receipt.\n\n" : '' )
 	     . "Before the call, it helps to jot down the two or three jobs that eat your week. No preparation beyond that.\n\n"
 	     . "Need to change the time? Reply to this email.\n\n{$brand}\n" . by_opt( 'tagline' ) . "\n" . home_url( '/' );
-	wp_mail( $d['email'], "Confirmed: {$types[$type]['name']} with {$brand}, " . $start->format( 'D j M g:i a' ), $txt, array( 'Reply-To: ' . $brand . ' <' . $from . '>' ), array( $icsf ) );
+	wp_mail( $d['email'], "Confirmed: {$tname} with {$brand}, " . $start->format( 'D j M g:i a' ), $txt, array( 'Reply-To: ' . $brand . ' <' . $from . '>' ), array( $icsf ) );
 	@unlink( $icsf );
 
 	$hook = by_opt( 'webhook_url' );
-	if ( $hook ) wp_remote_post( $hook, array( 'timeout' => 8, 'headers' => array( 'Content-Type' => 'application/json' ), 'body' => wp_json_encode( array_merge( $d, array( 'kind' => 'booking', 'call_type' => $type, 'start' => $start->format( 'c' ), 'end' => $end->format( 'c' ) ) ) ) ) );
+	if ( $hook ) wp_remote_post( $hook, array( 'timeout' => 8, 'headers' => array( 'Content-Type' => 'application/json' ), 'body' => wp_json_encode( array_merge( $d, array( 'kind' => 'booking', 'call_type' => get_post_meta( $post_id, '_by_type', true ), 'start' => $start->format( 'c' ), 'end' => $end->format( 'c' ), 'paid' => $paid, 'meet' => $meet ) ) ) ) );
 
-	if ( $post_id || $mailed ) wp_send_json( array( 'ok' => true, 'label' => $label, 'type' => $types[ $type ]['name'], 'ics' => $ics, 'how' => by_opt( 'booking_how' ) ) );
-	$fail( 'Sorry, we could not save your booking right now.', 500 );
+	return array( 'label' => $label, 'type' => $tname, 'meet' => $meet, 'ics' => $ics, 'how' => $how );
+}
+function by_booking_how( $meet = '' ) {
+	return $meet ? 'Join on Google Meet: ' . $meet : by_opt( 'booking_how' );
+}
+
+/** Visitor came back from Stripe without paying: release the slot. */
+function by_booking_cancel_pending( $post_id, $key ) {
+	if ( 'by_booking' !== get_post_type( $post_id ) || ! $key || ! hash_equals( (string) get_post_meta( $post_id, '_by_key', true ), (string) $key ) ) return false;
+	if ( 'awaiting_payment' !== get_post_meta( $post_id, '_by_status', true ) ) return false;
+	update_post_meta( $post_id, '_by_status', 'cancelled' );
+	delete_post_meta( $post_id, '_by_hold_until' );
+	by_booking_write_body( $post_id );
+	return true;
 }
 add_action( 'admin_post_nopriv_by_booking', 'by_booking_handler' );
 add_action( 'admin_post_by_booking', 'by_booking_handler' );
 
-function by_booking_ics( DateTime $start, DateTime $end, $summary, $description, $attendee = '' ) {
+function by_booking_ics( DateTime $start, DateTime $end, $summary, $description, $attendee = '', $location = '' ) {
 	$u = function ( DateTime $d ) { $c = clone $d; $c->setTimezone( new DateTimeZone( 'UTC' ) ); return $c->format( 'Ymd\THis\Z' ); };
 	$esc = function ( $s ) { return str_replace( array( '\\', ';', ',', "\n" ), array( '\\\\', '\;', '\,', '\n' ), $s ); };
 	$lines = array( 'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Better Yet//Booking//EN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
 		'UID:' . wp_generate_uuid4() . '@' . wp_parse_url( home_url(), PHP_URL_HOST ), 'DTSTAMP:' . gmdate( 'Ymd\THis\Z' ), 'DTSTART:' . $u( $start ), 'DTEND:' . $u( $end ),
-		'SUMMARY:' . $esc( $summary ), 'DESCRIPTION:' . $esc( $description ), 'URL:' . home_url( '/' ) );
+		'SUMMARY:' . $esc( $summary ), 'DESCRIPTION:' . $esc( $description ), 'URL:' . ( $location ? $location : home_url( '/' ) ) );
+	if ( $location ) $lines[] = 'LOCATION:' . $esc( $location );
 	if ( $attendee ) $lines[] = 'ATTENDEE;CN=' . $esc( $attendee ) . ':mailto:' . $attendee;
 	$lines[] = 'BEGIN:VALARM'; $lines[] = 'TRIGGER:-PT30M'; $lines[] = 'ACTION:DISPLAY'; $lines[] = 'DESCRIPTION:' . $esc( $summary ); $lines[] = 'END:VALARM';
 	$lines[] = 'END:VEVENT'; $lines[] = 'END:VCALENDAR';

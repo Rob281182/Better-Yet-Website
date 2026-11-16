@@ -11,6 +11,19 @@ $avail   = array();
 foreach ( $types as $k => $t ) { $avail[ $k ] = by_available_slots( $t['mins'] ); }
 $tz      = by_booking_tz();
 $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
+
+// Coming back from Stripe Checkout
+$return = null; $return_note = '';
+if ( isset( $_GET['paid'] ) && function_exists( 'by_stripe_settle_session' ) ) {
+	$bid = by_stripe_settle_session( sanitize_text_field( wp_unslash( $_GET['paid'] ) ) );
+	if ( $bid ) $return = by_booking_confirm( $bid );
+	else $return_note = 'We could not confirm your payment yet. If you were charged, you will get a confirmation email shortly; otherwise please pick a time again.';
+} elseif ( isset( $_GET['cancelled'], $_GET['k'] ) && function_exists( 'by_booking_cancel_pending' ) ) {
+	if ( by_booking_cancel_pending( (int) $_GET['cancelled'], sanitize_text_field( wp_unslash( $_GET['k'] ) ) ) ) {
+		foreach ( $types as $k => $t ) { $avail[ $k ] = by_available_slots( $t['mins'] ); } // the held time is free again
+	}
+	$return_note = 'Payment was not completed, so that time has not been booked. Pick a time again whenever you are ready.';
+}
 ?>
 <main id="main">
   <section class="hero hero--page hero--book">
@@ -26,7 +39,7 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
       <aside class="book__side">
         <p class="eyebrow">What happens</p>
         <ol class="book__steps">
-          <li><strong>Pick a time.</strong> <span id="bookTzNote">Times are shown in <?php echo esc_html( str_replace( '_', ' ', by_opt( 'booking_tz' ) ) ); ?> (<?php echo esc_html( $tzlabel ); ?>).</span> You get a confirmation email with a calendar invite straight away.</li>
+          <li><strong>Pick a time.</strong> <span id="bookTzNote">Times are shown in <?php echo esc_html( str_replace( '_', ' ', by_opt( 'booking_tz' ) ) ); ?> (<?php echo esc_html( $tzlabel ); ?>).</span> You get a confirmation email with a calendar invite<?php echo function_exists( 'by_gcal_on' ) && by_gcal_on() ? ' and a Google Meet link' : ''; ?> straight away. Paid sessions are confirmed as soon as payment goes through.</li>
           <li><strong>We talk.</strong> <?php echo esc_html( by_opt( 'booking_how' ) ); ?> You'll speak with Christianna or Robert, not a sales team.</li>
           <li><strong>You get a next step.</strong> A couple of quick wins you can do yourself, and whether <?php echo esc_html( by_opt( 'audit_name' ) ); ?> makes sense for you. If it doesn't, we'll say so.</li>
         </ol>
@@ -38,7 +51,16 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
       </aside>
 
       <div class="book__main">
-        <?php if ( $embed ) : ?>
+        <?php if ( $return ) : ?>
+          <div class="bookw__done" id="bookDone">
+            <p class="eyebrow">Paid and booked</p>
+            <h2 class="h2">You're in.</h2>
+            <p class="lead"><?php echo esc_html( $return['type'] . ', ' . $return['label'] . '.' ); ?></p>
+            <p class="muted"><?php if ( $return['meet'] ) : ?>Join on Google Meet: <a href="<?php echo esc_url( $return['meet'] ); ?>"><?php echo esc_html( $return['meet'] ); ?></a><?php else : echo esc_html( $return['how'] ); endif; ?></p>
+            <p><a href="data:text/calendar;charset=utf-8,<?php echo rawurlencode( $return['ics'] ); ?>" class="btn" download="better-yet-call.ics">Add to calendar</a> <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="btn btn--ghost">Back to the site</a></p>
+            <p class="muted">Your payment receipt and a confirmation with the calendar invite are on their way to your inbox. Need to change the time? Reply to that email.</p>
+          </div>
+        <?php elseif ( $embed ) : ?>
           <div class="book__embed">
             <iframe src="<?php echo esc_url( by_opt( 'booking_url' ) ); ?>" title="Book a call" loading="lazy"></iframe>
             <p class="book__fallback">Calendar not loading? <a href="<?php echo esc_url( by_opt( 'booking_url' ) ); ?>" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
@@ -51,13 +73,14 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
             <input type="hidden" name="date" id="bookDate" value="">
             <input type="hidden" name="time" id="bookTime" value="">
             <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <?php if ( $return_note ) : ?><p class="bookw__summary" role="status"><?php echo esc_html( $return_note ); ?></p><?php endif; ?>
 
             <div class="bookw__step" data-step="1">
               <p class="bookw__label"><span class="bookw__num">1</span> What kind of call?</p>
               <div class="bookw__types">
                 <?php foreach ( $types as $k => $t ) : ?>
                 <label class="bookw__type">
-                  <input type="radio" name="call_type" value="<?php echo esc_attr( $k ); ?>" <?php checked( $k, $pre ); ?>>
+                  <input type="radio" name="call_type" value="<?php echo esc_attr( $k ); ?>" <?php checked( $k, $pre ); ?><?php echo ! empty( $t['paid'] ) ? ' data-paid="1"' : ''; ?>>
                   <span class="bookw__type-card">
                     <span class="bookw__type-top"><strong><?php echo esc_html( $t['name'] ); ?></strong><span class="tag"><?php echo esc_html( $t['mins'] ); ?> min &middot; <?php echo esc_html( $t['price'] ); ?></span></span>
                     <span class="bookw__type-blurb"><?php echo esc_html( $t['blurb'] ); ?></span>
@@ -99,6 +122,7 @@ $tzlabel = ( new DateTime( 'now', $tz ) )->format( 'T' );
                 <label>What's slowing you down? <span class="muted">(optional)</span><textarea name="notes" rows="3" placeholder="e.g. chasing invoices, quotes that take all evening, enquiries we miss"></textarea></label>
                 <label class="check"><input type="checkbox" name="consent" required> You can contact me about this call. <a href="<?php echo esc_url( by_privacy_url() ); ?>">Privacy</a></label>
                 <p class="bookw__summary" id="bookSummary" hidden></p>
+                <p class="muted bookw__paynote" id="bookPayNote" hidden>Next you'll pay securely by card on Stripe. Your time is held for 30 minutes while you pay.</p>
                 <button type="submit" class="btn" id="bookSubmit" disabled>Confirm booking <span aria-hidden="true">→</span></button>
                 <p class="form__status" id="bookStatus" aria-live="polite"></p>
               </div>
