@@ -154,6 +154,17 @@ $where  = trim( (string) by_opt( 'location' ) );
       </div></div>
     </section>
 
+    <!-- TRADIES: pointer to the dedicated page -->
+    <section class="section3 section3--tight" id="tradies">
+      <div class="wrap"><div class="teams">
+        <h2 class="h3x">On the tools all day?</h2>
+        <div>
+          <p class="split__aside">Carpenters, plumbers, sparkies and builders: we've got a page just for you. Missed calls texted back, quotes followed up and invoices chased, for a low monthly fee.</p>
+          <a href="<?php echo esc_url( by_tradies_url() ); ?>" class="link-ink">See Better Yet for tradies <span aria-hidden="true">→</span></a>
+        </div>
+      </div></div>
+    </section>
+
     <!-- CALCULATOR: blue block -->
     <section class="section3 section3--blue" id="calculator">
       <div class="wrap calcb">
@@ -237,7 +248,7 @@ $where  = trim( (string) by_opt( 'location' ) );
           <p class="forwho__more"><span class="hand hand--line">Your business, minus the busywork.</span></p>
         </div>
         <ul class="forwho__list">
-          <li><a href="<?php echo esc_url( $audit ); ?>">Trades <span aria-hidden="true">→</span></a></li>
+          <li><a href="<?php echo esc_url( by_tradies_url() ); ?>">Trades <span aria-hidden="true">→</span></a></li>
           <li><a href="<?php echo esc_url( $audit ); ?>">Clinics <span aria-hidden="true">→</span></a></li>
           <li><a href="<?php echo esc_url( $audit ); ?>">Creatives <span aria-hidden="true">→</span></a></li>
           <li><a href="<?php echo esc_url( $audit ); ?>">Shops <span aria-hidden="true">→</span></a></li>

@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.4.7' );
+define( 'BY_VERSION', '2.4.8' );
 
 /* Ready Steady Go Kids is hidden for now (Rob, 16 Nov 2026). Return true to bring it back everywhere. */
 function by_show_rsgk() { return (bool) apply_filters( 'by_show_rsgk', false ); }
@@ -120,6 +120,7 @@ add_action( 'customize_register', function ( $wp ) {
 		'essentials_price' => array( 'Concierge Essentials price', 'text', 'Website hosting, maintenance and support. e.g. "$500 a month".' ),
 		'growth_price'     => array( 'Concierge Growth price', 'text', 'Ongoing systems, automation and optimisation. e.g. "from $2,000 a month".' ),
 		'gst_suffix'       => array( 'GST label', 'text', 'Added after every price once GST registration is confirmed, e.g. "+ GST". Blank shows prices without a GST label.' ),
+		'tradie_admin_price' => array( 'Tradie AI admin price', 'text', 'Monthly price of "AI admin and follow-up" on the Tradies page, e.g. "from $199 a month". Blank shows "Low monthly fee".' ),
 		'app_price'       => array( 'Custom apps and integrations price', 'text', 'Per-app band shown in Pricing (Rob, 30 Oct 2026: from $2,000 to $5,000 per app).' ),
 		'credit_text'    => array( 'Audit credit line', 'text', 'Optional. e.g. "The full audit fee is credited against any build booked within 60 days." Blank hides it.' ),
 		'guarantee_text' => array( 'Guarantee line', 'text', 'Shown in the hero and under the audit price. Proposed: "Find 10x your fee, or it\'s free." Blank hides it.' ),
@@ -380,6 +381,21 @@ add_action( 'init', function () {
 		update_option( 'by_work_page_id', $id );
 	}
 } );
+
+/* ---------- "Tradies" page (16 Nov 2026): created once, uses page-tradies.php ---------- */
+add_action( 'init', function () {
+	if ( get_option( 'by_tradies_page_id' ) ) return;
+	$page = get_page_by_path( 'tradies' );
+	$id   = $page ? $page->ID : wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Tradies', 'post_name' => 'tradies', 'post_content' => '' ) );
+	if ( $id && ! is_wp_error( $id ) ) {
+		update_post_meta( $id, '_wp_page_template', 'page-tradies.php' );
+		update_option( 'by_tradies_page_id', $id );
+	}
+} );
+function by_tradies_url() {
+	$id = (int) get_option( 'by_tradies_page_id' );
+	return $id ? get_permalink( $id ) : home_url( '/tradies/' );
+}
 
 function by_work_url() {
 	$id = (int) get_option( 'by_work_page_id' );

@@ -812,3 +812,7 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 @media (max-width: 860px) {
   .teams, .quotes, .quotes--2 { grid-template-columns: 1fr; }
 }
+
+/* Tradies page (2.4.8) */
+.hero3--trades { padding-bottom: 72px; }
+.hero3--trades .hero3__h1 { max-width: 14ch; }
