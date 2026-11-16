@@ -259,6 +259,7 @@ get_header(); ?>
       </div>
     </section>
 
+    <?php if ( by_show_rsgk() ) : ?>
     <!-- READY STEADY GO KIDS -->
     <!-- Rob: the "what we do" copy here is a first draft from the public site. Correct anything that isn't ours. -->
     <section class="section" id="rsgk">
@@ -296,9 +297,10 @@ get_header(); ?>
         </div>
       </div>
     </section>
+    <?php endif; ?>
 
     <!-- DAMSELFLY -->
-    <section class="section section--alt" id="damselfly">
+    <section class="section<?php echo by_show_rsgk() ? " section--alt" : ""; ?>" id="damselfly">
       <div class="wrap">
         <div class="case__grid case__grid--even">
           <div>

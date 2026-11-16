@@ -57,7 +57,7 @@ $where  = trim( (string) by_opt( 'location' ) );
         <a href="<?php echo esc_url( $work . '#heiden' ); ?>">Heiden Cycle Works</a>
         <a href="<?php echo esc_url( $work . '#roam' ); ?>">Roam Orthotics</a>
         <a href="<?php echo esc_url( $work . '#stephanie' ); ?>">Stephanie Anne Studio</a>
-        <a href="<?php echo esc_url( $work . '#rsgk' ); ?>">Ready Steady Go Kids</a>
+        <?php if ( by_show_rsgk() ) : ?><a href="<?php echo esc_url( $work . '#rsgk' ); ?>">Ready Steady Go Kids</a><?php endif; ?>
         <a href="<?php echo esc_url( $work . '#damselfly' ); ?>">Damselfly</a>
         <?php if ( by_has( 'hours_back' ) ) : ?><span class="proof__stat"><?php echo esc_html( by_opt( 'hours_back' ) ); ?> hours handed back so far</span><?php endif; ?>
       </div>

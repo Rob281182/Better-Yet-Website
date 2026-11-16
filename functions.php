@@ -7,7 +7,10 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.4.5' );
+define( 'BY_VERSION', '2.4.6' );
+
+/* Ready Steady Go Kids is hidden for now (Rob, 16 Nov 2026). Return true to bring it back everywhere. */
+function by_show_rsgk() { return (bool) apply_filters( 'by_show_rsgk', false ); }
 
 /*
  * Carry Customize settings across a theme folder change (2.4.5).
