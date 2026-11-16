@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.4.8' );
+define( 'BY_VERSION', '2.4.9' );
 
 /* Ready Steady Go Kids is hidden for now (Rob, 16 Nov 2026). Return true to bring it back everywhere. */
 function by_show_rsgk() { return (bool) apply_filters( 'by_show_rsgk', false ); }
@@ -151,6 +151,7 @@ add_action( 'customize_register', function ( $wp ) {
 } );
 
 require_once get_template_directory() . '/inc/booking.php';
+require_once get_template_directory() . '/inc/integrations.php';
 require_once get_template_directory() . '/inc/hygiene.php';
 
 /* ---------- Hand-drawn blue marks (brand board: scribbles, circles, arrows) ---------- */

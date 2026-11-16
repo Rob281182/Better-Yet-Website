@@ -246,8 +246,12 @@
     });
     update();
   }
+  var payNote = document.getElementById("bookPayNote");
+  function isPaid() { var r = form.querySelector("input[name=call_type]:checked"); return !!(r && r.getAttribute("data-paid")); }
   function update() {
     dateIn.value = picked.date; timeIn.value = picked.time;
+    if (payNote) payNote.hidden = !isPaid();
+    submit.innerHTML = (isPaid() ? "Continue to payment" : "Confirm booking") + " <span aria-hidden=\"true\">→</span>";
     var ok = picked.date && picked.time;
     submit.disabled = !ok;
     if (ok) {
@@ -263,7 +267,7 @@
     status.className = "form__status";
     if (!picked.date || !picked.time) { status.textContent = "Pick a day and a time first."; status.classList.add("is-err"); return; }
     if (!form.checkValidity()) { status.textContent = "Please add your name, email, phone and tick the box."; status.classList.add("is-err"); form.reportValidity(); return; }
-    submit.disabled = true; status.textContent = "Booking…";
+    submit.disabled = true; status.textContent = isPaid() ? "Opening secure payment…" : "Booking…";
     fetch(form.getAttribute("action"), { method: "POST", body: new FormData(form), headers: { "Accept": "application/json" } })
       .then(function (res) { return res.json().then(function (j) { return { ok: res.ok && j.ok, j: j, code: res.status }; }); })
       .then(function (out) {
@@ -274,10 +278,13 @@
           }
           throw new Error(out.j && out.j.error);
         }
+        if (out.j.redirect) { if (window.fbq) fbq("track", "InitiateCheckout"); window.location.href = out.j.redirect; return; }
         form.hidden = true;
         var done = document.getElementById("bookDone"); done.hidden = false;
         document.getElementById("bookDoneText").textContent = out.j.type + ", " + out.j.label + ".";
-        document.getElementById("bookDoneHow").textContent = out.j.how || "";
+        var how = document.getElementById("bookDoneHow"); how.textContent = "";
+        if (out.j.meet) { how.appendChild(document.createTextNode("Join on Google Meet: ")); var a = document.createElement("a"); a.href = out.j.meet; a.textContent = out.j.meet; how.appendChild(a); }
+        else how.textContent = out.j.how || "";
         var ics = document.getElementById("bookIcs"); ics.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(out.j.ics || "");
         done.scrollIntoView({ behavior: "smooth", block: "start" });
         if (window.gtag) gtag("event", "generate_lead", { method: "booking" });
