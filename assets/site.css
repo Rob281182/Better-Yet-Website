@@ -816,3 +816,57 @@ h1, .h2, .hero--page h1 { text-transform: uppercase; letter-spacing: -0.03em; li
 /* Tradies page (2.4.8) */
 .hero3--trades { padding-bottom: 72px; }
 .hero3--trades .hero3__h1 { max-width: 14ch; }
+
+/* ===== Tradies page: hi-vis colourway (16 Nov 2026) =====
+   Safety orange replaces electric blue; the blue block becomes hi-vis yellow; hazard stripes as the accent.
+   Text on orange and yellow is black for contrast. Scoped to the Tradies page template only. */
+body.page-template-page-tradies {
+  --accent: #FF6B00;       /* safety orange */
+  --accent-deep: #E85D00;
+  --accent-ink: #0A0A0A;
+  --hivis: #FFD400;        /* hi-vis yellow */
+  --accent-text: #B84A00;  /* orange dark enough for text on off-white */
+  --hazard: repeating-linear-gradient(-45deg, #0A0A0A 0 18px, #FFD400 18px 36px);
+}
+.page-template-page-tradies .btn,
+.page-template-page-tradies .btn:hover { color: #0A0A0A; }
+.page-template-page-tradies .btn:hover { background: var(--hivis); border-color: var(--hivis); }
+.page-template-page-tradies .hand { color: var(--accent-text); }
+.page-template-page-tradies .section3--black .hand,
+.page-template-page-tradies .close3 .hand { color: var(--hivis); }
+.page-template-page-tradies .fix__after span { color: var(--accent-text); }
+.page-template-page-tradies .auditb__price { color: var(--hivis); filter: none; }
+.page-template-page-tradies .section3--black .row__num { color: var(--accent); }
+
+/* Hazard stripe under the hero and above the closing block */
+.page-template-page-tradies .hero3--trades { position: relative; }
+.page-template-page-tradies .hero3--trades::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: var(--hazard); }
+.page-template-page-tradies .ticker { margin-top: 0; background: var(--hivis); border-color: #0A0A0A; }
+.page-template-page-tradies .ticker__item { color: #0A0A0A; }
+.page-template-page-tradies .ticker__item s { text-decoration-color: #0A0A0A; }
+.page-template-page-tradies .ticker__item::after { background: var(--accent); }
+
+/* The calculator block goes hi-vis yellow with black type */
+.page-template-page-tradies .section3--blue { background: var(--hivis); color: #0A0A0A; }
+.page-template-page-tradies .section3--blue .calcb__h2,
+.page-template-page-tradies .section3--blue .calcb__form label,
+.page-template-page-tradies .section3--blue .calcb__big span,
+.page-template-page-tradies .section3--blue .calcb__big small,
+.page-template-page-tradies .section3--blue .calcb__note,
+.page-template-page-tradies .section3--blue .calcb__consent,
+.page-template-page-tradies .section3--blue output { color: #0A0A0A; }
+.page-template-page-tradies .section3--blue input[type=range],
+.page-template-page-tradies .section3--blue .calcb__consent input { accent-color: #0A0A0A; }
+.page-template-page-tradies .section3--blue .calcb__result { background: transparent; }
+.page-template-page-tradies .section3--blue .btn--light { background: #0A0A0A; color: var(--hivis); border-color: #0A0A0A; }
+.page-template-page-tradies .section3--blue .btn--light:hover { background: var(--accent); border-color: var(--accent); color: #0A0A0A; }
+.page-template-page-tradies .section3--blue .link-light { color: #0A0A0A; border-bottom-color: #0A0A0A; }
+.page-template-page-tradies .section3--blue .calcb__capture input[type=email] { color: #0A0A0A; border-color: rgba(10,10,10,.5); background: rgba(255,255,255,.5); }
+.page-template-page-tradies .section3--blue .form__status--dark { color: #0A0A0A; }
+
+/* Closing block: hazard stripes instead of the blue scribble photo */
+.page-template-page-tradies .close3 { border-top: 14px solid transparent; border-image: var(--hazard) 1; }
+.page-template-page-tradies .close3__photo { background: var(--hazard); }
+.page-template-page-tradies .close3__img { display: none; }
+.page-template-page-tradies .close3__h2 .u .scribble--circle { color: var(--hivis); filter: none; }
+.page-template-page-tradies .close3 .link-light { border-bottom-color: var(--hivis); }
