@@ -84,7 +84,7 @@ get_header(); ?>
       <div class="wrap">
         <p class="eyebrow">Our work</p>
         <h1>Real businesses. <span class="u">Real time back.<?php echo by_scribble( 'underline' ); ?></span></h1>
-        <p class="lead">Five businesses we helped set up and streamline, from a one-person studio to a national franchise. Different trades, same result: the busywork runs itself, and the owner gets on with the work they love.</p>
+        <p class="lead"><?php echo by_show_rsgk() ? 'Five businesses we helped set up and streamline, from a one-person studio to a national franchise.' : 'Four businesses we helped set up and streamline, from a one-person studio to a custom bike brand.'; ?> Different trades, same result: the busywork runs itself, and the owner gets on with the work they love.</p>
         <div class="hero__strip" aria-hidden="true">
           <img src="<?php echo esc_url( $h['base'] . $h['strip'][0][0] ); ?>" alt="" loading="eager">
           <img src="<?php echo esc_url( $r['base'] . $r['workflow'] ); ?>" alt="" loading="eager">

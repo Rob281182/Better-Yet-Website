@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BY_VERSION', '2.4.6' );
+define( 'BY_VERSION', '2.4.7' );
 
 /* Ready Steady Go Kids is hidden for now (Rob, 16 Nov 2026). Return true to bring it back everywhere. */
 function by_show_rsgk() { return (bool) apply_filters( 'by_show_rsgk', false ); }
